@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+        <record id="view_task_form2_changed" model="ir.ui.view">
+			<field name="name">project.task.form.changed</field>
+			<field name="model">project.task</field>
+			<field eval="2" name="priority" />
+			<field name="inherit_id" ref="project.view_task_form2" />
+			<field name="arch" type="xml">
+				<header position="inside">
+					<button name="task_approve" type="object" states="draft"
+						string="Approve" class="oe_highlight" />
+					<button name="start_task" type="object" states="approved"
+						string="Start work" class="oe_highlight" />
+					<button name="complete_task" type="object" states="inprogress"
+						string="Mark as completed" class="oe_highlight" />
+					<button name="reset_task" type="object" string="Reset Estimation"
+						class="oe_highlight" />
+					<field name="state" widget="statusbar" />
+				</header>
+				<group>
+					<group col="2">
+						<field name="date_start" />
+					</group>
+					<group col="2">
+						<field name="date_end" />
+					</group>
+				</group>
+                <xpath expr="//notebook/page[@string='Extra Info']"
+					position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+				<xpath expr="//notebook/page[@string='Description']" position="before">
+					<page string="Task Details">
+						<field name="task_line_ids" nolabel="1">
+							<tree editable="bottom">
+								<field name="estimate_plan_line" string="Work"/>
+								<field name="work_id" string="Description Of Work"/>
+								<field name="sqft"/>
+								<field name="no_labours"/>
+								<field name="veh_categ_id" options="{'no_create':1}" widget="many2many_tags"/>
+								<field name="material" options="{'no_create':1}" widget="many2many_tags"/>
+								<field name="start_date"/>
+								<field name="finish_date"/>
+								<field name="subcontractor"/>
+								<field name="remarks_new"/>
+							</tree>
+						</field>
+					</page>
+				</xpath>
+					 <xpath expr="//notebook/page[@string='Description']"
+					position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+				<xpath expr="//header/field[@name='stage_id']" position="replace">
+					<field name="stage_id" widget="statusbar" clickable="True"
+						invisible="True" options="{'fold_field': 'fold'}" />
+				</xpath>
+				<xpath expr="//h1//field[@name='name']" position="attributes">
+					<attribute name="placeholder">Task Title</attribute>
+				</xpath>
+				<xpath expr="//field[@name='kanban_state']" position="attributes">
+						<attribute name="invisible">1</attribute>
+				</xpath>
+				<xpath expr="//group/group/field[@name='categ_ids']" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+				<xpath expr="//group/group[1]" position="replace">
+					<group col="2">
+						<field name="project_id" domain="[('state','not in', ('close', 'cancelled'))]"
+							required="True" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}" />
+						<field name="user_id" options='{"no_open": True}'
+							on_change="onchange_user_id(user_id, context)"
+							context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}" string="Assigned By" />
+						<field name="reviewer_id" options='{"no_open": True}'
+							context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}" string="Assigned To" />
+					</group>
+				</xpath>
+            </field>
+        </record>
+		<record id="view_task_tree2_changed" model="ir.ui.view">
+			<field name="name">project.task.tree.changed</field>
+			<field name="model">project.task</field>
+			<field eval="2" name="priority" />
+			<field name="inherit_id" ref="project.view_task_tree2" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='progress']" position="replace">
+					<field name="state" />
+				</xpath>
+				<xpath expr="//field[@name='stage_id']" position="replace">
+					<field name="stage_id" invisible="True" />
+				</xpath>
+			</field>
+		</record>
+		<record id="view_task_search_form_changed" model="ir.ui.view">
+			<field name="name">project.task.search.form.changed</field>
+			<field name="model">project.task</field>
+			<field name="inherit_id" ref="project.view_task_search_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//filter[@string='Unassigned']" position="after">
+					<filter string="Extra Works" name="extra_work"
+						domain="[('is_extra_work', '=', True)]" />
+				</xpath>
+				<xpath expr="//group/filter[@string='Project']" position="after">
+					<filter string="Category" name="category" context="{'group_by':'categ_id'}" />
+					<filter string="Sub Category" name="sub_category"
+						context="{'group_by':'sub_categ_id'}" />
+				</xpath>
+				<xpath expr="//field[@name='stage_id']" position="replace">
+					<field name="civil_contractor" />
+				</xpath>
+				<xpath expr="//field[@name='reviewer_id']" position="replace">
+				</xpath>
+				<xpath expr="//field[@name='user_id']" position="replace">
+				</xpath>
+				<xpath expr="//field[@name='categ_ids']" position="replace">
+				</xpath>
+			</field>
+		</record>
+    </data>
+</openerp>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+        <record id="form_planning_chart" model="ir.ui.view">
+			<field name="name">form.planning.chart</field>
+			<field name="model">planning.chart</field>
+			<field name="arch" type="xml">
+				<form string="Planning Chart">
+						<h1><center>PLANNING CHART</center></h1>
+
+						<group col="4">
+							<field name="site_id" required="True" />
+							<field name="project_id"/>
+							<field name="date" required="True" />
+							<field name="duration_from"  />
+							<field name="supervisor_id" required="True" />
+							<field name="duration_to"  />
+						</group>
+							<notebook>
+								<page string="Master Plans">
+									<field name="master_plan_line_new" nolabel="1">
+										<tree>
+											<field name="work_id"/>
+											<field name="employee_id"/>
+											<field name="products_id" options="{'no_create':1}" widget="many2many_tags" invisible="1"/>
+											<field name="no_labours" string="No of workers"/>
+											<field name="veh_categ_id" options="{'no_create':1}" widget="many2many_tags"/>
+											<field name="material"/>
+											<field name="sqft" />
+											<field name="start_date" />
+											<field name="duration" />
+											<field name="finish_date" />
+											<field name="subcontractor"/>
+											<field name="remarks"/>
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						<newline />
+							<notebook>
+								<page string="Estimation/Planning Chart">
+									<field name="planning_chart_line" nolabel="1">
+										<tree editable="bottom">
+											<field name="mep"/>
+											<field name="master_plan_line_id" string="Work plan"/>
+											<field name="date"/>
+											<field name="work_id"/>
+											<field name="labour" string="No of workers"/>
+											<field name="labour_charge"/>
+											<field name="veh_categ_id" options="{'no_create':0}" widget="many2many_tags"/>
+											<field name="machinery_charge"/>
+											<field name="material" options="{'no_create':1}" widget="many2many_tags"/>
+											<field name="uom_id"/>
+											<field name="material_qty"/>
+											<field name="sqft" />
+											<field name="estimated_cost" string="Material Cost"/>
+											<field name="working_hours"/>
+											<field name="total_charge" sum="Grand Total"/>
+											<field name="remarks" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+				</form>
+			</field>
+		</record>
+		<record id="tree_planning_chart" model="ir.ui.view">
+			<field name="name">tree.planning.chart</field>
+			<field name="model">planning.chart</field>
+			<field name="arch" type="xml">
+				<tree string="Planning Chart">
+					<field name="date"/>
+					<field name="site_id"/>
+					<field name="project_id"/>
+					<field name="supervisor_id"/>
+				    <field name="duration_from"  />
+					<field name="duration_to"/>
+				</tree>
+			</field>
+		</record>
+        <record id="planning_chart_search_view" model="ir.ui.view">
+			<field name="name">planning.search.view</field>
+			<field name="model">planning.chart</field>
+			<field name="arch" type="xml">
+				<search string="Planning Chart">
+					<field name="date" />
+					<field name="supervisor_id" />
+					<field name="site_id" />
+					<field name="duration_from"/>
+					<field name="duration_to"/>
+					<group expand="0" string="group by">
+						<filter name="groupby_date" string="Date"
+								context="{'group_by':'date'}"/>
+						<filter name="groupby_supervisor" context="{'group_by': 'supervisor_id'}" string="Supervisor"  />
+						<filter name="groupby_site" context="{'group_by':'site_id'}"
+								string="Site"/>
+						<filter name="groupby_from" string="Duration From" context="{'group_by':'duration_from'}"/>
+						<filter name="groupby_to" string="Duration To" context="{'group_by':'duration_to'}"/>
+					</group>
+
+				</search>
+
+			</field>
+		</record>
+
+		<record id="action_planning_chart" model="ir.actions.act_window">
+			<field name="name">Planning Chart</field>
+			<field name="res_model">planning.chart</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="tree_planning_chart"></field>
+
+		</record>
+
+
+		<menuitem id="sub_menu_hiworth_planning_chart" parent="main_menu_hiworth_planning" name="Estimation/Planning Chart" sequence="20" action="action_planning_chart"
+				 />
+    </data>
+</openerp>
