@@ -41,10 +41,10 @@
 								<page string="Estimation/Planning Chart">
 									<field name="planning_chart_line" nolabel="1">
 										<tree editable="bottom">
-											<field name="mep"/>
-											<field name="master_plan_line_id" string="Work plan"/>
+											<field name="mep" invisible="1"/>
+											<field name="master_plan_line_id" string="Nature Of Work/Plan"/>
 											<field name="date"/>
-											<field name="work_id"/>
+											<field name="work_id" invisible="1"/>
 											<field name="labour" string="No of workers"/>
 											<field name="labour_charge"/>
 											<field name="veh_categ_id" options="{'no_create':0}" widget="many2many_tags"/>

@@ -15,8 +15,8 @@ class PlanningChart(models.Model):
     work_plan_id = fields.Many2one('master.plan.line', string="Work Plan")
     date = fields.Date('Creation Date', default=datetime.today())
     planning_chart_line = fields.One2many('planning.chart.line','line_id')
-    duration_from = fields.Date("Duration From")
-    duration_to = fields.Date("Duration To")
+    duration_from = fields.Date("Duration To")
+    duration_to = fields.Date("Duration From")
     master_plan_line = fields.One2many('master.plan.chart.line', 'chart_id')
     master_plan_line_new = fields.One2many('master.plan.chart.line1', 'chart_id')
 

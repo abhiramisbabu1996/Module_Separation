@@ -27,7 +27,6 @@ class TaskLine(models.Model):
     sqft = fields.Float()
     no_labours = fields.Integer()
 
-    veh_categ_id = fields.Many2many('vehicle.category.types',string='Machinery')
     veh_categ_id = fields.Many2many('fleet.vehicle',string='Machinery')
     material = fields.Many2many('product.product', string='Materials')
     start_date = fields.Date('Start Date')
@@ -39,7 +38,8 @@ class TaskLine(models.Model):
 
 
 
-    # # partner_statement_id = fields.Many2one('partner.daily.statement')
+    # partner_statement_id = fields.Many2one('partner.daily.statement')
+
     # work_loc = fields.Char("Work Location")
     # estimated_hrs = fields.Char('Time Allocated')
     # # material = fields.Many2many('product.product', 'material_line','line_product_id', string='Materials')

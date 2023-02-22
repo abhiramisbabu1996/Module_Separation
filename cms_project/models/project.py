@@ -95,7 +95,6 @@ class ProjectFormInherit(models.Model):
     contractor_id1 = fields.Many2one('res.partner', string='Sub Contractor 1')
     contractor_id2 = fields.Many2one('res.partner', string='Sub Contractor 2')
     contractor_id3 = fields.Many2one('res.partner', string='Sub Contractor 3')
-    description = fields.Text('Description')
     village = fields.Char('Name Of Village')
     taluk = fields.Char('Name Of Taluk')
     district = fields.Char('Name Of District')

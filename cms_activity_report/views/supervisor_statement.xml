@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+		<record id="form_partner_daily_statement" model="ir.ui.view">
+			<field name="name">form.partner.daily.statement</field>
+			<field name="model">partner.daily.statement</field>
+			<field name="arch" type="xml">
+				<form string="Daily Statement">
+					<header></header>
+						<div>
+							<h1><field name="name" readonly="1"/></h1>
+					    </div>
+						<group>
+							<group>
+								<field name="employee_id" required="True" string="Supervisor"/>
+								<field name="date" required="True"/>
+								<field name="project_id" required="1"/>
+								<field name="location_ids" required="True" options="{'no_create': True, 'no_create_edit':True}"/>
+								<field name="project_task_id" string="Task"/>
+						    </group>
+					    </group>
+						<group>
+							<newline/>
+						</group>
+<!--						Notebooks and pages-->
+						<group string="Task Details">
+							<notebook>
+								<page>
+									<field name="project_task_line_ids" nolabel="1" no_create="1">
+										<tree editable="bottom">
+									        <field name="work_id" string="Nature Of Work"/>
+											<field name="sqft"/>
+											<field name="no_labours"/>
+											<field name="veh_categ_id" options="{'no_create':1}" widget="many2many_tags"/>
+											<field name="material" options="{'no_create':1}" widget="many2many_tags"/>
+											<field name="start_date"/>
+											<field name="finish_date"/>
+											<field name="subcontractor"/>
+											<field name="remarks_new"/>
+							            </tree>
+							       </field>
+						       </page>
+					        </notebook>
+					    </group>
+					    <group string="Supervisor Daily Work Details">
+							<notebook>
+								<page string="Supervisor Daily Work Details">
+									<field name="partner_line_ids" nolabel="1">
+										<tree editable="bottom">
+											<field name="date"/>
+											<field name="work_id" string="Nature of Work"/>
+											<field name="veh_categ_id" options="{'no_create':1}" widget="many2many_tags"/>
+											<field name="machines_used" widget="many2many_tags"/>
+											<field name="no_labours"/>
+											<field name="total_attendance"/>
+											<field name="total_absence"/>
+											<field name="sqft"/>
+											<field name="sqft_completed"/>
+											<field name="sqft_pending"/>
+											<field name="product_id" string="Items Used" options="{'no_create':1}" widget="many2many_tags"/>
+											<field name="quantity"/>
+											<field name="estimated_hrs" string="Estimated hours"/>
+											<field name="remarks"/>
+							            </tree>
+						            </field>
+						        </page>
+							</notebook>
+						</group>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="search_partner_daily_statement" model="ir.ui.view">
+			<field name="name">search.partner.daily.statement</field>
+			<field name="model">partner.daily.statement</field>
+			<field name="arch" type="xml">
+				<search string="Daily Statement">
+					<field name="date" />
+					<field name="employee_id" />
+					<group expand="0" string="Group By">
+						<filter string="Supervisor" icon="terp-stock_effects-object-colorize"
+								domain="[]" name="group_partner" context="{'group_by':'employee_id'}" />
+						<filter string="Month" icon="terp-go-month" domain="[]"
+								name="group_month" context="{'group_by':'date'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		<record id="tree_partner_daily_statement" model="ir.ui.view">
+			<field name="name">tree.partner.daily.statement</field>
+			<field name="model">partner.daily.statement</field>
+			<field name="arch" type="xml">
+				<tree string="Daily Statement">
+					<field name="date"/>
+					<field name="name" />
+					<field name="employee_id"/>
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+        <record id="action_partner_daily_statement" model="ir.actions.act_window">
+			<field name="name">Supervisor Daily Statement</field>
+			<field name="res_model">partner.daily.statement</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="tree_partner_daily_statement" />
+		</record>
+        <menuitem id="root_activity_reports_menu" name="Activity Reports"
+			sequence="40"/>
+        <menuitem id="menu_partner_daily_statement_in_activity_report" parent="root_activity_reports_menu"
+				  name="Supervisor Daily Statement" sequence="20"/>
+        <menuitem id="menu_partner_daily_statement" parent="menu_partner_daily_statement_in_activity_report"
+				  action="action_partner_daily_statement" name="Supervisor Daily Statement" sequence="10"/>
+
+    </data>
+</openerp>
