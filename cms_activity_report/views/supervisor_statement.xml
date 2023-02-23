@@ -64,8 +64,97 @@
 							            </tree>
 						            </field>
 						        </page>
+								<page string="Attendance Entry">
+									<newline/>
+									<field name="labour_details_ids">
+									<tree>
+										<field name="supervisor_id" string="Supervisor"/>
+<!--										<field name="mep" string="Work Category"/>-->
+<!--										<field name="item_id" string="Work"/>-->
+										<field name="site_id"/>
+										<field name="remarks" invisible="1"/>
+									</tree>
+									<form>
+										<sheet>
+											<group>
+												<group>
+													<field name="supervisor_id" string="Supervisor"/>
+<!--													<field name="mep" string="Work Category"/>-->
+<!--													<field name="item_id" string="Work"/>-->
+												</group>
+												<group>
+													<field name="start_time" string="Start Time"/>
+													<field name="end_time" string="End Time"/>
+													<field name="project_id"/>
+													<field name="site_id"/>
+												</group>
+											</group>
+											<notebook>
+												<page string="Labours">
+													<field name="details_ids">
+														<tree editable="bottom">
+															<field name="labour_name"/>
+															<field name="project"/>
+															<field name="start_time"/>
+															<field name="end_time"/>
+															<field name="remarks"/>
+															<field name="date" invisible="1"/>
+														</tree>
+													</field>
+												</page>
+											</notebook>
+											<field name="remarks" invisible="1"/>
+										</sheet>
+									</form>
+								</field>
+						        </page>
+								<page string="Used Materials">
+									<field name="products_used_lines">
+										<tree editable="bottom">
+											<field name="product_id" string="Product"/>
+											<field name="unit"/>
+											<field name="stock_qty" string="Stock Quantity"/>
+											<field name="used_qty" string="Used Quantity"/>
+											<field name="balance_qty" string="Balance Quantity"/>
+								        </tree>
+							        </field>
+						        </page>
 							</notebook>
 						</group>
+
+					<group string="Subcontractor Daily Work Report">
+					<notebook>
+						<page string="Subcontractor Daily Work">
+							<field name="project_task_ids" nolabel="1" no_create="0">
+								<tree editable="bottom">
+									<field name="estimate_plan_line" string="Work"/>
+									<field name="work_id" string="Description Of Work"/>
+									<field name="sqft"/>
+									<field name="no_labours"/>
+									<field name="veh_categ_id" options="{'no_create':1}" widget="many2many_tags"/>
+									<field name="material" options="{'no_create':1}" widget="many2many_tags"/>
+									<field name="start_date"/>
+									<field name="finish_date"/>
+									<field name="subcontractor"/>
+									<field name="remarks_new"/>
+							    </tree>
+						    </field>
+						</page>
+						<page string="Details Of Used Items">
+							<field name="subcontractor_products_used_lines">
+								<tree editable="bottom">
+									<field name="product_id" string="Product"/>
+									<field name="unit"/>
+									<field name="stock_qty" string="Stock Quantity"/>
+									<field name="used_qty" string="Used Quantity"/>
+									<field name="balance_qty" string="Balance Quantity"/>
+								</tree>
+							</field>
+						</page>
+
+					</notebook>
+					</group>
+
 				</form>
 			</field>
 		</record>

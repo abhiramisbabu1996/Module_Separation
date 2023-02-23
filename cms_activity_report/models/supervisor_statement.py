@@ -8,6 +8,53 @@ from openerp.exceptions import except_orm, ValidationError
 import math
 
 
+class LabourEmployeeDetails(models.Model):
+    _name = 'labour.employee.details.custom'
+
+    supervisor_id = fields.Many2one('hr.employee')
+    # item_id = fields.Many2one('daily.statement.item', 'Item')
+    remarks = fields.Text('Remarks')
+    details_ids = fields.One2many('labours.details.custom', 'labour_id')
+    supervisor_statement_id = fields.Many2one('partner.daily.statement')
+    start_time = fields.Datetime()
+    end_time = fields.Datetime()
+    # mep = fields.Selection([('mechanical', 'Mechanical'), ('electricel', 'Electrical'), ('plumbing', 'Plumbing')],
+    #                        string="Work Category")
+    site_id = fields.Many2one('stock.location', string='Site', related='supervisor_statement_id.location_ids')
+    project_id = fields.Many2one('project.project', related='supervisor_statement_id.project_id')
+
+    @api.model
+    def create(self, vals):
+        res = super(LabourEmployeeDetails, self).create(vals)
+        if res.supervisor_id:
+            lines = {'labour_name': res.supervisor_id.id,
+                     'labour_id': res.id,
+                     'site_id': res.site_id.id,
+                     'project': res.project_id.id,
+                     'end_time': res.end_time,
+                     'start_time': res.start_time, }
+            res.details_ids.create(lines)
+        return res
+
+
+class LaboursDetails(models.Model):
+    _name = 'labours.details.custom'
+
+    labour_id = fields.Many2one('labour.employee.details.custom')
+    labour_name = fields.Many2one('hr.employee')
+    # labour_name = fields.Many2one('hr.employee', domain=[('attendance_category', '!=', 'office_staff')])
+    remarks = fields.Text('Remarks')
+    start_time = fields.Datetime()
+    end_time = fields.Datetime()
+    # position = fields.Selection(related='labour_name.user_category')
+    # mep = fields.Selection([('mechanical', 'Mechanical'), ('electricel', 'Electrical'), ('plumbing', 'Plumbing')],
+    #                        string="Work Category")
+    site_id = fields.Many2one('stock.location', string='Site')
+    # site_id = fields.Many2one('stock.location', string='Site', related='labour_id.site_id')
+    project = fields.Many2one('project.project', related='labour_id.project_id', store=True)
+    date = fields.Date(default=fields.Date.today())
+
+
 class PartnerDailyStatement(models.Model):
     _name = 'partner.daily.statement'
     _order = 'date desc'
@@ -24,6 +71,7 @@ class PartnerDailyStatement(models.Model):
                     # 'location_ids': [('id', 'in', self.project_id.project_location_ids.ids)],
                 },
             }
+
     @api.onchange('project_id', 'location_ids')
     def onchange_partner_line_ids(self):
         self.partner_line_ids = False
@@ -54,7 +102,7 @@ class PartnerDailyStatement(models.Model):
                 if statement.subcontractor:
                     project_task_ids.append((0, 0, values_dict[0]))
         self.update({'project_task_line_ids': project_task_line_ids})
-        # self.update({'project_task_ids': project_task_ids})
+        self.update({'project_task_ids': project_task_ids})
         self.update({'partner_line_ids': project_task_line_ids})
         return
 
@@ -82,6 +130,7 @@ class PartnerDailyStatement(models.Model):
 
     line_ids = fields.One2many('partner.daily.statement.line', 'report_id', 'Lines', domain=[('expense', '!=', True)])
     partner_line_ids = fields.One2many('partner.daily.statement.line', 'report_id')
+    labour_details_ids = fields.One2many('labour.employee.details.custom', 'supervisor_statement_id')
     # expense_line_ids = fields.One2many('partner.daily.statement.expense', 'report_id', 'Lines')
     # mou_expense_line_ids = fields.One2many('partner.daily.statement.mou.line', 'report_id', 'Lines')
     # pre_balance = fields.Float('Pre. Balance', compute='compute_employee_id')
@@ -119,12 +168,11 @@ class PartnerDailyStatement(models.Model):
     # rent_fuel_transfer_ids = fields.One2many('partner.fuel.transfer', 'rent_daily_statement_id')
     project_id = fields.Many2one('project.project', string="Project")
     # item_received_lines = fields.One2many('items.received', 'product_id', 'Materials Used')
-    # labour_details_ids = fields.One2many('labour.employee.details.custom', 'supervisor_statement_id')
     # products_received_lines = fields.One2many('partner.received.products', 'partner_id')
-    # products_used_lines = fields.One2many('partner.used.products', 'partner_id')
-    # subcontractor_products_used_lines = fields.One2many('partner.used.products', 'partner_id')
-    # # project_task_ids = fields.One2many('project.task', 'partner_statement_id')
-    # project_task_ids = fields.One2many('task.line.custom', 'partner_statement_id')
+    products_used_lines = fields.One2many('partner.used.products', 'partner_id')
+    subcontractor_products_used_lines = fields.One2many('partner.used.products', 'partner_id')
+    # project_task_ids = fields.One2many('project.task', 'partner_statement_id')
+    project_task_ids = fields.One2many('task.line.custom', 'partner_statement_id')
     project_task_id = fields.Many2one('project.task')
     project_task_line_ids = fields.One2many('task.line.custom', 'partner_statement_id')
     # recieved_items_ids = fields.One2many('site.purchase.item.line', string="reieved items")
@@ -195,3 +243,52 @@ class PartnerDailyStatementLine(models.Model):
     total_attendance = fields.Integer(string="Total Attendance")
     total_absence = fields.Integer(string="Absentee")
     machines_used = fields.Many2many('fleet.vehicle', string="Machinery Used")
+
+
+class UsedProducts(models.Model):
+    _name = 'partner.used.products'
+
+    product_id = fields.Many2one('product.product')
+    stock_qty = fields.Float(readonly=True, compute="compute_quantity", store=True)
+    used_qty = fields.Float()
+    balance_qty = fields.Float(readonly=True, compute="compute_quantity", store=True)
+    unit = fields.Many2one('product.uom', readonly=True)
+    partner_id = fields.Many2one('partner.daily.statement')
+
+    @api.onchange('product_id', 'used_qty')
+    def onchange_product_id(self):
+        for record in self:
+            if record.product_id:
+                record.unit = record.product_id.uom_id.id
+            if record.product_id and record.partner_id.location_ids:
+                current_qty = sum(self.env['stock.quant'].search([('product_id', '=', record.product_id.id),
+                                                                  ('location_id', '=',
+                                                                   record.partner_id.location_ids.id)]).mapped('qty'))
+                record.stock_qty = current_qty
+                # record.stock_qty = record.product_id.qty_available
+                if record.used_qty:
+                    if record.stock_qty < record.used_qty:
+                        raise osv.except_osv(('Warning!'),
+                                             ('%s stock quantity is less than used quantity' % record.product_id.name))
+                    record.balance_qty = record.stock_qty - record.used_qty
+
+    @api.depends('product_id', 'used_qty')
+    def compute_quantity(self):
+        for record in self:
+            if record.product_id and record.partner_id.location_ids:
+                current_qty = sum(self.env['stock.quant'].search([('product_id', '=', record.product_id.id),
+                                                                  ('location_id', '=',
+                                                                   record.partner_id.location_ids.id)]).mapped('qty'))
+                record.stock_qty = current_qty
+                if record.used_qty:
+                    if record.stock_qty < record.used_qty:
+                        raise osv.except_osv(('Warning!'),
+                                             ('%s stock quantity is less than used quantity' % record.product_id.name))
+                    record.balance_qty = record.stock_qty - record.used_qty
+
+    @api.multi
+    def unlink(self, cr, uid, ids, context=None):
+        for rec in self:
+            if rec.partner_id.state != 'draft':
+                raise osv.except_osv(('Warning!'), ('Records in the %s state cannot be deleted' % rec.partner_id.state))
+            super(UsedProducts, self).unlink(cr, uid, ids, context)
