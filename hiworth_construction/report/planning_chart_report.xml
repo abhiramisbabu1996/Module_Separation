@@ -1,0 +1,113 @@
+<openerp>
+    <data>
+
+        <report
+                id="action_report_planning_chart"
+                string="Planning Chart Report"
+                model="planning.chart"
+                report_type="qweb-pdf"
+                name="hiworth_construction.planningchart_report"
+                file="hiworth_construction.planningchart_report"
+        />
+
+         <record id="paper_format_report_planning_chart" model="report.paperformat">
+            <field name="name">European A4 Planning Chart</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">5</field>
+            <field name="margin_left">15</field>
+            <field name="margin_right">15</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">12</field>
+            <field name="dpi">0</field>
+        </record>
+
+        <record id="hiworth_construction.action_report_planning_chart" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="hiworth_construction.paper_format_report_planning_chart" />
+        </record>
+
+        <template id="planningchart_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <center>
+                                <b>
+                                    <br/>
+                                    <h2>PLANNING CHART</h2>                                 
+                                </b>
+                            </center>
+
+                           
+                            <div class="row">
+                                <table style="text-align: left; width: 720px;" border="0" cellpadding="0" cellspacing="0" padding="0" margin="0">
+                                    <tbody>
+                                    <tr>
+                                        <td style="vertical-align: top; width: 168px;"><b>Date</b></td>
+                                        <td style="vertical-align: top; width: 546px;">:<span t-field="o.date"/></td>
+                                    </tr>
+                                    <tr >
+                                        <td style="vertical-align: top; width: 168px;"><b>Name of Supervisor/Captian</b></td>
+                                        <td style="vertical-align: top; width: 546px;">:<span t-field="o.supervisor_id.name"/></td>
+                                    </tr>
+                                    <tr >
+                                        <td style="vertical-align: top; width: 168px;"><b>Planning/Programme</b></td>
+                                        <td style="vertical-align: top; width: 546px;">:<t t-if="o.site_id.location_id"><span t-field="o.site_id.location_id.name"/>/</t><span t-field="o.site_id.name"/></td>
+                                    </tr>
+                                    </tbody>
+                                </table>                                
+                            </div>
+                            <br/>
+
+                            <t t-set="sl_no" t-value="1" />
+                            <table border="1" class="table table-condensed" style="border-style:solid">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Labour</th>
+                                        <th>Machinery</th>
+                                        <th>Qty</th>
+                                        <th>Working Location/Chainage</th>
+                                        <th>Target Qty</th>
+                                        <th>Material</th>
+                                        <th>Unit</th>
+                                        <th>Requirement Qty</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.planning_chart_line" t-as="line">
+                                        <td>
+                                            <t t-esc="sl_no" />
+                                            <t t-set="sl_no" t-value="sl_no+1" />
+                                        </td>
+                                        <td><span t-field="line.date"/></td>
+                                        <td><span t-field="line.work_id"/></td>
+                                        <td><span t-field="line.labour"/></td>
+                                        <td>
+                                            <t t-foreach="line.veh_categ_id" t-as="l">
+                                               <span t-field="l.name"/>,
+                                           </t>
+                                        </td>
+                                        <td><span t-field="line.qty"/></td>
+                                        <td><span t-field="line.chainage"/></td>
+                                        <td><span t-field="line.target_qty"/></td>
+                                        <td><span t-field="line.material.name"/></td>
+                                        <td><span t-field="line.uom_id.name"/></td>
+                                        <td><span t-field="line.material_qty"/></td>
+                                        <td><span t-field="line.remarks"/></td>                           
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

@@ -1,0 +1,657 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+    
+    <record id="view_report_form" model="ir.ui.view">
+                <field name="name">view.report.wizard</field>
+                <field name="model">report.wizard</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form string="Report">
+                       
+                        <group>
+                        	<group>
+                        	<field name="period_from" /> 
+                            <field name="based_on" /> 
+                        </group>
+                        <group>
+                        	<field name="period_to" /> 
+                        </group>
+                    </group>
+                        <footer>
+                            
+                            <button  icon="gtk-apply" name="print_report" string="Print" type="object" class="oe_highlight" />Or
+                            <button  icon="gtk-apply" name="view_report" string="View" type="object" class="oe_highlight" />Or
+                            <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
+
+                        </footer>
+                    </form>
+            </field>
+        </record>
+
+
+
+    <record id="action_report_wizard_main" model="ir.actions.act_window">
+        <field name="name">Reports</field>
+        <field name="res_model">report.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>        
+        <field name="view_id" ref="view_report_form"/>
+        <field name="target">new</field>        
+    </record>
+
+
+
+    <menuitem id="menu_report_wizard_mainss" name="Reports" parent="root_activity_reports_menu" sequence="55" />
+
+   <!--  <menuitem id="menu_report_wizard_sub" name="Reports" parent="menu_report_wizard_mainss" sequence="10" action="action_report_wizard_main" />
+
+ -->
+
+    <record id="search_crusher_report" model="ir.ui.view">
+        <field name="name">search.crusher.report</field>
+        <field name="model">crusher.report</field>
+        <field name="arch" type="xml">
+            <search>
+
+                <field name="bill_no" string="Bill No" />
+
+                <field name="date" string="Date" />
+
+                <field name="crusher" string="Crusher" />
+
+                <field name="vehicle_no" string="Vehicle" />
+
+                <field name="site_id" string="Site" />
+
+                <field name="item_id" string="Item" />
+ 
+                <filter name="group_by_contractor_id" string="Contractor"
+                context="{'group_by': 'contractor_id'}"/>
+
+                <filter name="group_by_vehicle_no" string="Vehicle"
+                context="{'group_by': 'vehicle_no'}"/>
+
+                <filter name="group_by_site_id" string="Site Name"
+                context="{'group_by': 'site_id'}"/>
+
+                <filter name="group_by_item_id" string="Item Name"
+                context="{'group_by': 'item_id'}"/>
+            </search>
+        </field>
+    </record>
+
+
+
+
+    <record id="view_crusher_report_form_views" model="ir.ui.view">
+            <field name="name">view.crusher.report</field>
+            <field name="model">crusher.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form edit="false" create="false" string="Crusher Report">
+                    <sheet>
+                   
+                    <group>
+                        <field name="date" /> 
+                        <field name="bill_no" /> 
+                        <field name="contractor_id" />
+                        <field name="vehicle_no" />
+                        <field name="crusher" />
+                        <field name="site_id" /> 
+                        <field name="item_id" />
+                        <field name="qty" />
+                        <field name="rate" />
+                        <field name="amount" />
+                        <field name="gst" />
+                        <field name="total" />
+                        <field name="amount_paid" />
+                        <field name="bank_account" />
+                        <field name="balance" />
+                        <field name="driver_stmt_id" invisible="1" />
+                        <field name="rent_vehicle_id" invisible="1" />
+                    </group>
+                </sheet>
+                    
+                </form>
+        </field>
+    </record>
+
+
+    <record id="view_crusher_report_tree_views1" model="ir.ui.view">
+        <field name="name">tree.crusher.report</field>
+        <field name="model">crusher.report</field>
+        <field name="arch" type="xml">
+            <tree string="Crusher Report" create="false">
+                <field name="date" /> 
+                <field name="crusher" />
+                <field name="bill_no" /> 
+                <field name="contractor_id" />
+                <field name="vehicle_no" />
+                <field name="site_id" /> 
+                <field name="item_id" />
+                <field name="qty" />
+                <field name="rate" />
+                <field name="amount" />
+                <field name="gst" />
+                <field name="total"  />
+                <field name="amount_paid" />
+                <field name="bank_account" />
+                <field name="balance" />
+            </tree>
+
+        </field>
+    </record>
+
+
+
+    <record id="action_crusher_reports" model="ir.actions.act_window">
+        <field name="name">Crusher Report</field>
+        <field name="res_model">crusher.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>        
+    </record>
+
+
+<!--     <menuitem id="menu_crusher_reportssssss" name="Crusher Report" parent="menu_report_wizard_mainss" sequence="15" action="action_crusher_reports" />
+ -->
+
+
+
+
+
+
+
+    <record id="search_fuel_report" model="ir.ui.view">
+        <field name="name">search.fuel.report</field>
+        <field name="model">fuel.report</field>
+        <field name="arch" type="xml">
+            <search>
+
+                <field name="date" string="Date" />
+                <field name="bill_no" string="Bill No" />
+                <field name="diesel_pump" string="Fuel Pump" />
+                <field name="vehicle_owner" string="Vehicle Owner" />
+                <field name="vehicle_no" string="Vehicle" />
+                <field name="item_char" string="Item" />
+
+                <filter name="group_by_vehicle_owner" string="Vehicle Owner"
+                context="{'group_by': 'vehicle_owner'}"/>
+
+                <filter name="group_by_diesel_pump" string="Fuel Pump"
+                context="{'group_by': 'diesel_pump'}"/>
+
+                <filter name="group_by_vehicle_no" string="Vehicle"
+                context="{'group_by': 'vehicle_no'}"/>
+
+                <filter name="group_by_item_char" string="Item Name"
+                context="{'group_by': 'item_char'}"/>
+
+
+
+                
+            </search>
+        </field>
+    </record>
+
+
+
+
+    <record id="view_fuel_report_form_views" model="ir.ui.view">
+            <field name="name">view.fuel.report</field>
+            <field name="model">fuel.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form edit="false" create="false" string="Fuel Report">
+                    <sheet>
+                   
+                    <group>
+                        <field name="date" /> 
+                        <field name="bill_no" />
+                        <field name="vehicle_owner" />
+                        <field name="diesel_pump" />
+                        <field name="vehicle_no" />
+                        <field name="item_char" />
+                        <field name="qty" />
+                        <field name="rate" />
+                        <field name="amount" />
+                        <field name="amount_paid" />
+                        <field name="bank_account" />
+                        <field name="balance" />
+                        <field name="rent_vehicle_id" invisible="1" />
+                        <field name="diesel_pump_id" invisible="1" />
+                        <field name="machinery_pump_id" invisible="1" />
+                    
+                    </group>
+                </sheet>
+                    
+                </form>
+        </field>
+    </record>
+
+
+    <record id="view_fuel_report_tree_views1" model="ir.ui.view">
+        <field name="name">tree.fuel.report</field>
+        <field name="model">fuel.report</field>
+        <field name="arch" type="xml">
+            <tree string="Fuel Report" create="false">
+                <field name="date" /> 
+                <field name="bill_no" />
+                <field name="diesel_pump" />
+                <field name="vehicle_owner" />
+                <field name="vehicle_no" />
+                <field name="item_char" />
+                <field name="qty" />
+                <field name="rate" />
+                <field name="amount" />
+                <field name="amount_paid" />
+                <field name="bank_account" />
+                <field name="balance" />
+                
+            </tree>
+
+        </field>
+    </record>
+
+
+
+    <record id="action_fuel_reports" model="ir.actions.act_window">
+        <field name="name">Fuel Report</field>
+        <field name="res_model">fuel.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>        
+    </record>
+
+
+    <!-- <menuitem id="menu_fuel_report" name="Fuel Report" parent="menu_report_wizard_mainss" sequence="20" action="action_fuel_reports" /> -->
+
+
+
+
+
+
+
+
+
+
+
+    <record id="fuel_report_move_line_tree" model="ir.ui.view">
+        <field name="name">fuel_report_move_line</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <tree string="fuel Statement" editable="bottom" default_order="date desc,id asc">
+                <field name="date" readonly="1" />
+                <field name="bill_no" readonly="1"/>
+                <field name="reconcile_bool" invisible="1" />
+                <field name="partner_id" string="Diesel Pump" invisible="1" />
+                <field name="account_id" string="Diesel Pump" readonly="1" />
+                <!-- <field name="contractor_id" options="{'no_create':1}" /> -->
+                <field name="vehicle_id" readonly="1"/>
+                <field name="vehicle_owner" string="Vehicle Owner" readonly="1"/>
+                <!-- <field name="location_id" string="Site Name"/> -->
+                <field name="product_id" readonly="1"/>
+                <field name="qty" readonly="1" />
+                <field name="rate" readonly="1" />
+                <!-- <field name="amount" />
+                <field name="tax_ids" widget="many2many_tags" options="{'no_create':1}" />
+                <field name="sub_total" />
+                <field name="tax_amount" />
+                <field name="round_off" string="Round Off" /> -->
+                <field name="credit" string="Total" readonly="1"/>
+
+                <field name="debit" string="Amount Paid" readonly="1"/>
+                <field name="balance" />
+                <!-- <button name="reconcile_entry" icon="STOCK_EDIT" type="object" attrs="{'invisible':[('reconcile_bool','=',True)]}" help="Reconcile This Line" />
+ 
+                <button name="apply_reconcile_entry" icon="STOCK_APPLY" type="object" attrs="{'invisible':[('reconcile_bool','=',False)]}" help="Apply Reconciliation" /> -->
+
+            </tree>
+        </field>
+    </record>
+              <!--   <field name="vehicle_owner" />
+                <field name="vehicle_no" />
+                <field name="item_char" />
+                <field name="bank_account" /> -->
+
+    <record id="action_fuel_reports_move_line" model="ir.actions.act_window">
+        <field name="name">Fuel Report</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field> 
+        <field name="domain">[('fuel_line','=',True)]</field>
+        <field name="view_id" ref="fuel_report_move_line_tree"></field>        
+    </record>
+
+
+    <menuitem id="menu_fuel_reports_move_line" name="Fuel Report" parent="menu_report_wizard_mainss" sequence="20" action="action_fuel_reports_move_line" groups="hiworth_hr_attendance.group_project_manager,base.group_erp_manager,hiworth_hr_attendance.group_supervisor,hiworth_hr_attendance.group_admin"/>
+
+    <record id="reconcile_fuel_entries" model="ir.ui.view">
+            <field name="name">Reconcile Fuel Entries</field>
+            <field name="model">reconcile.fuel.entries</field>
+            <field name="arch" type="xml">
+               <form string="Reconcile Fuel Entries">
+                    <group>
+                        <field name="value" />
+                        <field name="new_value" attrs="{'invisible': [('value', 'not in', ['qty', 'rate','amount'])],'required': [('value', 'in', ['qty', 'rate','amount'])]}" />
+                        <field name="bill_no" attrs="{'invisible':[('value','!=','bill_no')],'required':[('value','=','bill_no')]}" />
+                        <field name="vehicle_id" domain="[('rent_vehicle','!=',True)]" options="{'no_create':1}" attrs="{'invisible':[('value','!=','vehicle')],'required':[('value','=','vehicle')]}" />
+                        <!-- <field name="site_id" options="{'no_create':1}" attrs="{'invisible':[('value','!=','site')],'required':[('value','=','site')]}" /> -->
+                        <field name="product_id" options="{'no_create':1}" attrs="{'invisible':[('value','!=','item')],'required':[('value','=','item')]}" />
+
+                        <field name="pump_id" options="{'no_create':1}" attrs="{'invisible':[('value','!=','fuel_pump')],'required':[('value','=','fuel_pump')]}" />
+                        <!-- <field name="tax_ids" widget="many2many_tags" options="{'no_create':1}" attrs="{'invisible':[('value','!=','gst')],'required':[('value','=','gst')]}" /> -->
+
+                        <!-- <field name="contractor_id" options="{'no_create':1}" attrs="{'invisible':[('value','!=','contractor')],'required':[('value','=','contractor')]}"  /> -->
+                        
+                    </group>
+                    
+                    <footer>
+                        <button name="reconcile_fuel_entries" string="Confirm" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window name="Reconcile Fuel Entries"
+            context="{}"
+            res_model="reconcile.fuel.entries"
+            src_model="account.move.line"
+            view_mode="form"
+            target="new"
+            multi="True"
+            key2="client_action_multi"
+            id="action_reconcile_fuel_entries"/>
+
+
+
+
+
+
+
+
+
+
+
+
+    <record id="view_driver_payable_form" model="ir.ui.view">
+                <field name="name">view.driver.payable.report</field>
+                <field name="model">driver.payable.report</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form string="Driver Payable Report">
+                       
+                        <group>
+                            <group>
+                            <field name="period_from" required="1" /> 
+                            <field name="driver_id" required="1" options="{'no_create':1}" /> 
+                        </group>
+                        <group>
+                            <field name="period_to" required="1" /> 
+                        </group>
+                    </group>
+                        <footer>
+                            
+                            <button name="print_report" string="Print" type="object" class="oe_highlight" />Or
+                            <button name="view_report" string="View" type="object" class="oe_highlight" />Or
+                            <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
+
+                        </footer>
+                    </form>
+            </field>
+        </record>
+
+
+
+    <record id="action_report_driver_payable" model="ir.actions.act_window">
+        <field name="name">Driver Payable Report</field>
+        <field name="res_model">driver.payable.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>        
+        <field name="view_id" ref="view_driver_payable_form"/>
+        <field name="target">new</field>        
+    </record>
+
+
+
+
+    <menuitem id="menu_driver_payable_report" name="Driver Payable AC" parent="menu_report_wizard_mainss" sequence="25" action="action_report_driver_payable" groups="hiworth_hr_attendance.group_project_manager,base.group_erp_manager,hiworth_hr_attendance.group_supervisor,hiworth_hr_attendance.group_admin,hiworth_hr_attendance.group_driver,hiworth_hr_attendance.group_eicher_driver"/>
+
+
+
+
+
+    <report id="report_driver_main_menu" string="Driver Payable AC"
+            model="driver.payable.report" report_type="qweb-pdf" file="hiworth_construction.report_driver_payable_account"
+            name="hiworth_construction.report_driver_payable_account" menu="True" multi="True" />
+
+
+
+    <template id="report_driver_payable_account">
+    <t t-call="report.html_container">
+    <t t-foreach="docs" t-as="o">
+
+        <div class="page">
+
+            <center>
+                <h3>Statement Of Accounts - Drivers</h3>
+            </center>
+            <center><h3>Account of <span t-field="o.driver_id.name"/>&#160;From : <span t-field="o.period_from"/> To : <span t-field="o.period_to"/> </h3></center>
+
+
+             <table width="100%;" style="border-top:outset;border-bottom:outset;border-left:outset;border-right:outset;">
+                <thead>
+                    <tr>
+                        <th style="border-right:outset;">Date</th>
+                        <th style="border-right:outset;">Ref No</th>
+                        <th style="border-right:outset;">Description</th>
+                        <th style="border-right:outset;">Debit</th>
+                        <th style="border-right:outset;">Credit</th>
+                    </tr>
+                </thead>
+                <t t-set="debit" t-value="0" />
+                <t t-set="credit" t-value="0" />
+                <tbody>
+                    <tr>
+                        <td colspan="3" style="padding-left: 1px;border-top:outset;border-bottom:outset;border-right:outset;">
+                            Opening Balance
+                        </td>
+                        <td style="padding-right: 2px;border-top:outset;border-bottom:outset;border-right:outset;"  align="right"><span t-esc="docs.get_opening_balance(1,o.period_from,o.driver_id)"/>
+                        <t t-set="debit" t-value="debit+docs.get_opening_balance(1,o.period_from,o.driver_id)" />
+                    </td>
+                    <td style="padding-right: 2px;border-top:outset;border-bottom:outset;" align="right"><span t-esc="docs.get_opening_balance(0,o.period_from,o.driver_id)"/>
+                        <t t-set="credit" t-value="credit+docs.get_opening_balance(0,o.period_from,o.driver_id)" />
+                    </td>
+                    </tr>
+                    <tr t-foreach="docs.get_line(o.period_from,o.period_to,o.driver_id)" t-as="l">
+                        <td style="padding-left: 1px;border-right:outset;border-bottom:outset;">
+                            <span t-esc="l['date']" />
+                        </td>
+                        <td style="padding-left: 1px;border-right:outset;border-bottom:outset;">
+                            <span t-esc="l['ref_no']" />
+                        </td>
+                        <td style="padding-left: 1px;border-right:outset;border-bottom:outset;">
+                            <span t-esc="l['desc']" />
+                        </td>
+                        <td style="padding-right: 2px;border-right:outset;border-bottom:outset;" align="right">
+                            <span t-esc="l['debit']" />
+                            <t t-set="debit" t-value="debit+l['debit']" />
+                        </td>
+                        <td style="padding-right: 2px;border-right:outset;border-bottom:outset;" align="right">
+                            <span t-esc="l['credit']" />
+                            <t t-set="credit" t-value="credit+l['credit']" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="padding-left: 1px;border-top:outset;border-bottom:outset;border-right:outset;">
+                            Total
+                        </td>
+                        <td style="padding-right: 2px;border-top:outset;border-bottom:outset;border-right:outset;" align="right"><span t-esc="debit"/></td>
+                        <td style="padding-right: 2px;border-top:outset;border-bottom:outset;" align="right"><span t-esc="credit"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="padding-left: 1px;border-top:outset;border-bottom:outset;border-right:outset;">
+                            Closing Balance
+                        </td>
+                        <td style="border-top:outset;border-bottom:outset;border-right:outset;" align="center">
+                            <t t-if="debit &gt; credit">
+                                <span t-esc="debit-credit"/>Dr
+                            </t>
+                            <t t-if="debit == credit">
+                                0
+                            </t>
+                        </td>
+                        <td style="border-top:outset;border-bottom:outset;" align="center">
+                            <t t-if="debit &lt; credit">
+                                <span t-esc="credit-debit"/>Cr
+                            </t>
+                            <t t-if="debit == credit">
+                                0
+                            </t>
+                        </td>
+                    </tr>
+                </tbody>
+
+             </table>
+
+
+        </div>
+    </t>
+</t>
+</template>
+
+
+
+    <record id="crusher_report_move_line_tree" model="ir.ui.view">
+        <field name="name">crusher_report_move_line</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <tree string="Crusher Statement" editable="bottom" default_order="date desc,id asc">
+                <field name="date" readonly="1" />
+                <field name="reconcile_bool" invisible="1" />
+                <field name="partner_id" string="Crusher" invisible="1" />
+                <field name="account_id" string="Crusher" readonly="1" />
+                <field name="bill_no" attrs="{'readonly':[('reconcile_bool','=',False)]}" />
+                <field name="contractor_id" attrs="{'readonly':[('reconcile_bool','=',False)]}" options="{'no_create':1}" />
+                <field name="vehicle_id" attrs="{'readonly':[('reconcile_bool','=',False)]}" />
+                <field name="location_id" string="Site Name" attrs="{'readonly':[('reconcile_bool','=',False)]}"/>
+                <field name="product_id" attrs="{'readonly':[('reconcile_bool','=',False)]}" />
+                <field name="qty" attrs="{'readonly':[('reconcile_bool','=',False)]}"  />
+                <field name="rate" attrs="{'readonly':[('reconcile_bool','=',False)]}"  />
+                <field name="amount" attrs="{'readonly':[('reconcile_bool','=',False)]}" />
+                <field name="tax_ids" attrs="{'readonly':[('reconcile_bool','=',False)]}" widget="many2many_tags" options="{'no_create':1}" />
+                <field name="sub_total" attrs="{'readonly':[('reconcile_bool','=',False)]}" />
+                <field name="tax_amount" attrs="{'readonly':[('reconcile_bool','=',False)]}" />
+                <field name="round_off" string="Round Off" attrs="{'readonly':[('reconcile_bool','=',False)]}" />
+                <field name="credit" string="Total" attrs="{'readonly':[('reconcile_bool','=',False)]}" />
+
+                <field name="debit" string="Amount Paid" attrs="{'readonly':[('reconcile_bool','=',False)]}" />
+                <field name="balance" />
+                <!-- <button name="reconcile_entry" icon="STOCK_EDIT" type="object" attrs="{'invisible':[('reconcile_bool','=',True)]}" help="Reconcile This Line" />
+ 
+                <button name="apply_reconcile_entry" icon="STOCK_APPLY" type="object" attrs="{'invisible':[('reconcile_bool','=',False)]}" help="Apply Reconciliation" /> -->
+
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="action_crusher_reports_move_line" model="ir.actions.act_window">
+        <field name="name">Crusher Report</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field> 
+        <field name="domain">[('crusher_line','=',True)]</field>
+        <field name="view_id" ref="crusher_report_move_line_tree"></field>        
+    </record>
+
+
+    <menuitem id="menu_crusher_reports_move_line" name="Crusher Report" parent="menu_report_wizard_mainss" sequence="15" action="action_crusher_reports_move_line" groups="hiworth_hr_attendance.group_project_manager,base.group_erp_manager,hiworth_hr_attendance.group_supervisor,hiworth_hr_attendance.group_admin"/>
+
+
+
+
+
+
+
+
+
+
+
+    <record id="reconcile_crusher_entries" model="ir.ui.view">
+            <field name="name">Reconcile Crusher Entries</field>
+            <field name="model">reconcile.crusher.entries</field>
+            <field name="arch" type="xml">
+               <form string="Reconcile Crusher Entries">
+                    <group>
+                        <field name="value" />
+                        <field name="new_value" attrs="{'invisible': [('value', 'not in', ['qty', 'rate','amount','roundoff'])],'required': [('value', 'in', ['qty', 'rate','amount','roundoff'])]}" />
+                        <field name="bill_no" attrs="{'invisible':[('value','!=','bill_no')],'required':[('value','=','bill_no')]}" />
+                        <field name="vehicle_id" domain="[('rent_vehicle','!=',True)]" options="{'no_create':1}" attrs="{'invisible':[('value','!=','vehicle')],'required':[('value','=','vehicle')]}" />
+                        <field name="site_id" options="{'no_create':1}" attrs="{'invisible':[('value','!=','site')],'required':[('value','=','site')]}" />
+                        <field name="product_id" options="{'no_create':1}" attrs="{'invisible':[('value','!=','item')],'required':[('value','=','item')]}" />
+
+                        <field name="crusher_id" options="{'no_create':1}" attrs="{'invisible':[('value','!=','crusher')],'required':[('value','=','crusher')]}" />
+                        <field name="tax_ids" widget="many2many_tags" options="{'no_create':1}" attrs="{'invisible':[('value','!=','gst')],'required':[('value','=','gst')]}" />
+
+                        <field name="contractor_id" options="{'no_create':1}" attrs="{'invisible':[('value','!=','contractor')],'required':[('value','=','contractor')]}"  />
+                        
+                    </group>
+                    
+                    <footer>
+                        <button name="reconcile_crusher_entries" string="Confirm" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window name="Reconcile Crusher Entries"
+            context="{}"
+            res_model="reconcile.crusher.entries"
+            src_model="account.move.line"
+            view_mode="form"
+            target="new"
+            multi="True"
+            key2="client_action_multi"
+            id="action_reconcile_crusher_entries"/>
+
+
+
+
+  
+
+
+            <record id="view_account_move_line_filter_hiworth_search" model="ir.ui.view">
+            <field name="name">view.account.move.line.filter.hiworth</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_account_move_line_filter" />
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@string='Next Partner to Reconcile']"
+                    position="after">
+                    <filter string="Date Lesser/Equal" name="date_lesser"
+                        domain="[('date','&lt;=',datetime.datetime.now())]" />
+                    <filter string="Date Greater/Equal" name="date_greater"
+                        domain="[('date','&gt;=',datetime.datetime.now())]" />
+                        <field name="vehicle_id" string="Vehicle" />
+                        <field name="bill_no" string="Bill No" />
+                        <field name="product_id" string="Material" />
+                        <field name="location_id" string="Site" />
+                        <field name="account_id" string="Crusher" />
+
+                        <field name="qty" string="Quantity" />
+                        <field name="rate" string="Rate" />
+                        <field name="contractor_id" string="Contractor" />
+                   
+                </xpath>
+            </field>
+        </record>
+
+
+
+
+
+</data>
+</openerp>

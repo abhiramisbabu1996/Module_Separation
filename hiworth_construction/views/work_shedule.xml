@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+		<record id="form_project_added_work_schedule" model="ir.ui.view">
+			<field name="name">project.project.form.schedule</field>
+			<field name="model">project.project</field>
+			<field name="inherit_id" ref="edit_project_changed" />
+			<field name="arch" type="xml">
+
+				<!-- <xpath expr="//notebook/page[@string='Payment Schedule']"
+					position="after">
+					<page string="Work Schedules">
+						<field name="schedule_ids">
+							<tree>
+								<field name="name" />
+							</tree>
+							<form string="Work Schedule">
+								<group>
+									<field name="name" reqiured="True" />
+
+								</group>
+								<group string="Schedule Lines">
+									<field name="schedule_line" nolabel="1">
+										<tree editable="bottom">
+											<field name="sequence" widget="handle" />
+											<field name="name" string="Job Description" />
+											<field name="start_date" />
+											<field name="end_date" />
+											<field name="status" />
+											<field name="remarks" />
+
+										</tree>
+									</field>
+								</group>
+							</form>
+						</field>
+					</page>
+				</xpath> -->
+			</field>
+		</record>
+
+
+	</data>
+</openerp>

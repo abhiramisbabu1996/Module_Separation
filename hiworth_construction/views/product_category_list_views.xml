@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+        <record id="product_category_list_tree_view" model="ir.ui.view">
+            <field name="name">product.category.tree</field>
+            <field name="model">product.category.list</field>
+
+            <field name="arch" type="xml">
+                <tree toolbar="True" string="Product Categories">
+                    <field name="name"/>
+                    <field name="product_category_list_line_ids">
+                        <tree>
+                            <field name="product_id"/>
+                        </tree>
+                    </field>
+                </tree>
+            </field>
+        </record>
+        <record id="product_category_action_list" model="ir.actions.act_window">
+            <field name="name">Products by Category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.category.list</field>
+
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="product_category_list_tree_view"/>
+            <field name="help" type="html">
+              <p>
+                Here is a list of all your products classified by category. You
+                can click a category to get the list of all products linked to
+                this category or to a child of this category.
+              </p>
+            </field>
+        </record>
+
+          <record id="product.product_category_tree_view" model="ir.ui.view">
+            <field name="name">product.category.tree</field>
+            <field name="model">product.category</field>
+
+            <field name="arch" type="xml">
+                <tree  string="Product Categories">
+
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+         <record id="product_category_action_inventory" model="ir.actions.act_window">
+            <field name="name">Inventory by Category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.category</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="product.product_category_tree_view"/>
+            <field name="help" type="html">
+              <p>
+                Here is a list of all your products classified by category. You
+                can click a category to get the list of all products linked to
+                this category or to a child of this category.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_product_by_category_inv" name="Inventory by category"
+			parent="stock.menu_stock_inventory_control" sequence="5"
+			action="product_category_action_inventory" />
+
+         <record id="product_category_action_material" model="ir.actions.act_window">
+            <field name="name">Material/s by Category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.category</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="product.product_category_tree_view"/>
+            <field name="help" type="html">
+              <p>
+                Here is a list of all your products classified by category. You
+                can click a category to get the list of all products linked to
+                this category or to a child of this category.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_product_by_category_material" name="Material/s by category"
+			parent="stock.menu_traceability" sequence="5"
+			action="product_category_action_material" />
+    </data>
+</openerp>

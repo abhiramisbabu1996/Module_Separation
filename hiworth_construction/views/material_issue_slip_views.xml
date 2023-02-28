@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	    <record id="view_material_issue_slip_form" model="ir.ui.view">
+			<field name="name">material.issue.slip.form</field>
+			<field name="model">material.issue.slip</field>
+			<field name="arch" type="xml">
+				<form>
+				 <header>
+
+					<button name="button_request" string="Request" type="object" invisible="0" states="draft"/>
+
+					<field name="state" widget="statusbar"/>
+				 </header>
+					<group col='4' >
+						<field name="name" string='MRN NO' readonly="1"/>
+						<field name="date" attrs="{'readonly':[('state','=','done')]}"/>
+						<!--field name="grr_no_id" options="{'no_create':True}" /-->
+						<field name="source_location_id" string='Store' domain="[('usage','=','internal'),('is_warehouse','=',True)]" options="{'no_create':True, 'no_create_edit':True}"  />
+						<field name="location_id" required="1" attrs="{'readonly':[('state','=','done')]}" string='Location' domain="[('usage','=','internal')]" options="{'no_create':True, 'no_create_edit':True}"/>
+						<field name="project_id" required="1" attrs="{'readonly':[('state','=','done')]}" string='Project Name' options="{'no_create':True, 'no_create_edit':True}"/>
+						
+						<field name="employee_id" required="1" attrs="{'readonly':[('state','=','done')]}" string='Receiver' options="{'no_create':True, 'no_create_edit':True}"/>
+						
+-->						<!--<field name="vehicle_id" options="{'no_create':True, 'no_create_edit':True}"/>-->
+						<!--<field name="is_debit_note" />-->
+						<field name="category_ids"  required="1" attrs="{'readonly':[('state','=','done')]}"/>
+
+
+					</group>
+					<notebook attrs="{'readonly':[('state','=','done')]}">
+					<page string="Item List">
+					<field name="material_issue_slip_lines_ids" required="1" context="{'source_location':source_location_id,'category_id':category_ids}" attrs="{'readonly':[('state','=','done')]}">
+					<tree editable="bottom">
+						<field name="date" invisible='1'/>
+					    <field name="item_id" options="{'no_create':True, 'no_create_edit':True}"/>
+					    <field name="desc"/>
+					    <field name="unit_id" options="{'no_create':True, 'no_create_edit':True}"/>
+						<field name="available_quantity"/>
+					    <field name="quantity"/>
+					    <field name="req_qty" string="Issued Quantity"/>
+					    <field name="rem_qty"/>	
+					    <field name ="rate"/>
+
+						<field name="remarks"/>
+						<field name="project_id" invisible='1'/>
+						<button name="process_view_price" string="View Rate" type="object"/>
+
+					</tree>
+					</field>
+					</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+
+
+
+
+
+		 <record id="view_material_issue_slip_tree" model="ir.ui.view">
+			<field name="name">material.issue.slip.tree</field>
+			<field name="model">material.issue.slip</field>
+			<field name="arch" type="xml">
+				<tree>
+
+						<field name="name"  string="MRN No" />
+						<field name="date"/>
+						<field name="project_id" string='Project Name'/>
+						<field name="employee_id" string='Receiver'/>
+						<field name="location_id" />
+							<field name="state"/>
+
+
+
+				</tree>
+			</field>
+		</record>
+		<record id="material_issue_slip_search" model="ir.ui.view">
+			<field name="name">tree.material.issue.slip.search</field>
+			<field name="model">material.issue.slip</field>
+			<field name="arch" type="xml">
+				<search>
+					<field name="name"  string="MRN No"/>
+						<field name="date"/>
+						<field name="project_id" string='Project Name'/>
+						<field name="employee_id" string='Receiver'/>
+						<field name="project_id"/>
+
+					<group>
+						<filter string="MRN No" name="name" domain="[]" context="{'group_by':'name'}"/>
+						<filter string="Receiver" name="employee_id" domain="[]" context="{'group_by':'employee_id'}"/>
+						<filter string="Date" name="date" domain="[]" context="{'group_by':'date'}"/>
+						<filter string="Project" name="project_id" domain="[]" context="{'group_by':'project_id'}"/>
+
+
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_material_issue_slip" model="ir.actions.act_window">
+			<field name="name">Store To Site</field>
+			<field name="res_model">material.issue.slip</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('is_receive','=',False)]</field>
+			<field name="search_view_id" ref="material_issue_slip_search"/>
+			<field name="view_id" ref="view_material_issue_slip_tree" />
+
+			<field name="context">{'form_view_ref':'hiworth_construction.view_material_issue_slip_form','readonly_by_pass': True}</field>
+		</record>
+
+		<menuitem id="menu_material_issue_slip" parent="stock.menu_stock_warehouse_mgmt"
+				  name="Store To Site" sequence="1"
+				  action="action_material_issue_slip"
+				   />
+
+
+
+		<record id="view_material_issue_slip_receive_form" model="ir.ui.view">
+			<field name="name">material.issue.slip.form</field>
+			<field name="model">material.issue.slip</field>
+			<field name="arch" type="xml">
+				<form>
+				 <header>
+
+				    <button name="action_receive" string="Receive" type="object" states="draft"/>
+
+				    <field name="state" widget="statusbar"/>
+				 </header>
+					<group col='4'>
+						<field name="name" string='MRN NO' readonly="1"/>
+						<field name="date" required="1" attrs="{'readonly':[('state','=','done')]}"/>
+						<!--field name="grr_no_id" options="{'no_create':True}" /-->
+						<field name="employee_id" required="1" string='Given By' options="{'no_create':True, 'no_create_edit':True}" attrs="{'readonly':[('state','=','done')]}"/>
+						<field name="is_receive" invisible="1"/>
+
+						<field name="project_id" required="1" attrs="{'readonly':[('state','=','done')]}" string='Project Name' options="{'no_create':True, 'no_create_edit':True}"/>
+						<field name="source_location_id" required="1" attrs="{'readonly':[('state','=','done')]}" string='Location' domain="[('usage','=','internal')]" options="{'no_create':True, 'no_create_edit':True}"/>
+						<field name="location_id" string="Store" />
+						<field name="category_ids" required="1" attrs="{'readonly':[('state','=','done')]}"/>
+					<!--	<field name="is_debit_note" />-->
+
+					</group>
+					<notebook>
+					<page string="Item List">
+					<field name="material_issue_slip_lines_ids" required="1" context="{'source_location':source_location_id,'category_id':category_ids}" attrs="{'readonly':[('state','=','done')]}">
+					<tree editable="bottom">
+						<field name="date" invisible='1'/>
+					    <field name="item_id" options="{'no_create':True, 'no_create_edit':True}"/>
+					    <field name="desc"/>
+					    <field name="unit_id" options="{'no_create':True, 'no_create_edit':True}"/>
+						<field name="available_quantity" readonly="1"/>
+					    <field name="req_qty"/>
+
+					    <field name ="rate"/>
+
+						<field name="remarks"/>
+						<field name="project_id" invisible='1'/>
+							<button name="process_view_price" string="View Rate" type="object"/>
+
+					</tree>
+					</field>
+					</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+
+
+
+
+
+		 <record id="view_material_issue_slip_tree_receiver" model="ir.ui.view">
+			<field name="name">material.issue.slip.tree</field>
+			<field name="model">material.issue.slip</field>
+			<field name="arch" type="xml">
+				<tree>
+
+						<field name="name" string="MRN No"/>
+						<field name="date"/>
+						<field name="project_id" string='Project Name'/>
+						<field name="employee_id" string='Given By'/>
+				<field name="source_location_id" string='Location'/>
+								<field name="state"/>
+					<!--	<field name="item_list"/>
+						<field name="total_quantity"/>-->
+
+
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_material_issue_slip_receiver" model="ir.actions.act_window">
+			<field name="name">Site to Store</field>
+			<field name="res_model">material.issue.slip</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_material_issue_slip_tree_receiver" />
+			<field name="domain">[('is_receive','=',True)]</field>
+
+			<field name="context">{'form_view_ref':'view_material_issue_slip_receive_form','tree_view_ref':'view_material_issue_slip_tree_receiver','default_is_receive':True,'readonly_by_pass': True}</field>
+
+		</record>
+
+
+		<record id="action_tree_mrn_receiver_new" model="ir.actions.act_window.view">
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="view_material_issue_slip_tree_receiver" />
+			<field name="act_window_id" ref="action_material_issue_slip_receiver" />
+		</record>
+
+		<record id="action_form_mrn_receiver_mrn" model="ir.actions.act_window.view">
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_material_issue_slip_receive_form" />
+			<field name="act_window_id" ref="action_material_issue_slip_receiver" />
+		</record>
+
+		<menuitem id="menu_material_issue_slip_receive" parent="stock.menu_stock_warehouse_mgmt"
+				  name="Site To Store" sequence="2"
+				  action = "action_material_issue_slip_receiver"
+				   />
+
+
+		<report id="report_material_request_action" string="MATERIAL REQUISITION NOTE"
+			model="material.issue.slip" report_type="qweb-pdf"
+			name="hiworth_construction.material_requistion_note_template"
+			file="hiworth_construction.material_requistion_note_template"/>
+	<template id="external_layout_inherit_mrn">
+    <!-- Multicompany -->
+    	<t t-if="o and 'company_id' in o">
+        	<t t-set="company" t-value="o.company_id"></t>
+    	</t>
+    	<t t-if="not o or not 'company_id' in o">
+        	<t t-set="company" t-value="res_company"></t>
+    	</t>
+
+    <t t-call="hiworth_construction.external_layout_header_inherit_mrn" />
+    <t t-raw="0" />
+    <t t-call="hiworth_construction.external_layout_footer_inherit_mrn" />
+</template>
+
+<template id="external_layout_header_inherit_mrn">
+    <div class="header">
+        <div class="row">
+            <div class="col-xs-3">
+                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 80px;"/>
+            </div>
+            <div class="col-xs-9 text-left" style="font-size: 30px;margin-top:30px;" t-field="company.rml_header1"/>
+        </div>
+            <div class="col-xs-12 text-center" style="font-size: 20px;margin-top:10px;">
+                <div style="border-style:solid;"><b>MATERIAL REQUISITION NOTE</b></div>
+        </div>
+        <!--div class="row zero_min_height">
+            <div class="col-xs-12">
+                <div style="border-bottom: 1px solid black;"></div>
+            </div>
+        </div-->
+        <!--div class="row">
+            <div class="col-xs-3">
+                <div t-field="company.partner_id"
+                    t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
+                    style="border-bottom: 1px solid black;"/>
+            </div>
+        </div-->
+    </div>
+</template>
+
+<template id="external_layout_footer_inherit_mrn">
+    <div class="footer">
+        <div class="text-center" style="border-top: 1px solid black;">
+            <ul t-if="not company.custom_footer" class="list-inline">
+                <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
+
+                <li t-if="company.fax and company.phone">&amp;bull;</li>
+                <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
+
+                <li t-if="company.email">&amp;bull;</li>
+                <li t-if="company.email">Email: <span t-field="company.email"/></li>
+
+                <li t-if="company.website">&amp;bull;</li>
+                <li t-if="company.website">Website: <span t-field="company.website"/></li>
+            </ul>
+
+            <t t-if="company.custom_footer">
+                <span t-raw="company.rml_footer"/>
+            </t>
+
+            <ul class="list-inline">
+                <li>Page:</li>
+                <li><span class="page"/></li>
+                <li>/</li>
+                <li><span class="topage"/></li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+		<template id="material_requistion_note_template">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="hiworth_construction.external_layout_inherit_mrn">
+						<div class="page">
+
+							<div class="col-xs-6">
+
+								<h2 class="text-left" style="font-size:15px;width:100%;">
+									<span>Project:</span>
+									<span t-field="o.project_id.name"/>
+								</h2>
+								<h2 class="text-Left" style="font-size:15px;width:100%;">
+									<span>Dept/Work for which issued:</span>
+									<span t-field="o.location_id.name"/>
+								</h2>
+							</div>
+							<div class="col-xs-6">
+								<h1 class="text-right" style="font-size:15px;width:90%;">
+									<span>MRN No:</span>
+									<span t-field="o.name"/>
+								</h1>
+								<h1 class="text-right" style="font-size:15px;width:90%;">
+									<span>Date:</span>
+									<span t-field="o.date"/>
+								</h1>
+							</div>
+							<table class ="table-bordered" style='width:100%;height:40px'>
+								<thead >
+								<tr>
+										<th >
+											Sl No</th>
+										<th >
+											Description item</th>
+										<th >
+											Unit</th>
+										<th >
+											Qty</th>
+										<th >
+											Rate</th>
+										<th >
+											Amount</th>
+										<th >
+											L.F</th>
+										<th >
+											Remarks</th>
+
+								</tr>
+								 <!--tr >
+										<td  style="width: 7%;font-size:13px;border-right: outset"><b>Rs</b> </td>
+
+										<td  style="width: 7%;font-size:13px;border-right: outset"><b>Rs</b> </td>
+
+									</tr-->
+								</thead>
+
+
+								<t t-set="sl_no" t-value="1"/>
+								<tbody>
+									<tr t-foreach="o.material_issue_slip_lines_ids" t-as="line">
+										<td ><span t-esc="sl_no"/></td>
+										<t t-set="sl_no" t-value="sl_no+1"/>
+										<td ><span t-field="line.item_id.name"/></td>
+										<td ><span t-field="line.unit_id.name"/></td>
+										<td ><span t-field="line.quantity"/></td>
+										<td ><span t-field="line.rate"/></td>
+
+										<td ><span t-field="line.amount"/></td>
+
+										<td ><span/></td>
+										<td ><span t-field="line.remarks"/></td>
+									</tr>
+								</tbody>
+
+							</table>
+							<table  class ='table table-bordered' style='width:100%;height:20px' >
+    								<tr>
+      									<td style="width: 25%"><b>Requisitioned by:</b> <span t-esc = "o.create_uid.name"/> </td>
+      									<td style="width: 25%"><b>Authorised by:</b> </td>
+      									<td style="width: 25%" ><b>Issued by:</b> </td>
+      									<td style="width: 25%"><b>Recieved by:</b> </td>
+
+    								</tr>
+  							</table>
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+
+
+		 <record model="ir.ui.view" id="material_issue_slip_line_form_view">
+			 <field name="name">form.material.issue.slip.line.view</field>
+			 <field name="model">material.issue.slip.line</field>
+			 <field name="arch" type="xml">
+				 <form>
+					  <sheet>
+						 <field name="rate_disposable_line_ids">
+							 <tree editable="bottom" create="true" delete="false">
+								 <field name="item_id"/>
+								 <field name="origin"/>
+								 <field name="quantity"/>
+								 <field name="select_qty"/>
+								 <field name="unit_price"/>
+								 <field name="amount"/>
+							 </tree>
+						 </field>
+						 <group>
+							 <field name="req_qty"/>
+
+						 </group>
+						<footer>
+							 <button string="Submit" name="action_submit" type="object"/>
+						</footer>
+					 </sheet>
+				 </form>
+			 </field>
+		 </record>
+
+
+	</data>
+	</openerp>

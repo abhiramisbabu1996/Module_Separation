@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<!-- Task Common header template -->
+		<template id="report_task_common_header_template">
+			<div class="row">
+				<div class="col-xs-6">
+					Name:
+					<span class="lead" t-field="o.name" />
+				</div>
+				<div class="col-xs-6">
+					Category:
+					<span class="lead" t-field="o.categ_id" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6">
+					Project:
+					<span class="lead" t-field="o.project_id" />
+				</div>
+				<div class="col-xs-6">
+					Location:
+					<span class="lead" t-field="o.project_id.location_id" />
+				</div>
+
+			</div>
+			<div class="row">
+				<div class="col-xs-6">
+					Contractor:
+					<span class="lead" t-field="o.civil_contractor" />
+				</div>
+				<div class="col-xs-6">
+					Estimated Cost:
+					<span class="lead" t-field="o.estimated_cost" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6">
+					Start Date:
+					<span class="lead" t-field="o.date_start" />
+				</div>
+				<div class="col-xs-6">
+					End Date:
+					<span class="lead" t-field="o.date_end" />
+				</div>
+			</div>
+		</template>
+
+		<!-- Project task template -->
+		<template id="report_task_estimation_template">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="report.external_layout">
+						<div class="page">
+							<t t-call="hiworth_construction.report_task_common_header_template" />
+
+							<div class="row">
+								<div class="col-xs-12"
+									style="height:1px;background:black;margin-top:10px;margin-bottom:5px;"></div>
+								<div class="row">
+									<div class="col-xs-12">
+										<strong
+											style="    text-align: center; font-size: 30px; display: block; margin-top: 10px; margin-bottom: 10px;">
+											Estimations </strong>
+										<!-- <span class="lead"><t t-esc="task.name" /></span> -->
+									</div>
+								</div>
+								<!-- <div class="row"> <div class="col-xs-3"> <strong>Category</strong> 
+									</div> <div class="col-xs-3"> <strong>Starting Date</strong> </div> <div 
+									class="col-xs-3"> <strong>Ending Date</strong> </div> <div class="col-xs-3"> 
+									<strong>Estimated Cost</strong> </div> <div class="col-xs-3"> <span class="lead"> 
+									<t t-esc="task.categ_id.name" /> </span> </div> <div class="col-xs-3"> <span 
+									class="lead"> <t t-esc="task.date_start" /> </span> </div> <div class="col-xs-3"> 
+									<span class="lead"> <t t-esc="task.date_end" /> </span> </div> <div class="col-xs-3"> 
+									<span class="lead"> <t t-esc="task.company_id.currency_id.symbol" /> <t t-esc="task.estimated_cost" 
+									/> </span> </div> </div> -->
+								<div class="col-xs-12">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>Resource</th>
+												<th>Quantity</th>
+												<th>Unit Price</th>
+												<th>Estimated Cost</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr t-foreach="o.estimate_ids" t-as="estimate">
+												<td>
+													<t t-esc="estimate.pro_id.name" />
+												</td>
+												<td>
+													<t t-esc="estimate.qty" />
+													<t t-esc="estimate.uom.name" />
+												</td>
+												<td>
+													<t t-esc="o.company_id.currency_id.symbol" />
+													<t t-esc="estimate.unit_price" />
+												</td>
+												<td>
+													<t t-esc="o.company_id.currency_id.symbol" />
+													<t t-esc="estimate.estimated_cost_sum" />
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+
+		<report id="view_task_estimation" string="View Estimation"
+			model="project.task" report_type="qweb-html"
+			name="hiworth_construction.report_task_estimation_template" />
+
+		<report id="print_task_estimation" string="Print Estimation"
+			model="project.task" report_type="qweb-pdf"
+			name="hiworth_construction.report_task_estimation_template" />
+
+
+	</data>
+</openerp>

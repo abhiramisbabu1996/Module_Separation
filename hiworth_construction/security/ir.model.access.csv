@@ -1,0 +1,81 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_account_user,Grant rw to accounts,account.model_account_account,group_accounts_user,1,0,1,0
+access_project_account_user_project,Grant permission to account user project,model_project_project,group_accounts_user,1,1,1,0
+access_project_account_user_account_journal,Grant permission to account user account journal,account.model_account_journal,group_accounts_user,1,1,1,0
+access_project_account_user_purchase_order,Grant permission to account user purchase order,model_purchase_order,group_accounts_user,1,0,0,0
+access_project_account_user_purchase_order_line,Grant permission to account user purchase order line,model_purchase_order_line,group_accounts_user,1,0,0,0
+
+access_stock_picking_user_product_price_history,Grant rw to warehouse product price history,product.model_product_price_history,group_warehouse_user,1,1,1,0
+access_stock_picking_user_product_cost_table,Grant rw to warehouse product cost table,model_product_cost_table,group_warehouse_user,1,1,1,0
+
+access_project_estimation_user_project,Grant permission to estimation,model_project_project,group_estimation_user,1,1,1,0
+access_project_estimation_user_account_move_line,Grant permission to estimation account move line,account.model_account_move_line,group_estimation_user,1,1,1,0
+access_project_estimation_user_location,Grant permission to estimation  location,stock.model_stock_location,group_estimation_user,1,0,1,0
+access_project_estimation_user_analytic_account,Grant permission to estimation analytic account,analytic.model_account_analytic_account,group_estimation_user,1,1,1,0
+access_project_estimation_user_product_product,Grant permission to estimation product product,product.model_product_product,group_estimation_user,1,1,1,0
+access_project_estimation_user_product_price_history,Grant permission to estimation product price history,product.model_product_price_history,group_estimation_user,1,1,1,0
+access_project_estimation_user_product_template,Grant permission to estimation product template,product.model_product_template,group_estimation_user,1,1,1,0
+access_project_estimation_user_product_cost_table,Grant permission to estimation product cost table,model_product_cost_table,group_estimation_user,1,1,1,0
+access_project_estimation_user_etxtra_request,Grant permission to estimation extra request,model_estimate_quantity_extra_request,group_estimation_user,1,1,0,0
+access_project_estimation_user_stock_history,Grant permission to estimation stock history,model_stock_history,group_estimation_user,1,1,1,0
+access_project_estimation_user_product_category,Grant permission to estimation product category,product.model_product_category,group_estimation_user,1,1,1,0
+access_project_estimation_user_mrp_bom,Grant permission to estimation mrp bom,model_mrp_bom,group_estimation_user,1,1,1,0
+access_project_estimation_user_mrp_bom_line,Grant permission to estimation mrp bom line,model_mrp_bom_line,group_estimation_user,1,1,1,0
+access_estimation_user_account_move,Grant rw to estimation account move,account.model_account_move,group_estimation_user,1,0,0,0
+access_estimation_user_account_move_reconcil,Grant rw to estimation account move reconcile,account.model_account_move_reconcile,group_estimation_user,1,0,0,0
+access_estimation_user_contractor_bill,Grant rw to estimation contractor bill,model_hiworth_invoice,group_estimation_user,1,1,1,0
+access_estimation_user_contractor_bill_line,Grant rw to estimation contractor bill line,model_hiworth_invoice_line,group_estimation_user,1,1,1,1
+access_estimation_user_contractor_bill_line2,Grant rw to estimation contractor bill line2,model_hiworth_invoice_line2,group_estimation_user,1,1,1,1
+access_estimation_user_work_schedule,Grant rw to estimation work schedule,model_work_schedule,group_estimation_user,1,1,1,0
+access_estimation_user_work_schedule_line,Grant rw to estimation work schedule Line,model_work_schedule_line,group_estimation_user,1,1,1,1
+access_estimation_work_order,Grant rw to estimation work order,model_work_order,group_estimation_user,1,1,1,0
+access_estimation_work_order_line,Grant rw to estimation work order line,model_work_order_line,group_estimation_user,1,1,1,0
+access_estimation_work_order_payment,Grant rw to estimation work order payment,model_work_order_payment,group_estimation_user,1,1,1,1
+access_estimation_work_order_payment_line,Grant rw to estimation work order payment line,model_work_order_payment_line,group_estimation_user,1,1,1,1
+access_estimation_sale_order,Grant rw to estimation Sale Order,sale.model_sale_order,group_estimation_user,1,1,1,0
+access_estimation_material_request,Grant rw to estimation Material Request,model_material_request,group_estimation_user,1,1,1,0
+access_estimation_material_request_line,Grant rw to estimation Material Request Line,model_material_request_line,group_estimation_user,1,1,1,0
+,,,,,,,
+,,,,,,,
+,,,,,,,
+access_project_management_user_project,Grant permission to management,model_project_project,group_project_management_user,1,1,1,0
+access_project_management_user_account_move_line,Grant permission to management account move line,account.model_account_move_line,group_project_management_user,1,1,1,0
+access_project_management_user_location,Grant permission to management  location,stock.model_stock_location,group_project_management_user,1,0,1,0
+access_project_management_user_analytic_account,Grant permission to management analytic account,analytic.model_account_analytic_account,group_project_management_user,1,1,1,0
+access_project_management_user_product_product,Grant permission to management product product,product.model_product_product,group_project_management_user,1,1,1,0
+access_project_management_user_product_price_history,Grant permission to management product price history,product.model_product_price_history,group_project_management_user,1,1,1,0
+access_project_management_user_product_template,Grant permission to management product template,product.model_product_template,group_project_management_user,1,1,1,0
+access_project_management_user_product_cost_table,Grant permission to management product cost table,model_product_cost_table,group_project_management_user,1,1,1,0
+access_project_management_user_etxtra_request,Grant permission to management extra request,model_estimate_quantity_extra_request,group_project_management_user,1,1,0,0
+access_project_management_user_stock_history,Grant permission to management stock history,model_stock_history,group_project_management_user,1,1,1,0
+access_project_management_user_product_category,Grant permission to management product category,product.model_product_category,group_project_management_user,1,1,1,0
+access_project_management_user_mrp_bom,Grant permission to management mrp bom,model_mrp_bom,group_project_management_user,1,1,1,0
+access_project_management_user_mrp_bom_line,Grant permission to management mrp bom line,model_mrp_bom_line,group_project_management_user,1,1,1,0
+access_management_work_shedule,Grant rw to management work schedule,model_work_schedule,group_project_management_user,1,1,1,0
+access_management_work_shedule_line,Grant rw to management work schedule Line,model_work_schedule_line,group_project_management_user,1,1,1,1
+access_management_work_order_payment,Grant rw to management work order payment,model_work_order_payment,group_project_management_user,1,1,1,1
+access_management_work_order_payment_line,Grant rw to management work order payment line,model_work_order_payment_line,group_project_management_user,1,1,1,1
+access_project_admin_user_product_cost_table,Grant permission to admin product cost table,model_product_cost_table,group_admin_user,1,1,1,1
+access_project_admin_user_etxtra_request,Grant permission to admin extra request,model_estimate_quantity_extra_request,group_admin_user,1,1,1,1
+access_project_admin__user_company,Grant rw to admin company,base.model_res_company,group_admin_user,1,1,1,1
+access_project_admin__user_location,Grant rw to admin location,stock.model_stock_location,group_admin_user,1,1,1,1
+access_project_admin__user_location,Grant rw to admin location,stock.model_stock_location,group_admin_user,1,1,1,1
+access_admin_user_contractor_bill,Grant rw to admin contractor bill,model_hiworth_invoice,group_admin_user,1,1,1,1
+access_admin_user_contractor_bill_line,Grant rw to admin contractor bill line,model_hiworth_invoice_line,group_admin_user,1,1,1,1
+access_admin_user_contractor_bill_line2,Grant rw to admin contractor bill line2,model_hiworth_invoice_line2,group_admin_user,1,1,1,1
+access_admin_work_shedule,Grant rw to admin work schedule,model_work_schedule,group_admin_user,1,1,1,1
+access_admin_work_shedule_line,Grant rw to admin work schedule Line,model_work_schedule_line,group_admin_user,1,1,1,1
+access_admin_work_order,Grant rw to admin work order,model_work_order,group_admin_user,1,1,1,1
+access_admin_work_order_line,Grant rw to admin work order line,model_work_order_line,group_admin_user,1,1,1,1
+access_admin_work_order_payment,Grant rw to admin work order payment,model_work_order_payment,group_admin_user,1,1,1,1
+access_admin_work_order_payment_line,Grant rw to admin work order payment line,model_work_order_payment_line,group_admin_user,1,1,1,1
+access_admin_purchase_item_category,Grant rw to admin purchase item category,model_purchase_item_category,group_admin_user,1,1,1,1
+access_admin_purchase_item_category,Grant rw to admin payment vouchers,hiworth_accounting.model_payment_vouchers,group_admin_user,1,1,1,1
+
+access_site_purchase_supervisor,SIte Purchase Siupervisor,model_site_purchase,base.group_user,1,1,1,0
+access_site_purchase_item_line,Grant Permission to item purchase,hiworth_construction.model_site_purchase_item_line,base.group_erp_manager,1,1,1,1
+access_site_purchase_item_line_user,Grant Permission to item purchase user,hiworth_construction.model_site_purchase_item_line,base.group_user,1,1,1,1
+acess_purchase_comparison_user,access_purchase_comparison_user,hiworth_construction.model_purchase_comparison,base.group_user,1,1,1,1
+access_purchase_comparison_line_user,access_purchase_comparison_line_user,hiworth_construction.model_purchase_comparison_line,base.group_user,1,1,1,1
+access_goods_receive_report_user,access_goods_receive_Report_user,hiworth_construction.model_goods_recieve_report,base.group_user,1,1,1,0
+access_goods_recieve_report_line_user,access_goods_recieve_report_line_user,hiworth_construction.model_goods_recieve_report_line,base.group_user,1,1,1,0

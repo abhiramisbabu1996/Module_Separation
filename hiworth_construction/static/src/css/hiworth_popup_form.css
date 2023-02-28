@@ -1,0 +1,136 @@
+/*body.oe_single_form .oe_single_form_container {
+    padding: 10px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 950px;
+    margin-top: -400px;
+    margin-left: -450px;
+    margin-right: -200px;
+    margin-bottom: -350px;
+}*/
+
+.ui-notify-message p {
+    margin: 3px 0;
+    padding: 0;
+    line-height: 18px;
+    background-color: olive;
+    text-align :center;
+}
+.ui-notify-message-style h1 {
+    /*color: darksalmon;*/
+    font-weight: bold;
+}
+
+.ui-notify-message h1 {
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+}
+
+.fc-event-vert .fc-event-inner {
+    position: relative;
+    z-index: 2;
+    color: black;
+    background-color: lightgreen;
+    font-size: 20px;
+}
+
+.fc-event .ui-resizable-handle {
+    background-color: red;
+    padding-bottom: 40px;
+}
+/*.fc-event-report {
+    background-color: yellow;
+    padding-top: 30px;
+}*/
+
+/*.fc-event .ui-resizable-handle {
+        display: none !important;
+        background-color: red;
+        }*/
+
+/*.fc-event-vert .fc-event-inner.fc-last {
+    background-color: red;
+}*/
+
+.openerp .oe_vm_switch_tree_job_summary_quickadd:after {
+    padding: 2px;
+    content: "i";
+}
+
+
+.openerp .oe_application .oe_breadcrumb_item:not(:last-child) {
+    max-width: 15em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.openerp .oe_kanban_view .oe_kanban_file_location {
+    width: 345px;
+    cursor: default;
+    min-height: 245px !important;
+}
+
+.oe_background_color_details {
+    background-color: blue;
+}
+
+.openerp .oe_list_content td.oe_number {
+  text-align: left !important;
+  max-width: 100px;
+}
+
+.oe_kanban_avatar_primebox {
+    width:200px;
+    height:250px;
+}
+
+.oe_kanban_avatar_primegallery {
+    width:325px;
+    height:325px;
+}
+
+.textarea_inherited {
+    box-sizing: border-box;
+    background: #66b3ff;
+    min-width: 60px;
+    color: #1f1f1f;
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
+}
+
+.star_inherited {
+    color : #66b3ff;
+}
+
+
+.openerp .oe_webclient .oe_star_on, .openerp .oe_webclient .oe_star_off, .openerp .modal-body .oe_star_on, .openerp .modal-body .oe_star_off {
+    color: #cccccc;
+    text-shadow: 0 0 2px black;
+    vertical-align: top;
+    position: relative;
+    top: -8px;
+    font-size: 60px;
+}
+
+
+.openerp .oe_webclient .oe_star_on, .openerp .modal-body .oe_star_on {
+    color: gold;
+    font-size: 60px;
+}  
+
+
+.oe_systray #oe_topbar_imbutton_icon {
+    color: black;
+    font-size: 0px;
+}
+
+
+
+
+/*.oe_website_login_container {
+    width: 900px;
+    margin: 40px auto;
+    margin-left: 200px;
+}*/

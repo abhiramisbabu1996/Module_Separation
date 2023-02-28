@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    
+    <t t-name='popup_title'>
+        <p style="display:none;" id="p_id"><t t-esc="id"/></p>
+        Hi <t t-esc="name"/>,<br/><br/>
+        <i><t t-esc="message"/><br/><br/></i>
+    </t>
+   
+    <t t-name='popup_footer_msg'>
+    	Thank You...!!!
+        <center><button class='link2showed oe_highlight oe_form oe_button'><span>OK</span></button></center>
+    </t>
+</template>

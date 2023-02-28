@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    	<function
+		   id="contractor_payment_journal"
+		   model="account.journal"
+		   name="contractor_payment_journal_creation"/>
+    </data>
+</odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	
+
+        <record id="seq_type_site_purchase" model="ir.sequence.type">
+            <field name="name">Site Purchase</field>
+            <field name="code">site.purchase</field>
+        </record>
+ <record id="sequence_site_purchase" model="ir.sequence">
+            <field name="name">Site Purchase</field>
+            <field name="code">site.purchase</field>
+            <field name="padding">4</field>
+            <field name="prefix"></field>
+            <field name="suffix">/%(year)s</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+
+        <record id="seq_type_driver_statement" model="ir.sequence.type">
+            <field name="name">Driver Statement</field>
+            <field name="code">driver.daily.statement</field>
+        </record>
+ <record id="sequence_driver_statement" model="ir.sequence">
+            <field name="name">Driver Statement</field>
+            <field name="code">driver.daily.statement</field>
+            <field name="padding">4</field>
+            <field name="prefix">DRIVER-STMT/</field>
+            <field name="suffix"></field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+
+        
+        
+    </data>
+</openerp>
+
+
+
+
+       
+
+   

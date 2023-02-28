@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+        <record id="tree_purchase_comparison" model="ir.ui.view">
+            <field name="name">Purchase Comparison</field>
+            <field name="model">purchase.comparison</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Comparison" create="false">
+                    <field name="number"  attrs="{'readonly':[('state','in',['po','draft'])]}"/>
+                    <field name="project_id"/>
+                    <field name="date" required="True" />
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="form_purchase_comparison" model="ir.ui.view">
+            <field name="name">Purchase Comparison</field>
+            <field name="model">purchase.comparison</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Comparison" >
+                    <header>
+                        <button name="button_request" states="draft"
+                            string="Request" type="object"  class="oe_highlight" groups="hiworth_construction.group_warehouse_user"/>
+
+                        <button name="%(action_view_stock_history)d" states="draft,requested,validated2,po"
+                            string="View Stock history" type="action" />
+
+
+
+
+                      <button name="button_approve1"  states="requested"
+                            string="First Approve" type="object" class="oe_highlight" groups="base.group_erp_manager" />
+                        <button name="button_approve2" states="first_approve"
+                            string="Approve" type="object" class="oe_highlight" groups="base.group_erp_manager"/>
+
+
+                        <button name="button_po_create" states="validated2"
+                            string="Create Purchase" type="object"  groups="base.group_erp_manager" class="oe_highlight"/>
+                        <button name="button_view_purchase" states="po" groups="base.group_erp_manager"
+                            string="View Purchase" type="object" class="oe_highlight"/>
+                         <button name="button_cancel"
+                            string="Cancel" type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+
+    
+                    
+                    <div class="oe_title">
+                        <h1><field name="number" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/></h1>
+                    </div>
+                    <group>
+                        <group col="2">
+                            <field name="mpr_id" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                            <field name="project_id" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                        </group>
+                        <group>
+                            <field name="date" required="True" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                        </group>
+                    </group>
+                  
+                     <div style="margin-left:0px;">
+                     <label for="partner_id1" string="Supplier 1" style="margin-left:45%;width:125px;"/>
+                          <label for="partner_id2" string="Supplier 2" style="margin-left:15.5%;width:125px;"/>
+                          <label for="partner_id2" string="Supplier 3" style="margin-left:15.5%;width:125px;"/>
+                     </div>
+                    <div style="margin-left:00px;">
+                        <field name="partner_id1" String="Supplier 1" domain="[('supplier','=',True)]" style="margin-left:44%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                        <field name="partner_id2" String="Supplier 2" domain="[('supplier','=',True)]" style="margin-left:12.5%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                        <field name="partner_id3" String="Supplier 3" domain="[('supplier','=',True)]" style="margin-left:12.5%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                       <!-- <field name="partner_id4" placeholder="Name Of Suppliers" domain="[('supplier','=',True)]" style="float: left !important; width:175px;" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>
+                        <field name="partner_id5" placeholder="Name Of Suppliers" domain="[('supplier','=',True)]"  style="float: left !important; width:175px;" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>
+                 -->   </div>
+                    <div style="margin-left:0px;">
+                        <newline/>
+                        <field name="remark1" String="Remark 1" style="margin-left:44%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                        <field name="remark2" String="Remark 1" style="margin-left:12.5%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                        <field name="remark3" String="Remark 1" style="margin-left:12.5%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                        <!--<field name="remark4" placeholder="Remark" nolabel="1" style="width:175px;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>
+                        <field name="remark5" placeholder="Remark" nolabel="1" style="width:175px;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>
+                   --> </div>
+                <notebook style="margin-top: -40px; float:left;">
+                        <page string="Lines" >
+                            <field name="comparison_line" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}">
+                                <tree editable="bottom"  style="width:20%;" >
+                                    <field name="product_id" required="1" />
+                                    <field name="qty" required="1" />
+                                    <field name="uom" required="1"/>
+                                    <field name="tax_id"/>
+                                    <field name="rate1"/>
+                                    <field name="sub_total1"/>
+                                    <field name="rate2"/>
+                                    <field name="sub_total2"/>
+                                    <field name="rate3"/>
+                                    <field name="sub_total3"/>
+                                  <!--  <field name="rate4" />
+                                    <field name="sub_total4"/>
+                                    <field name="rate5" />
+                                    <field name="sub_total5"/>-->
+                                </tree>
+                            </field>
+
+                            <div style="margin-top: 8px;">
+                                <newline/>
+                                <label for="p_n_f1" string="P&amp;F"/>
+                                <field name="p_n_f1" nolabel="1" style="margin-left:48%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                <field name="p_n_f2" nolabel="1" style="margin-left:10%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                <field name="p_n_f3" nolabel="1" style="margin-left:10%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                    </div>
+                            <div style="margin-top: 8px;">
+                                <newline/>
+                                <label for="loading_charge1" string="Loading Charge"/>
+                                <field name="loading_charge1" nolabel="1" style="margin-left:43%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                <field name="loading_charge2" nolabel="1" style="margin-left:10%;width:125px;"  attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                <field name="loading_charge3" nolabel="1" style="margin-left:10%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                    </div>
+                            <div style="margin-top: 8px;">
+                                <newline/>
+                                <label for="transport_cost1" string="Transport Cost"/>
+                                <field name="transport_cost1" nolabel="1" style="margin-left:43%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                <field name="transport_cost2" nolabel="1" style="margin-left:10%;width:125px;"  attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                <field name="transport_cost3" nolabel="1" style="margin-left:10%;width:125px;"  attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                 </div>
+                            <div style="margin-top: 8px;">
+                                <newline/>
+                                <label for="delivery_period1" string="Ready To Stock"/>
+                                <field name="delivery_period1" nolabel="1" style="margin-left:43%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                <field name="delivery_period2" nolabel="1" style="margin-left:10%;width:125px;"  attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                <field name="delivery_period3" nolabel="1" style="margin-left:10%;width:125px;"  attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                 </div>
+                            <div style="margin-top: 8px;">
+                                <newline/>
+                                <label for="payment_term1" string="Term Of Payment"/>
+                                <field name="payment_term1" nolabel="1" style="margin-left:43%;width:125px;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                <field name="payment_term2" nolabel="1" style="margin-left:10%;width:125px;"  attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                <field name="payment_term3" nolabel="1" style="margin-left:10%;width:125px;"  attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                   </div>
+                            <div style="border-bottom: 2px solid black;margin-top: 8px;">
+                            </div>
+                             <div style="margin-top: 8px;">
+                                <newline/>
+                                <label string="Taxable Amount"/>
+
+                                <field name="taxable1" nolabel="1" style="margin-left:42%;width:125px;"/>
+                                <field name="taxable2" nolabel="1" style="margin-left:10%;width:125px;"/>
+                                <field name="taxable3" nolabel="1" style="margin-left:10%;width:125px;"/>
+                                   </div>
+                                    <div style="margin-top: 8px;">
+                                <newline/>
+                                <label  string="CGST Amount"/>
+                                <field name="cgst_id1" nolabel="1" style="margin-left:42%;width:125px;"/>
+                                <field name="cgst_id2" nolabel="1"  style="margin-left:10%;width:125px;"  />
+                                <field name="cgst_id3" nolabel="1" style="margin-left:10%;width:125px;"/>
+                                   </div>
+                                    <div style="margin-top: 8px;">
+                                <newline/>
+                                <label  string="SGST Amount"/>
+                                <field name="sgst_id1" nolabel="1" style="margin-left:42%;width:125px;" />
+                                <field name="sgst_id2" nolabel="1"  style="margin-left:10%;width:125px;"   />
+                                <field name="sgst_id3" nolabel="1" style="margin-left:10%;width:125px;"/>
+                                   </div>
+                                    <div style="margin-top: 8px;">
+                                <newline/>
+                                <label string="IGST Amount"/>
+                                <field name="igst_id1" nolabel="1" style="margin-left:42%;width:125px;" />
+                                <field name="igst_id2" nolabel="1"  style="margin-left:10%;width:125px;"  />
+                                <field name="igst_id3" nolabel="1"  style="margin-left:10%;width:125px;"   />
+                                   </div>
+                         
+                              
+                            <div style="margin-top: 1px;">
+                                <newline/>
+                                <label for="total_amt1" string="Total Amount" style="font-size:18px !important;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                <field name="total_amt1" nolabel="1" allign="right" style=" margin-left: 40%;width:200px; font-size:18px !important;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                <field name="total_amt2" nolabel="1" allign="right" style="margin-left: 10%; width:200px; font-size:18px !important;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                                <field name="total_amt3" nolabel="1" allign="right" style="margin-left: 10%; width:5px; font-size:18px !important;" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+                               </div>
+                        </page>
+                    </notebook>
+                    <group>
+                        <group>
+                            <field name="remark" placeholder="Note...." nolabel="1" attrs="{'readonly':[('state','in',['po','validated2','ceo_approval','first_approve'])]}"/>
+
+                        </group>
+                        <group>
+                            <field name="partner_selected"  attrs="{'readonly':[('state', '=', 'validated')],'required':[('state', '=', 'first_approve')]}" options="{&quot;no_create&quot;: 1, &quot;no_create_edit&quot;: 1}"/>
+                            <field name="user_id1" attrs="{'invisible':[('state','in',('draft','requested'))]}"/>
+                            <field name="user_id2" attrs="{'invisible':[('state','in',('draft','requested','first_approve'))]}"/>
+                            <field name="approved_date" readonly="1" attrs="{'invisible':[('state','in',('draft','requested'))]}"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_purchase_comparison">
+            <field name="name">Purchase Comparison</field>
+            <field name="res_model">purchase.comparison</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+
+         <record model="ir.actions.act_window" id="action_purchase_comparison_approval">
+            <field name="name">Purchase Comparison Approval</field>
+            <field name="res_model">purchase.comparison</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+             <field name="domain">[('state','in',['first_approve','requested'])]</field>
+            <field name="context">{}</field>
+        </record>
+
+         <record id="action_goods_receive_report" model="ir.actions.act_window">
+            <field name="name">Goods Receieve Report</field>
+            <field name="res_model">goods.recieve.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+
+
+        <menuitem id="menu_purchase_comparison"
+                  parent="purchase.menu_procurement_management"
+                  name="Quotation Comparison"
+                  sequence="1"
+                  action="action_purchase_comparison"/>
+
+         <menuitem id="menu_purchase_comparison_aproval"
+                  parent="purchase.menu_procurement_management"
+                  name="Quotation Approval"
+                  sequence="1"
+                  action="action_purchase_comparison_approval"/>
+
+        
+        <menuitem name="Goods Receive Report"
+            id="menu_goods_receive_report"
+            parent="purchase.menu_procurement_management"
+            action= "action_goods_receive_report"
+            sequence="16"/>
+
+
+    </data>
+</openerp>

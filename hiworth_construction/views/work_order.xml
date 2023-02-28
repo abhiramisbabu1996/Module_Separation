@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+		<record id="form_view_work_order" model="ir.ui.view">
+			<field name="name">form_view_work_order</field>
+			<field name="model">work.order</field>
+			<field name="arch" type="xml">
+				<form string="Activity">
+					<header>
+						<button name="action_approve" states="draft" string="Approve"
+							type="object" class="oe_highlight" groups="hiworth_construction.group_admin_user"/>
+						<button name="action_reject" states="draft" string="Reject"
+							type="object" class="oe_highlight" groups="hiworth_construction.group_admin_user" />
+						<button name="action_cancel" states="approved,start"
+							string="Cancel" type="object" class="oe_highlight" />
+						<button name="action_draft" states="cancel,reject" string="Set to Draft"
+							type="object" class="oe_highlight" />
+						<button name="action_start" states="approved" string="Start"
+							type="object" class="oe_highlight" />
+						<button name="action_done" states="start" string="Completed"
+							type="object" class="oe_highlight" />
+						<button name="action_paid" states="done" string="Paid"
+							type="object" class="oe_highlight" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,approved,start,done,paid"
+							readonly="1" />
+					</header>
+					<!-- <sheet> -->
+
+						<div class="oe_title">
+							<h1>
+								<label string="WO No." />
+								<field name="name" readonly="True" string="WO no." class="oe_inline" />
+							</h1>
+						</div>
+						<!-- <div class="oe_right oe_button_box" name="buttons"> <button type="object" 
+							name="invoice_open" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': 
+							[('invoice_count', '=', 0)]}"> <field name="invoice_count" widget="statinfo" 
+							string="Invoices" /> </button> </div> -->
+						<div class="oe_right oe_button_box" name="buttons">
+							<button class="oe_inline oe_stat_button" type="action"
+								attrs="{'invisible':[('invoice_count','=', 0)]}" name="%(action_hiworth_invoice_tree_all)d"
+								icon="fa-tasks"
+								context="{'search_default_work_order_id': active_id, 'default_work_order_id': active_id}">
+								<field string="Invoices" name="invoice_count" widget="statinfo" />
+							</button>
+						</div>
+						<group col="4">
+							<!-- <newline /> -->
+							<field name="project_id" required="True" options="{'no_create': True}"/>
+							<field name="date" required="True" />
+							<!-- <field name="state" invisible="1" /> -->
+							<div colspan="2">
+								<label for="partner_id" string="To,"
+									style="font-size: 16px;font-weight: bold;" />
+								<div style="margin-left: 35px;">
+									<!-- <seperator /> -->
+
+									<field name="partner_id" required="True" options="{'no_create': True}" domain="[('contractor','=',True)]"/>
+									<field name="street" />
+									<field name="street2" />
+									<div class="address_format">
+										<field name="post" />
+										<field name="city" class="oe_inline" />
+										-
+										<field name="zip" class="oe_inline" />
+										<field name="state_id" />
+										<field name="phone" class="oe_inline" />
+										,
+										<field name="mobile" class="oe_inline" />
+										<field name="action_compute" invisible="1" />
+									</div>
+								</div>
+							</div>
+							<!-- </group> -->
+
+							<!-- <field name="reference" colspan="4" nolabel="1" placeholder="Ref:-" 
+								/> -->
+							<!-- </group> <group> -->
+							<field name="part1" colspan="4" nolabel="1" placeholder="part1" />
+
+							<!-- <div style="float: left;"> <button name="refresh_payment_lines" 
+								type="object" string="Refresh Payments" class="oe_right" /> </div> -->
+							<field name="order_lines" nolabel="1" colspan="4">
+								<tree editable="bottom">
+									<field name="sequence" widget="handle" />
+									<!-- <field name="index" /> -->
+									<field name="product_id" attrs="{'readonly':[('status','!=', 'draft')]}"/>
+									<field name="qty"  attrs="{'readonly':[('status','!=', 'draft')]}"/>
+									<field name="uom_id" attrs="{'readonly':[('status','!=', 'draft')]}"/>
+									<field name="rate" attrs="{'readonly':[('status','!=', 'draft')]}"/>
+									<field name="amount" sum="Total" attrs="{'readonly':[('status','!=', 'draft')]}"/>
+									<field name="remarks" attrs="{'readonly':[('status','!=', 'draft')]}"/>
+									<field name="paid_amount" sum="Total" attrs="{'readonly':[('status','!=', 'draft')]}"/>
+									<button type="object" name="open_payments" icon="gtk-edit" />
+									<!-- context="{'default_account_id': id}" -->
+									<field name="balance" sum="Total" />
+									<!-- <field name="part1" /> -->
+									<field name="binary_field" filename="filename" attrs="{'readonly':[('status','!=', 'draft')]}"/>
+									<field name="filename" invisible="1" />
+									<field name="status" invisible="1" />
+								</tree>
+							</field>
+							<label for="scope" string="Scope of Work :-"
+								style="font-size: 16px;font-weight: bold;" />
+							<field name="scope" colspan="4" nolabel="1" placeholder="Scope" />
+							<label for="terms" string="Terms And Conditions of Contract :-"
+								style="font-size: 16px;font-weight: bold;" />
+							<field name="terms" colspan="4" nolabel="1" placeholder="Terms" />
+
+							<!-- </group> <group> -->
+							<!-- <field name="remark" placeholder="Note...." /> -->
+						</group>
+					<!-- </sheet> -->
+				</form>
+
+			</field>
+		</record>
+
+		<record id="tree_view_work_order" model="ir.ui.view">
+			<field name="name">tree_view_work_order</field>
+			<field name="model">work.order</field>
+			<field name="arch" type="xml">
+				<tree string="Activity">
+					<field name="sequence" widget="handle" />
+					<field name="name" />
+					<field name="date" />
+					<field name="project_id" string="Project" />
+					<field name="partner_id" string="Contractor" />
+					<field name="state" />
+				</tree>
+
+			</field>
+		</record>
+
+		<record id="search_view_work_order" model="ir.ui.view">
+			<field name="name">search_view_work_order</field>
+			<field name="model">work.order</field>
+			<field name="arch" type="xml">
+				<search string="Work Order">
+					<field name="name" />
+					<field name="date" />
+					<field name="project_id" />
+					<field name="partner_id" />
+					<field name="state" />
+					<filter string="Contractor" name="search_partner_id"
+						context="{'group_by':'partner_id'}" />
+					<filter string="Project" name="search_project_id" context="{'group_by':'project_id'}" />
+					<filter string="Month" name="search_date" context="{'group_by':'date'}" />
+					<filter string="State" name="search_state" context="{'group_by':'state'}" />
+				</search>
+			</field>
+		</record>
+
+		<!-- <record id="serch_view_work_order" model="ir.ui.view"> <field name="name">tree_view_work_order</field> 
+			<field name="model">work.order</field> <field name="arch" type="xml"> <search> 
+			<field name="project_id" /> </search> </field> </record> -->
+
+		<record id="action_view_work_order" model="ir.actions.act_window">
+			<field name="name">Work Order</field>
+			<field name="res_model">work.order</field>
+			<field name="domain">[('state','!=','paid')]</field>
+			<field name="view_id" ref="tree_view_work_order" />
+		</record>
+
+		<menuitem id="main_menu_view_work_order" parent="base.menu_main_pm"
+			name="CONTRACT WORK ORDER &amp; PAYMENT" sequence="4" />
+			<menuitem id="menu_action_invoice_tree_accounts1" action="action_hiworth_invoice_tree" 
+				parent="main_menu_view_work_order" name="Contractor Invoices"
+				sequence="1" />
+	    	<menuitem id="menu_action_invoice_tree_accounts_paid1" action="action_hiworth_invoice_tree_paid" 
+	            parent="main_menu_view_work_order" name="Paid Contractor Invoices"
+	            sequence="2" />
+<!--			<menuitem id="menu_view_work_order_paid" parent="main_menu_view_work_order"-->
+<!--			action="action_view_work_order_paid" name="Paid Work Order" sequence="20" />-->
+			<menuitem id="menu_view_work_order" parent="main_menu_view_work_order"
+			action="action_view_work_order" name="Work Order" sequence="10" />
+
+
+
+		<record id="action_view_work_order_paid" model="ir.actions.act_window">
+			<field name="name">Work Order</field>
+			<field name="res_model">work.order</field>
+			<field name="domain">[('state','=','paid')]</field>
+			<field name="view_id" ref="tree_view_work_order" />
+		</record>
+
+		
+
+
+
+
+		<report id="view_work_order_report" string="View Report" model="work.order"
+			report_type="qweb-html" name="hiworth_construction.report_work_order" />
+
+		<report id="print_work_order_report" string="Print Report"
+			model="work.order" report_type="qweb-pdf"
+			name="hiworth_construction.report_work_order" />
+
+		<template id="report_work_order">
+			<t t-call="report.html_container">
+
+				<t t-call="report.external_layout">
+					<t t-foreach="docs" t-as="o">
+						<div class="page">
+
+							<div class="row">
+								<h3>
+									<b>
+										<span>
+											WO No.
+											<t t-esc="o.name" />
+										</span>
+									</b>
+								</h3>
+							</div>
+							<div class="row">
+								<h4>
+									<b>
+										<span>
+											<t t-esc="o.project_id.name" />
+										</span>
+										<span style="float: right;">
+											<t t-esc="o.date" />
+										</span>
+									</b>
+								</h4>
+							</div>
+							<div class="row">
+								<t t-if="o.partner_id.id != False">
+									<strong>TO</strong>
+								</t>
+								<br />
+								<p style="margin-left: 3%;">
+									<span>
+										<t t-if="o.partner_id.name != False">
+											<t t-esc="o.partner_id.name" />
+											<br />
+										</t>
+										<t t-if="o.street != False">
+											<t t-esc="o.street" />
+											<br />
+										</t>
+										<t t-if="o.street2 != False">
+											<t t-esc="o.street2" />
+											<br />
+										</t>
+										<t t-if="o.post != False">
+											<t t-esc="o.post" />
+											<br />
+										</t>
+										<t t-if="o.city != False">
+											<t t-esc="o.city" />
+											-
+										</t>
+										<t t-if="o.zip != False">
+											<t t-esc="o.zip" />
+											<br />
+										</t>
+										<t t-if="o.state_id.id != False">
+											<t t-esc="o.state_id.name" />
+											<br />
+										</t>
+										<t t-if="o.phone != False">
+											<t t-esc="o.phone" />
+											-
+										</t>
+										<t t-if="o.mobile != False">
+											<t t-esc="o.mobile" />
+										</t>
+									</span>
+								</p>
+							</div>
+							<div class="row" style="font-size: 15px;margin-top: 20px;">
+								<span>
+									<t t-raw="o.part1" />
+									<br />
+								</span>
+							</div>
+							<div class="row">
+								<table class="table table-bordered" style="width: 100%">
+									<thead>
+										<tr>
+											<th style="width: 5%">Sl.No</th>
+											<th>Description</th>
+											<th>Qty</th>
+											<th>Unit</th>
+											<th>Rate</th>
+											<th>Amount</th>
+											<th>Remarks</th>
+											<th>Paid Amount</th>
+											<th>Balance</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<t t-set="total" t-value="0" />
+									<t t-set="paid_amount" t-value="0" />
+									<t t-set="balance" t-value="0" />
+									<tbody>
+										<tr t-foreach="o.order_lines" t-as="line">
+											<td>
+												<t t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<t t-esc="line.product_id.name" />
+											</td>
+											<td>
+												<t t-esc="line.qty" />
+											</td>
+											<td>
+												<t t-esc="line.uom_id.name" />
+											</td>
+											<td>
+												<t t-esc="line.rate" />
+											</td>
+											<td>
+												<t t-esc="line.amount" />
+												<t t-set="total" t-value="total+line.amount" />
+											</td>
+											<td>
+												<t t-esc="line.remarks" />
+											</td>
+											<td>
+												<t t-esc="line.paid_amount" />
+												<t t-set="paid_amount" t-value="paid_amount+line.paid_amount" />
+											</td>
+											<td>
+												<t t-esc="line.balance" />
+												<t t-set="balance" t-value="balance+line.balance" />
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Total
+											</td>
+											<td>
+											</td>
+											<td>
+											</td>
+											<td>
+											</td>
+											<td>
+											</td>
+											<td>
+												<t t-esc="total" />
+											</td>
+											<td>
+											</td>
+											<td>
+												<t t-esc="paid_amount" />
+											</td>
+											<td>
+												<t t-esc="balance" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="row" style="font-size: 15px;margin-top: 20px;">
+								<span style="margin-top: 20px;">
+									<t t-raw="o.scope" />
+									<br />
+								</span>
+								<span style="margin-top: 20px;">
+									<t t-raw="o.terms" />
+									<br />
+								</span>
+							</div>
+
+
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+
+
+		<record id="form_view_work_order_payment" model="ir.ui.view">
+			<field name="name">form.view.work.order.payment</field>
+			<field name="model">work.order.payment</field>
+			<field name="arch" type="xml">
+				<form string="Payment">
+					<group>
+						<field name="name" readonly="1" />
+					</group>
+					<group col="6">
+						<field name="qty" readonly="1" />
+						<field name="rate" readonly="1" />
+						<field name="amount" />
+						<!-- <field name="balance" /> -->
+						<!-- <button name="generate_payment_lines" type="object" string="Refresh" 
+							class="oe_highlight" /> -->
+					</group>
+					<field name="line_ids">
+						<tree editable="bottom">
+							<field name="date" required="1" />
+							<field name="invoice_id" string="Invoice" readonly="1" />
+							<field name="name" string="Discription" />
+							<field name="amount" sum="Total" required="1" />
+						</tree>
+					</field>
+					<group class="oe_subtotal_footer oe_right">
+						<div class="oe_subtotal_footer_separator oe_inline">
+							<label for="balance" />
+						</div>
+						<field name="balance" nolabel="1" class="oe_subtotal_footer_separator"
+							widget="monetary" />
+					</group>
+				</form>
+			</field>
+		</record>
+
+
+
+
+
+
+
+
+
+	</data>
+</openerp>

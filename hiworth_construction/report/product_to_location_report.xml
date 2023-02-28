@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<!-- Material request report wizard -->
+		<record id="form_product_to_location_wizard" model="ir.ui.view">
+			<field name="name">Product to location form</field>
+			<field name="model">product.to.location.report</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<group>
+							<field name="from_date" />
+						</group>
+						<group>
+							<field name="to_date" />
+						</group>
+						<group string="Products">
+							<field name="category_id" />
+							<field name="select_product" />
+
+							<notebook attrs="{'invisible':[('select_product','!=',True)]}"
+								colspan="2">
+								<page string="Products">
+									<field name="product_ids">
+										<tree editable="True">
+											<field name="product_id" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</group>
+						<group string="Locations">
+							<field name="select_location" />
+							<notebook attrs="{'invisible':[('select_location','!=',True)]}"
+								colspan="2">
+								<page string="Locations">
+									<field name="location_ids">
+										<tree editable="True">
+											<field name="location_id" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</group>
+					</group>
+					<footer>
+						<button type="object" name="view_product_to_location_report"
+							string="View" class="oe_highlight" />
+						<button type="object" name="print_product_to_location_report"
+							string="Print" class="oe_highlight" />
+						<button special="cancel" string="Cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+		<!-- Material request wizard action -->
+		<record id="action_product_to_location_wizard" model="ir.actions.act_window">
+			<field name="name">Inventory location report</field>
+			<field name="res_model">product.to.location.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<menuitem id="menu_product_to_location_wizard" name="Location wise Inventory report"
+			parent="stock.menu_stock_inventory_control" sequence="4"
+			action="action_product_to_location_wizard" />
+
+<!--		<menuitem id="menu_site_product" name="Site wise Stock report"-->
+<!--			parent="root_activity_reports_menu" sequence="20"-->
+<!--			/>-->
+<!--		<menuitem id="menu_site_stock" name="Site wise Stock report"-->
+<!--			parent="menu_site_product" sequence="4"-->
+<!--			action="action_product_to_location_wizard" />-->
+
+		<report id="report_product_to_location" string="Product To Location"
+			model="product.to.location.report" report_type="qweb-pdf"
+			name="hiworth_construction.report_product_to_location_template" />
+
+
+		<template id="report_product_to_location_template">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<!-- <t t-foreach="docs" t-as="o"> -->
+						<t t-set="sl_no1" t-value="1" />
+						<t t-set="grand_total" t-value="0" />
+						<t t-foreach="docs.get_locations()" t-as="location">
+							<div style="display: table;width: 100%">
+								<div class="row">
+									<h3>
+										<span t-esc="sl_no1" />
+										.
+										<t t-set="sl_no1" t-value="sl_no1+1" />
+									
+										<span style="float: right;">
+											Location :
+											<t t-esc="location.name" />
+
+										</span>
+									</h3>
+								</div>
+								<div class="row">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>Sl.No</th>
+												<th>Item</th>
+												<th>Category</th>
+												<th>Quantity(IN)</th>
+												<th>Quantity (OUT)</th>
+												<th>Current Stock</th>
+												<th>Unit Price</th>
+												<th>Inventory Value</th>
+											</tr>
+										</thead>
+										<t t-set="sl_no2" t-value="1" />
+										<t t-set="total" t-value="0" />
+										<tbody t-foreach="docs.get_products(location)" t-as="o">
+
+												<tr>
+													<td>
+														<t t-esc="sl_no2" />
+														<t t-set="sl_no2" t-value="sl_no2+1" />
+													</td>
+													<td>
+														<t t-esc="o['item']"/>
+													</td>
+													<td>
+														<t t-esc="o['category']" />
+													</td>
+													<td>
+															<t t-esc="o['qty_in']" />
+													</td>
+													<td>
+														<t t-esc="o['qty_out']" />
+													</td>
+													<td>
+															<t t-esc="o['current']" />
+													</td>
+
+													<td>
+														<t t-esc="o['unit_price']" />
+													</td>
+													<td>
+														<t t-esc="o['total']" />
+
+														<t t-set="total" t-value="total+o['total']" />
+													</td>
+
+												</tr>
+
+
+										</tbody>
+										<tr>
+											<td>
+												<b>Total</b>
+											</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td>
+												<b>
+													<t t-esc="total" />
+													<t t-set="grand_total" t-value="grand_total+total" />
+												</b>
+											</td>
+										</tr>
+									</table>
+								</div>
+
+							</div>
+						</t>
+						<div>
+							<div>
+								<span style="float: right;font-size: 25px;font-weight: bold;">
+									Total inventory
+									value:
+									<t t-esc="grand_total" />
+								</span>
+							</div>
+						</div>
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+
+
+
+	</data>
+</openerp>

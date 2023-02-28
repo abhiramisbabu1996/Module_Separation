@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+           <record id="view_force_po_close_form" model="ir.ui.view">
+            <field name="name">Foreclosure</field>
+            <field name="model">force.po.close</field>
+            <field name="arch" type="xml">
+                  <form>
+
+                          <group>
+
+                                <field name="force_po_close_ids" >
+                                    <tree editable="bottom" create="false" delete="false">
+                                        <field name="product_id"/>
+                                        <field name="qty"/>
+                                        <field name="closed_qty"/>
+                                    </tree>
+                                </field>
+
+                          </group>
+
+                        <footer>
+
+                            <button name="action_submit" string="Submit" type="object"/>
+
+                            <button name="cancel" string="Cancel" special="cancel"/>
+                        </footer>
+
+                  </form>
+
+            </field>
+        </record>
+
+         <record id="action_force_po_close" model="ir.actions.act_window">
+            <field name="name">Foreclosure</field>
+            <field name="res_model">force.po.close</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="context">{}</field>
+             <field name="target">new</field>
+            <field name="view_mode">form</field>
+        </record>
+
+
+
+
+
+
+    </data>
+</openerp>

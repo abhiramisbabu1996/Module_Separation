@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+
+
+
+<!--        <template id="report.external_layout_header">-->
+<!--        <template id="report.external_layout_header">-->
+<!--            <div class="header">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-xs-3">-->
+<!--                        <img src='/static/image/bg_header.png' style="max-height: 45px;"/>-->
+<!--&lt;!&ndash;                        <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 45px;"/>&ndash;&gt;-->
+<!--                    </div>-->
+<!--                    <div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.rml_header1"/>-->
+<!--                </div>-->
+<!--                <div class="row zero_min_height">-->
+<!--                    <div class="col-xs-12">-->
+<!--                        <div style="border-bottom: 1px solid black;"></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--&lt;!&ndash;                <div class="row">&ndash;&gt;-->
+<!--&lt;!&ndash;                     <div class="pull-left">&ndash;&gt;-->
+<!--&lt;!&ndash;                         <span>&ndash;&gt;-->
+<!--&lt;!&ndash;                             <strong>&ndash;&gt;-->
+<!--&lt;!&ndash;                             108, Office Court Building<br/>&ndash;&gt;-->
+<!--&lt;!&ndash;                             Oud Metha, Dubai, P.O Box: 127385<br/>&ndash;&gt;-->
+<!--&lt;!&ndash;                             Fax: +971-4-2215452<br/>&ndash;&gt;-->
+<!--&lt;!&ndash;                             TRN : 100279899700003&ndash;&gt;-->
+<!--&lt;!&ndash;                             </strong>&ndash;&gt;-->
+<!--&lt;!&ndash;                         </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                     </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="row">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="col-xs-3">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div t-field="company.partner_id"&ndash;&gt;-->
+<!--&lt;!&ndash;                            t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'&ndash;&gt;-->
+<!--&lt;!&ndash;                            style="border-bottom: 1px solid black;"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--            </div>-->
+<!--        </template>-->
+        <template id="purchase.report_purchaseorder_document">
+			<style>
+                .page {
+                    border: 2px solid black !important;
+                    padding: 3px;
+                    margin: 3px;
+                }
+           </style>
+
+            <div style="border: 2px solid black !important;">
+            <t t-call="report.external_layout">
+                <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div>
+                                <img t-if="o.company_contractor_id.image" t-att-src="'data:image/png;base64,%s' % o.company_contractor_id.image" style="max-height: 70px;"/>
+                            </div>
+
+                            <div class="pull-left">
+                                <span>
+                                    <strong>
+                                        108, Office Court Building<br/>
+                                        Oud Metha, Dubai, P.O Box: 127385<br/>
+                                        Fax: +971-4-2215452<br/>
+                                        TRN : 100279899700003<br/><br/><br/>
+                                    </strong>
+                                </span>
+                            </div>
+                            <div class="pull-right">
+                                <h4 t-if="o.state != 'draft'">PURCHASE ORDER</h4>
+                                <h4 t-if="o.state == 'draft'">Request for Quotation</h4>
+                                <div t-if="o.date_order">
+                                    <strong>DATE :</strong>
+                                    <t t-esc="o.date_order"/>
+                                </div>
+                                <div t-if="o.name">
+                                    <strong>P.O.# : </strong>
+                                    <t t-esc="o.name"/><br/><br/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"/>
+
+                        <div class="row">
+                            <div class="pull-left">
+                                <div>
+                                    <td style="font-size: 16px;"><strong>VENDOR</strong></td>
+                                </div>
+                                <div>
+                                    <span t-field="o.partner_id.name"/>
+                                </div>
+                                <div>
+                                    <t t-if="o.partner_id.street">
+                                        <span t-esc="o.partner_id.street"/><br/>
+                                    </t>
+                                    <t t-if="o.partner_id.street2">
+                                        <span t-esc="o.partner_id.street2"/><br/>
+                                    </t>
+                                    <t t-if="o.partner_id.post">
+                                        <span t-esc="o.partner_id.post"/><br/>
+                                    </t>
+                                    <t t-if="o.partner_id.city">
+                                        <span t-esc="o.partner_id.city"/><br/>
+                                    </t>
+                                    <t t-if="o.partner_id.state_id">
+                                        <span t-esc="o.partner_id.state_id.name"/><br/>
+                                    </t>
+                                    <t t-if="o.partner_id.zip">
+                                        <span t-esc="o.partner_id.zip"/><br/>
+                                    </t>
+                                    <t t-if="o.partner_id.country_id">
+                                        <span t-esc="o.partner_id.country_id.name"/><br/>
+                                    </t>
+                                    <t t-if="o.partner_id.phone">
+                                        <span>Tel:</span><t t-esc="o.partner_id.phone"/><br/>
+                                    </t>
+                                    <t t-if="o.partner_id.fax">
+                                        <span>Fax:</span><t t-esc="o.partner_id.fax"/><br/>
+                                    </t>
+
+                                </div>
+                                <div>
+                                    <td> TRN :</td>
+                                    <td>
+                                        <span t-field="o.partner_id.trn_no"/><br/><br/>
+                                    </td>
+                                </div>
+                            </div>
+                            <div class="pull-right">
+
+                                <div>
+                                    <td> Sales Per:</td>
+                                    <td>
+                                        <span t-field="o.partner_id.responsible_name"/>
+                                    </td>
+                                </div>
+                                <div>
+                                    <td> Contact #</td>
+                                    <td>
+                                        <span t-field="o.partner_id.responsible_mobile"/>
+                                    </td>
+                                </div>
+                                <div>
+                                    <td> Email ID: </td>
+                                    <td>
+                                        <span t-field="o.partner_id.responsible_email"/>
+                                    </td>
+                                </div>
+                                <div>
+                                    <td> Project No:</td>
+                                    <td>
+                                        <span t-field="o.project_id.project_number"/>
+                                    </td>
+                                </div>
+                                <div>
+                                    <td> Ref #:</td>
+                                    <td>
+                                        <span t-field="o.supplier_quotation_reference"/>
+                                    </td>
+                                </div>
+                                <div>
+                                    <td> MPR Ref #:</td>
+                                    <td>
+                                        <span t-field="o.site_purchase_id.name"/>
+                                    </td> <br/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"/>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th><strong>VENDOR ID</strong></th>
+                                    <th><strong>DELIVERY LOCATION</strong></th>
+                                    <th><strong>DELIVERY DATE</strong></th>
+                                    <th><strong>PAYMENT TERMS</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span t-field="o.partner_id.sp_code"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.deliver_to"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.maximum_planned_date"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.payment_term_id.name"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th><strong>ITEM #</strong></th>
+                                    <th><strong>DESCRIPTION</strong></th>
+                                    <th><strong>UNIT</strong></th>
+                                    <th class="text-right"><strong>QTY</strong></th>
+                                    <th class="text-right"><strong>UP</strong></th>
+                                    <th class="text-right"><strong>TOTAL</strong></th>
+                                </tr>
+                            </thead>
+                            <t t-set="sl_no" t-value="1"/>
+                            <tbody>
+                                <tr t-foreach="o.order_line" t-as="line">
+                                    <td style='font-size:15px'>
+                                        <center><span t-esc="sl_no"/></center>
+                                    </td>
+                                    <t t-set="sl_no" t-value="sl_no+1" />
+                                    <td>
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td>
+                                        <center><span t-field="line.product_uom.name"/></center>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.required_qty"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.received_rate"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.new_sub_total"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-xs-4 pull-right">
+                                <table class="table table-condensed">
+                                    <tr>
+                                        <td><strong>Subtotal</strong></td>
+                                        <td class="text-right">
+                                            <span t-esc="o.new_gross_total"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tax Rate </td>
+                                        <td class="text-right">
+                                            <span t-field="o.tax_amount"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="border-black">
+                                        <td><strong>Total Amount</strong></td>
+                                        <td class="text-right">
+                                            <span t-esc="o.amount_total+o.discount_amount"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Discount</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="o.discount_amount"/>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-black">
+                                        <td><strong>Grand Total Amount</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="o.amount_total"
+                                                  t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-xs-4 pull-left">
+                                <tr>
+                                    <td><strong>Terms &amp; Conditions</strong></td>
+                                    <td class="text-right">
+                                        <span t-field="o.payment_term_id.name"/>
+                                    </td>
+                                </tr>
+                            </div>
+                        </div>
+                        <div class="row"/>
+                        <div class="row">
+                            <div class="pull-left">
+                                <span><strong>Amount in Words in ARAB EMIRATES DIRHAMS:</strong></span>
+                                <t t-esc="o.amount_to_text(o.amount_total,o.currency_id)"/><br/><br/><br/><br/>
+                            </div>
+                        </div>
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="pull-left">
+                                <strong>Project Department</strong>
+                            </div>
+                            <div class="pull-right">
+                                <strong>Approved By</strong><br/>
+                            </div>
+                            <div class="text-center">
+                                <strong>Accounts Department</strong>
+                            </div>
+
+                        </div>
+                        <br/><span><strong>Terms &amp; Conditions as follows</strong></span><br/>
+                        <span>   1	Starting date will be 19-Jan 2021, site working timing is from 7AM to 6PM in-between 1 hour lunch break.<br/>
+                            2	All workers to arrive with required PPE and proper uniform only safety jacket will be provided by us and to ware strictly.<br/>
+                            3	No workers are entertained without our safety vast from Bureau Green.<br/>
+                            4	Site performance check will be done to verify their category and if found unskilled then need to replace with skilled labours as per trade mention in LPO.<br/>
+                            5	Any misbehaviour worker on site will be removed and will be marked absent for that day.<br/>
+                            6	All workers to strictly follow our Engineer, Supervisor, Forman instruction.</span>
+
+                        <p t-field="o.additional_terms"/>
+                        <div class="oe_structure"/>
+                    </div>
+            </t>
+            </div>
+        </template>
+    </data>
+</openerp>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record  forcecreate="1" model="ir.sequence.type" id="seq_cb_type">
+            <field name="name">Contract Bill No</field>
+            <field name="code">cb_no</field>
+        </record>
+        <record forcecreate="1" model="ir.sequence" id="seq_cb">
+            <field name="name">Contract Bill No</field>
+            <field name="code">cb_no</field>
+            <field name="prefix"></field>
+            <field name="padding">1</field>
+        </record>
+
+
+         <record id="seq_type_material_rqst" model="ir.sequence.type">
+            <field name="name">Material Request</field>
+            <field name="code">material.request</field>
+        </record>
+
+        <record id="seq_material_rqst" model="ir.sequence">
+            <field name="name">Material Request</field>
+            <field name="code">material.request</field>
+            <field name="prefix">REQ/</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+
+    </data>
+</openerp>
+
+
+
+
+
+
+
+       
+    

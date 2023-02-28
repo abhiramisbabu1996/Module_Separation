@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+         <record id="form_purchase_return_view" model="ir.ui.view">
+            <field name="name">form.purchase.return</field>
+            <field name="model">purchase.return</field>
+            <field name="arch" type="xml">
+                 <form create="true" edit="false" delete="false">
+                    <header>
+
+                    </header>
+
+                    <sheet>
+                      <!-- <div class="oe_right oe_button_box" name="buttons" >
+                        <button class="oe_inline oe_stat_button" type="object" name="view_invoices" icon="fa-tasks" string="View Invoices" attrs="{'invisible':[('state','!=','invoice')]}"/>
+                      </div> -->
+                    <div class="oe_title">
+                      <h1>
+
+                        <field name="name" readonly="1"/>
+                      </h1>
+                    </div>
+                    <group>
+                      <group>
+  <field name="purchase_id"  />
+                          <field name="site" readonly="1" domain="[('usage','=','internal')]" />
+						 <field name="site_purchase_ids" widget="many2many_tags"/>
+						   <field name="mpr_id"  readonly="1"/>
+
+
+                        <field name="project_id" readonly="1"/>
+                            <field name="vehicle_id" readonly="1"/>
+
+
+                        <field name="supplier_id" options="{'no_create':1}" readonly="1" domain="[('supplier','=',True)]"  />
+
+                      </group>
+                      <group>
+                        <field name="date" required="1" />
+                           <field name="company_contractor_id" readonly="1" options="{'no_create':True}"/>
+
+                        <field name="journal"/>
+
+                      </group>
+
+
+                    </group>
+
+                    <group >
+                      <group string="Item details">
+
+
+                           <field name="goods_recieve_report_line_ids"  nolabel="1" >
+
+							   <tree editable="bottom" delete="false" create="false">
+                                  <field name="item_id" readonly="1" required="1" />
+                                   <field name="brand_name" string="Brand" readonly="1"/>
+                                    <field name="desc" required="1" />
+                                <field name="unit_id" readonly="1" required="1" />
+                                   <field name="tax_ids" readonly="1" widget='many2many_tags'/>
+                                <field name="po_quantity" readonly="1" widget="char" required="1" sum="Total" />
+
+                                   <field name="quantity_accept"  widget="char" sum="Total"/>
+
+                                     <field name="rate" widget="char" required="1" />
+
+                                    <field name="taxable_amount" sum="Total"/>
+
+
+
+                              </tree>
+
+
+
+
+                          </field>
+
+
+                      </group>
+
+
+
+
+                    </group>
+                        <group>
+                              <group name="Other Charge Details">
+                        <field name="other_charge_details_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="other_charge_id"/>
+                                <field name="is_tax_applicable"/>
+                                <field name="tax_id" attrs="{'readonly':[('is_tax_applicable','=',False)]}"/>
+                                <field name="amount"/>
+                            </tree>
+                        </field>
+                    </group>
+
+                        </group>
+                        <group class="text-right">
+                            <field name="taxable_amount"/>
+                            <field name="cgst_amount"/>
+                            <field name="sgst_amount"/>
+                            <field name="igst_amount"/>
+                            <field name="non_taxable_amount"/>
+                            <field name="other_charge"/>
+                            <field name="round_off_amount"/>
+                            <field name="total_amount"/>
+                        </group>
+                      <group string="Previous Entry details">
+
+
+                           <field name="previous_goods_receipt_entries_ids"  nolabel="1">
+
+							   <tree delete="false"  create="false">
+
+                                  <field name="item_id"  />
+                                    <field name="desc" />
+                                <field name="unit_id"  />
+                                   <field name="tax_ids" />
+                                <field name="po_quantity"  sum="Total" />
+
+                                   <field name="quantity_accept"   sum="Total"/>
+                                   <field name="quantity_reject" sum="Total"/>
+                                     <field name="rate"  />
+
+                                    <field name="amount" sum="Total"/>
+
+
+
+                              </tree>
+
+
+
+
+                          </field>
+
+
+                      </group>
+
+
+                </sheet>
+
+
+                  </form>
+            </field>
+         </record>
+
+
+          <record id="purchase_return_tree_view" model="ir.ui.view">
+            <field name="name">tree.purchase.return</field>
+            <field name="model">purchase.return</field>
+            <field name="arch" type="xml">
+                <tree delete="false">
+                     <field name="site_purchase_ids" widget="many2many_tags" string="P.R Nos"/>
+									 <field name="mpr_id" string="P.R No"/>
+                    	<field name="purchase_id"/>
+                   					 <field name="name" string="GRN"/>
+
+                    				<field name="date" />
+
+									 <field name="supplier_id"   />
+                    <field name="company_contractor_id"/>
+
+
+                  </tree>
+            </field>
+        </record>
+
+         <record id="action_purchase_return" model="ir.actions.act_window">
+            <field name="name">Purchase Return</field>
+            <field name="res_model">purchase.return</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+              <field name="target">current</field>
+             <field name="context">{'readonly_by_pass': True}</field>
+        </record>
+
+          <menuitem name="Purchase Return"
+            id="menu_purchase_return"
+            parent="purchase.menu_procurement_management"
+            action= "action_purchase_return"
+            sequence="20"/>
+
+
+        <record id="search_purchase_return" model="ir.ui.view">
+            <field name="name">search.purchase.return</field>
+            <field name="model">purchase.return</field>
+            <field name="arch" type="xml">
+            <search string="Purchase Return">
+              <field name="name" />
+              <field name="site" />
+                <field name="purchase_id" />
+                <field name="project_id"/>
+              <field name="vehicle_id" />
+                 <field name="supplier_id"/>
+
+
+              <field name="date" />
+              <field name="journal" />
+
+                <field name="company_contractor_id"/>
+              <!-- <filter string="To Receive" icon="terp-go-month" domain="[('state','=','order')]" name="group_to_receive" />
+ -->
+
+              <group expand="0" string="Group By">
+                <filter string="Supplier" icon="terp-go-month" domain="[]"
+                  name="group_supplier_id" context="{'group_by':'supplier_id'}" />
+
+                <filter string="Site" icon="terp-go-month" domain="[]"
+                  name="group_location" context="{'group_by':'site'}" />
+                <filter string="Purchase" icon="terp-go-month" domain="[]"
+                  name="group_purchase_id" context="{'group_by':'purchase_id'}" />
+
+             <filter string="Company" icon="terp-go-month" domain="[]"
+                name="group_company_contractor_id" context="{'group_by':'company_contractor_id'}" />
+              </group>
+            </search>
+
+          </field>
+        </record>
+    </data>
+</openerp>

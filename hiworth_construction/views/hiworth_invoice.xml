@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="hiworth_invoice_form" model="ir.ui.view">
+			<field name="name">hiworth.invoice.form</field>
+			<field name="model">hiworth.invoice</field>
+			<field name="arch" type="xml">
+				<form string="Invoice">
+					<header>
+						<!-- <button name="action_invoice_sent" type="object" string="Send
+							by Email" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}"
+							class="oe_highlight" groups="base.group_user" /> -->
+						<button name="action_for_approval" type="object" states="draft"
+							string="Send for Approval" class="oe_highlight" />
+						<!-- <button name="action_validate" type="object" states="draft"
+							string="Validate" class="oe_highlight" groups="purchase.group_purchase_manager" />
+ -->
+						<button name="action_approve" type="object" states="waiting"
+							string="Approve" class="oe_highlight" groups="purchase.group_purchase_manager" />
+						<!-- <button name="action_paid_partial" type="object" states="approve,paid"
+							string="Set as Partially Paid" class="oe_highlight"
+							groups="purchase.group_purchase_manager" />
+						<button name="action_paid" type="object" states="approve,partial"
+							string="Set as Fully Paid" class="oe_highlight"
+							groups="purchase.group_purchase_manager" /> -->
+
+						<button name="action_payment" type="object" states="approve,partial"
+							string="Payment" class="oe_highlight" />
+
+						<button name="action_cancel" type="object" states="waiting,approve,partial,paid"
+							string="Cancel"  />
+						<button name="set_to_draft" type="object" states="cancel"
+							string="Set To Draft" class="oe_highlight" />
+
+
+
+						<field name="state" widget="statusbar" statusbar_colors='{"draft":"blue","paid":"blue"}' />
+					</header>
+					<div class="oe_title">
+						<h1>
+							<label string="Invoice No." />
+							<field name="name" attrs="{'readonly':[('is_purchase_bill','!=',True)]}"
+								string="Invoice No." class="oe_inline" />
+						</h1>
+					</div>
+					<group>
+						<group>
+							<field name="work_order_id"
+								attrs="{'invisible':[('is_purchase_bill','=',True)], 'required': [('is_purchase_bill', '!=', True)]}" />
+							<field name="partner_id" options="{'no_create': True}" domain="[('contractor','=', True)]"
+								context="{'default_contractor': 1,'default_customer': 0}" />
+							<field name="account_id" />
+							<field name="journal_id" />
+							<field name="inv_type" invisible="1"/>
+							<!-- <field name="name" /> -->
+							<field name="project_id"
+								attrs="{'invisible':[('is_purchase_bill','=',True)], 'required': [('is_purchase_bill', '!=', True)]}" options="{'no_create': True}" />
+							<field name="customer_id"
+								attrs="{'invisible':[('is_purchase_bill','=',True)], 'required': [('is_purchase_bill', '!=', True)]}" options="{'no_create': True}" />
+							<field name="reference" />
+
+						</group>
+
+						<group>
+							<field name="date_invoice" string="Date invoice" />
+							<field name="origin" readonly="1" />
+							<button name="open_purchase_order" type="object" icon="gtk-go-forward"
+								class="oe_inline" colspan="1" attrs="{'invisible':[('origin','=',False)]}" />
+							<newline />
+							<field name="company_id" readonly="True" />
+							<field name="create_date" readonly="True" />
+							<field name="is_purchase_bill" readonly="True" invisible="1" />
+							<field name="purchase_order_date" readonly="True"
+								attrs="{'invisible':[('is_purchase_bill','!=',True)]}" />
+						</group>
+
+						<notebook colspan="4"
+							attrs="{'invisible':[('is_purchase_bill','=',True)]}">
+							<page string="Invoice Lines">
+								<button name="generate_invoice_lines" type="object"
+									string="Generate Invoice Lines" attrs="{'invisible':[('generated_lines','=',True)]}"
+									class="oe_highlight" />
+								<field name="invoice_line" nolabel="1" widget="one2many_list">
+									<tree string="Invoice Lines" editable="bottom">
+										<!-- <field name="line_no" readonly="True" /> -->
+										<field name="sequence" widget="handle"/>
+										<field name="stage_id" required="1" options="{'no_create': True}"/>
+										<field name="shd_no" />
+										<field name="product_id" string="Items" required="1" />
+										<field name="name" string="Description" />
+										<field name="account_id" />
+										<field name="total_assigned_qty" string="Qty" sum="Total" />
+										<field name="uos_id" string="Uom" />
+										<field name="price_unit" string="Rate" />
+										<field name="total_amount" sum="Total" />
+										<field name="quantity" sum="Total"  />
+										<field name="pre_qty" sum="Total" />
+										<field name="upto_date_qty" sum="Total" />
+										<!-- <field name="pre_amount" sum="Total" /> -->
+										<!-- <field name="price_subtotal" sum="Total" string="Since Last Amount" /> -->
+										<field name="tax_ids" widget="many2many_tags"/>
+										<field name="tax_amount" sum="Total" />
+										<field name="total_amount_with_tax" sum="Total" />
+										<!-- <field name="upto_date_amount" sum="Total" /> -->
+										<field name="remark" />
+
+									</tree>
+								</field>
+								<div
+									style="float: right;width: 70%;margin-top: 2%;margin-right: 17%;text-align: right; font-weight: 900;">
+									<!-- <group col="16" > -->
+									<newline />
+									<label for="invoiced_amount" string="Amount" />
+									<field name="invoiced_amount" class="oe_inline" />
+									<br />
+									<label for="discount" string="Discount %" />
+									<field name="discount" class="oe_inline" />
+									--:
+									<field name="diccount_amount" class="oe_inline" />
+									<br />
+									<label for="total_amount" string="Total Amount" />
+									<field name="total_amount" class="oe_inline" />
+									<br />
+									<label for="retention" string="Retention %" />
+									<field name="retention" class="oe_inline" />
+									--:
+									<field name="retention_amount" class="oe_inline" />
+									<br />
+									<label for="net_total" string="Net Total" />
+									<field name="net_total" class="oe_inline" />
+									<br />
+									<label for="addition" string="Additions %" />
+									<field name="addition" class="oe_inline" />
+									--:
+									<field name="addition_amount" class="oe_inline" />
+									<br />
+								</div>
+							</page>
+							<page string="Other Info">
+								<group>
+									<field name="generated_lines" />
+								</group>
+							</page>
+						</notebook>
+						<notebook colspan="4"
+							attrs="{'invisible':[('is_purchase_bill','!=',True)]}">
+							<page string="Invoice Lines">
+								<field name="invoice_lines2" nolabel="1" widget="one2many_list" context="{'default_inv_type': inv_type, 'type2': type2}">
+									<tree string="Invoice Lines" editable="bottom">
+										<field name="product_id" />
+										<field name="name" />
+										<field name="task_id" />
+										<field name="location_id" />
+										<field name="account_id" />
+										<field name="price_unit" />
+										<field name="quantity" />
+										<field name="uos_id" />
+										<field name="tax_ids" widget="many2many_tags"/>
+										<field name="tax_amount" sum="Total" />
+										<field name="price_subtotal" sum="Total" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<div style="width: 100%;">
+						<div
+							style="float: right;width: 70%;margin-top: 2%;margin-right: -65%;text-align: right; font-weight: 900;">
+							<label for="grand_total" string="Sub Total" style="font-size: 130%;" />
+							<field name="grand_total" class="oe_inline" style="font-size: 130%;" />
+							<br />
+							<label for="amount_tax" string="Tax Amount" style="font-size: 130%;" />
+							<field name="amount_tax" class="oe_inline" style="font-size: 130%;" />
+							<br />
+							<label for="round_off_amount" style="font-size: 130%;" />
+							<field name="round_off_amount" class="oe_inline" style="font-size: 130%;" />
+							<label for="discount_amount" style="font-size: 130%;" attrs="{'invisible':[('is_purchase_bill','!=',True)]}"/>
+							<field name="discount_amount" class="oe_inline" style="font-size: 130%;" attrs="{'invisible':[('is_purchase_bill','!=',True)]}"/>
+							<br />
+							<hr />
+							<label for="amount_total" string="Total Amount" style="font-size: 150%;" />
+							<field name="amount_total" class="oe_inline" style="font-size: 150%;" />
+
+						</div>
+							<div style="float: left;width: 30%;margin-top: 2%;margin-left: 10%;text-align: left; font-weight: 900;">
+								<label for="round_off_account" />
+								<field name="round_off_account" class="oe_inline" 
+									attrs="{'required':[('round_off_amount','!=',0)]}"/>
+							</div>
+							<div style="float: left;width: 30%;margin-top: 2%;margin-left: 10%;text-align: left; font-weight: 900;">
+								<label for="discount_account" />
+								<field name="discount_account" class="oe_inline" 
+									attrs="{'required':[('discount_amount','!=',0)]}"/>
+							</div>
+
+					</div>
+
+					<!-- 	<div
+							style="float: right;width: 70%;margin-top: 2%;margin-right: -65%;text-align: right; font-weight: 900;">
+							<hr />
+							
+						</div> -->
+
+						<!-- <notebook colspan="4" > <page string="Reduction"> <field name="account_move_lines"
+							nolabel="1" widget="one2many_list" readonly="1" > <tree string="Payments"
+							editable="bottom" > <field name="product_id" /> <field name="date" string="Date"
+							/> <field name="name" /> <field name="cheque_no" /> <field name="account_id"
+							/> <button name="open_account" type="object" string="Goto Account" icon="gtk-go-forward"
+							class="oe_inline" /> <button class="oe_inline oe_stat_button" name='open_account'
+							type="object" string="Goto Account" icon="gtk-go-forward" /> <field name="location_id"
+							/> <field name="credit" sum="Total" /> <field name="credit" sum="Total"/>
+							<field name="current_balace" /> <field name="price_subtotal" sum="Total"
+							/> </tree> </field> </page> </notebook> -->
+						<!-- <div style="float: right;width: 70%;margin-top: 2%;margin-right:
+							-65%;text-align: right; font-weight: 900;"> <label for="reduction_amount"
+							string="Reduction Total" style="font-size: 150%;" /> <field name="reduction_amount"
+							class="oe_inline" style="font-size: 150%;" /> <label for="amount_to_be_paid"
+							string="Reduction Total" style="font-size: 150%;" /> <field name="amount_to_be_paid"
+							class="oe_inline" style="font-size: 150%;" /> </div> -->
+
+						<notebook colspan="4">
+							<page string="Entries">
+								<field name="account_move_lines" nolabel="1" widget="one2many_list">
+									<tree string="Payments" editable="bottom" create="false">
+										<!-- <field name="product_id" /> -->
+										<field name="date" string="Date" readonly="1" />
+										<field name="name" readonly="1" />
+										<field name="cheque_no" />
+										<field name="account_id" readonly="1" />
+										<!-- <button name="open_account" type="object" string="Goto Account"
+											icon="gtk-go-forward" class="oe_inline" /> -->
+										<button class="oe_inline oe_stat_button" name='open_account'
+											type="object" string="Goto Account" icon="gtk-go-forward" />
+										<field name="location_id" readonly="1" />
+										<field name="credit" sum="Total" string="Reductions"
+											readonly="1" />
+										<field name="debit" sum="Total" string="Payments"
+											readonly="1" />
+
+										<field name="discount"/>
+										<field name="retention"/>
+
+										<!-- <field name="credit" sum="Total"/> -->
+										<!-- <field name="current_balace" /> -->
+										<!-- <field name="price_subtotal" sum="Total" /> -->
+									</tree>
+								</field>
+							</page>
+						</notebook>
+
+					</group>
+					<div style="float: right;text-align: right;font-size: 150%">
+						<label for="reduction_amount" string="Total Reduction" />
+						:
+						<field name="reduction_amount" class="oe_inline" />
+						<br />
+						<label for="amount_to_be_paid" string="Amount To Pay" />
+						:
+						<field name="amount_to_be_paid" class="oe_inline" />
+						<br />
+						<label for="paid_amount" string="Amount Paid" />
+						:
+						<field name="paid_amount" widget="monetary" class="oe_inline" />
+						<br />
+						<label for="balance" string="Balance" style="font-size: 150%;" />
+						:
+						<field name="balance" class="oe_inline" style="font-size: 150%;" />
+					</div>
+				</form>
+			</field>
+		</record>
+
+		<record id="hiworth_invoice_tree" model="ir.ui.view">
+			<field name="name">hiworth.invoice.tree</field>
+			<field name="model">hiworth.invoice</field>
+			<field name="arch" type="xml">
+				<tree string="Invoice">
+					<field name="name" string="Inv No." />
+					<field name="date_invoice" />
+					<field name="create_date" />
+
+					<!-- <field name="name" /> -->
+					<field name="partner_id" />
+					<field name="project_id" />
+					<!-- <field name="task_id" /> -->
+					<field name="origin" />
+					<!-- <field name="reference" /> -->
+					<field name="company_id" />
+
+					<field name="amount_to_be_paid" />
+					<field name="paid_amount" />
+					<field name="balance" />
+					<field name="state" />
+					<!-- <field name="price_subtotal" /> -->
+				</tree>
+			</field>
+		</record>
+
+		<record id="hiworth_invoice_search" model="ir.ui.view">
+			<field name="name">hiworth.invoice.search</field>
+			<field name="model">hiworth.invoice</field>
+			<field name="arch" type="xml">
+				<search>
+					<field name="name" string="Invoice No."/>
+					<field name="write_date" />
+					<field name="create_date" />
+					<field name="partner_id" />
+					<field name="project_id" />
+					<field name="work_order_id" />
+					<field name="account_id" />
+					<!-- <field name="task_id" /> -->
+					<field name="state" />
+					<filter name="purchase_order" string="purchase_order"
+						domain="[('name','=', origin)]" />
+				</search>
+
+			</field>
+		</record>
+
+		<record id="action_hiworth_invoice_tree_all" model="ir.actions.act_window">
+            <field name="name">Contractors Invoices</field>
+            <field name="res_model">hiworth.invoice</field>
+            <field name="view_type">form</field>
+            <field name="domain">[("is_purchase_bill", "=", False)]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hiworth_invoice_tree" />
+        </record>
+
+		<record id="action_hiworth_invoice_tree" model="ir.actions.act_window">
+			<field name="name">Contractors Invoices</field>
+			<field name="res_model">hiworth.invoice</field>
+			<field name="view_type">form</field>
+			<field name="domain">[("is_purchase_bill", "=", False),('state','!=','paid')]</field>
+			<field name="context">{'default_inv_type': 'out', 'type2': 'out'}</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="hiworth_invoice_tree" />
+		</record>
+
+		<menuitem action="action_hiworth_invoice_tree" id="menu_hiworth_invoice_tree"
+			parent="menu_customer_details_under_project" sequence="1" />
+
+		<menuitem action="action_hiworth_invoice_tree" id="menu_action_invoice_tree_accounts"
+			parent="account.menu_finance_payables" name="Contractor Invoices"
+			sequence="4" />
+
+		<record id="action_hiworth_invoice_tree_paid" model="ir.actions.act_window">
+            <field name="name">Paid Contractors Invoices</field>
+            <field name="res_model">hiworth.invoice</field>
+            <field name="view_type">form</field>
+            <field name="domain">[("is_purchase_bill", "=", False),('state','=','paid')]</field>
+            <field name="context">{'default_inv_type': 'out', 'type2': 'out'}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hiworth_invoice_tree" />
+        </record>
+
+        <menuitem action="action_hiworth_invoice_tree_paid" id="menu_hiworth_invoice_tree_paid"
+            parent="menu_customer_details_under_project" sequence="2" />
+
+        <menuitem action="action_hiworth_invoice_tree_paid" id="menu_action_invoice_tree_accounts_paid"
+            parent="account.menu_finance_payables" name="Paid Contractor Invoices"
+            sequence="5" />
+
+
+
+		<record id="action_hiworth_invoice_tree_supplier2" model="ir.actions.act_window">
+			<field name="name">Supplier Invoices</field>
+			<field name="res_model">hiworth.invoice</field>
+			<field name="view_type">form</field>
+			<field name="domain">[("is_purchase_bill", "=", True),('state','!=','paid')]</field>
+			<field name="context">{'default_is_purchase_bill': 1, 'default_inv_type': 'out', 'type2': 'out'}</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="hiworth_invoice_tree" />
+		</record>
+
+		<!-- <menuitem action="action_hiworth_invoice_tree_supplier2" id="account.menu_action_invoice_tree2"
+			parent="account.menu_finance_payables" sequence="8"/> -->
+
+		<record id="action_hiworth_invoice_tree_supplier2_paid" model="ir.actions.act_window">
+            <field name="name">Paid Supplier Invoices</field>
+            <field name="res_model">hiworth.invoice</field>
+            <field name="view_type">form</field>
+            <field name="domain">[("is_purchase_bill", "=", True),('state','=','paid')]</field>
+            <field name="context">{'default_is_purchase_bill': 1, 'default_inv_type': 'out', 'type2': 'out'}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hiworth_invoice_tree" />
+        </record>
+
+        <menuitem action="action_hiworth_invoice_tree_supplier2_paid" id="menu_action_invoice_tree2_paid"
+            parent="account.menu_finance_payables" sequence="9"/>
+
+
+         <record id="view_vouchers_receipts_form_construction" model="ir.ui.view">
+            <field name="name">payment.vouchers.receipts.form</field>
+            <field name="model">payment.vouchers</field>
+            <field name="inherit_id" ref="hiworth_accounting.view_payment_vouchers_form" />
+            <field name="arch" type="xml">
+<!--            	<xpath expr="//field[@name='purchase_id']" position="replace">-->
+					<!-- <field name="invoice_id" attrs="{'invisible':['|',('mode','=','supplier'),('types','=','received')]}"
+						options="{'no_create':1,'no_create_edit':1}" /> -->
+<!--					<field name="invoice_id" invisible="1" />-->
+<!--				</xpath>-->
+				<xpath expr="//button[@name='action_post']" position="replace">
+					<button name="action_post" type="object" class="oe_highlight" states="confirm" string="Post"
+						groups="hiworth_construction.group_admin_user"/>
+				</xpath>
+				<xpath expr="//button[@name='action_cancel']" position="replace">
+					<button name="action_cancel" type="object" class="oe_highlight" states="confirm,post" string="Cancel"
+						groups="hiworth_construction.group_admin_user"/>
+				</xpath>
+
+<!--				<xpath expr="//group//group//field[@name='opp_account_id']" position="after">-->
+<!--					&lt;!&ndash; <label for="opp_account_balance" /> &ndash;&gt;-->
+<!--					<field name="opp_account_balance" />-->
+<!--				</xpath>-->
+				<xpath expr="//h1[1]" position="before">
+					<div class="oe_right oe_button_box" name="buttons" >
+						<button name="view_account_data" string="View Statement" type="object" class="oe_inline oe_stat_button" icon="fa-tasks"/>
+                    </div>
+                </xpath>
+
+
+
+            </field>
+        </record>
+
+
+
+        <record id="view_vouchers_receipts_construction" model="ir.ui.view">
+            <field name="name">payment.vouchers.receipts2.form</field>
+            <field name="model">payment.vouchers</field>
+            <field name="inherit_id" ref="hiworth_accounting.view_vouchers_receipts_form" />
+            <field name="arch" type="xml">
+				<xpath expr="//button[@name='action_post']" position="replace">
+					<button name="action_post" type="object" class="oe_highlight" states="confirm" string="Post"
+						groups="hiworth_construction.group_admin_user"/>
+				</xpath>
+				<xpath expr="//button[@name='action_cancel']" position="replace">
+					<button name="action_cancel" type="object" class="oe_highlight" states="confirm,post" string="Cancel"
+						groups="hiworth_construction.group_admin_user"/>
+				</xpath>
+
+            </field>
+        </record>
+
+
+        <record id="hiworth_invoice_payment_wizard" model="ir.ui.view">
+			<field name="name">hiworth.invoice.payment.wizard.form</field>
+			<field name="model">hiworth.invoice.payment.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Invoice">
+					<sheet>
+						<group>
+							<group>
+								<field name="user_id" readonly="1"/>
+								<field name="journal_id" required="1"/>
+								<field name="bank_id"  attrs="{'invisible':[('bank_bool','!=',True)],'required':[('bank_bool','=',True)]}"/>
+								<field name="bank_bool" invisible="1"/>
+								<field name="account_id" required="1"/>
+							</group>
+							<group>
+								<field name="date" readonly="1"/>
+								<field name="invoice_id" readonly="1"/>
+								<field name="payment_amount" required="1"/>
+								
+							</group>
+						</group>
+					</sheet>
+					<footer>
+						<button name="button_payment" string="Payment"
+						type="object" class="oe_highlight"/>
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+
+	</data>
+</openerp>

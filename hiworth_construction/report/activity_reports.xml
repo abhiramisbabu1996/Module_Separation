@@ -1,0 +1,479 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<report id="view_employee_activity_report" string="View Report"
+			model="employee.activity" report_type="qweb-html"
+			name="hiworth_construction.report_employee_activity" />
+
+		<report id="print_employee_activity_report" string="Print Report"
+			model="employee.activity" report_type="qweb-pdf"
+			name="hiworth_construction.report_employee_activity" />
+
+		<template id="report_employee_activity">
+			<t t-call="report.html_container">
+
+				<t t-call="report.external_layout">
+
+					<div class="page">
+						<div>
+							<h2>
+								<center>
+									<span>
+										<u>
+											Activity Report
+										</u>
+									</span>
+								</center>
+							</h2>
+						</div>
+						<t t-foreach="docs" t-as="o">
+							<div class="row">
+								<h3>
+									<span>
+										Date :
+										<t t-esc="o.date" />
+									</span>
+									<span style="float: right;">
+										Engineer :
+										<t t-esc="o.employee_id.name" />
+									</span>
+								</h3>
+							</div>
+							<div class="row">
+								<table class="table table-bordered" style="width: 100%">
+									<thead>
+										<tr>
+											<!-- <th>Date</th> -->
+											<th style="width: 5%">Sl.No</th>
+											<th>Project</th>
+											<th>Activities Done</th>
+											<th>Remarks</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<tbody>
+										<tr t-foreach="o.activity_line_ids" t-as="activity">
+											<!-- <td> <t t-esc="activity.date" /> </td> -->
+											<td>
+												<t t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<t t-esc="activity.project_id.name" />
+											</td>
+											<td>
+												<t t-esc="activity.name" />
+											</td>
+											<td>
+												<t t-esc="activity.remarks" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<t t-if="o.remark != False">
+								<div class="row">
+									<h3>
+										<span>
+											Remarks :-
+											<t t-esc="o.remark" />
+										</span>
+										<hr />
+									</h3>
+								</div>
+							</t>
+						</t>
+					</div>
+
+				</t>
+			</t>
+		</template>
+
+		<report id="view_delay_report" string="View Report" model="delay.report"
+			report_type="qweb-html" name="hiworth_construction.template_delay_report" />
+
+		<report id="print_delay_report" string="Print Report" model="delay.report"
+			report_type="qweb-pdf" name="hiworth_construction.template_delay_report" />
+
+		<template id="template_delay_report">
+			<t t-call="report.html_container">
+
+				<t t-call="report.external_layout">
+
+					<div class="page">
+						<div>
+							<h2>
+								<center>
+									<span>
+										<u>
+											Delay Report
+										</u>
+									</span>
+								</center>
+							</h2>
+						</div>
+						<t t-foreach="docs" t-as="o">
+							<div class="row">
+								<h3>
+									<span>
+										Project :
+										<t t-esc="o.project_id.name" />
+									</span>
+								</h3>
+							</div>
+							<div class="row">
+								<table class="table table-bordered" style="width: 100%">
+									<thead>
+										<tr>
+											<!-- <th>Date</th> -->
+											<th style="width: 5%">Sl.No</th>
+											<th>Date</th>
+											<th>Project</th>
+											<th>Type of Work</th>
+											<th>Reason for Delay</th>
+											<th>Corrective Action</th>
+											<th>Remarks</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<tbody>
+										<tr t-foreach="o.report_line_ids" t-as="report">
+											<!-- <td> <t t-esc="activity.date" /> </td> -->
+											<td>
+												<t t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<t t-esc="report.date" />
+											</td>
+											<td>
+												<t t-esc="report.project_id.name" />
+											</td>
+											<td>
+												<t t-esc="report.name" />
+											</td>
+											<td>
+												<t t-esc="report.reason" />
+											</td>
+											<td>
+												<t t-esc="report.corrective" />
+											</td>
+											<td>
+												<t t-esc="report.remarks" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<t t-if="o.remark != False">
+								<div class="row">
+									<h3>
+										<span>
+											Remarks :-
+											<t t-esc="o.remark" />
+										</span>
+										<hr />
+									</h3>
+								</div>
+							</t>
+						</t>
+					</div>
+
+				</t>
+			</t>
+		</template>
+
+
+
+		<report id="view_progress_report" string="View Report" model="progress.report"
+			report_type="qweb-html" name="hiworth_construction.template_progress_report" />
+
+		<report id="print_progress_report" string="Print Report" model="progress.report"
+			report_type="qweb-pdf" name="hiworth_construction.template_progress_report" />
+
+		<template id="template_progress_report">
+			<t t-call="report.html_container">
+
+				<t t-call="report.external_layout">
+
+					<div class="page">
+						<div>
+							<h2>
+								<center>
+									<span>
+										<u>
+											Progress Report
+										</u>
+									</span>
+								</center>
+							</h2>
+						</div>
+						<t t-foreach="docs" t-as="o">
+							<div class="row">
+								<h3>
+									Project :
+									<span t-field="o.project_id.name">style="width: 100%"
+									</span>
+									<div style="float: right;">
+										Month :
+										<span t-field="o.month">
+										</span>
+									</div>
+								</h3>
+							</div>
+							<div class="row">
+								<table class="table table-bordered" style="width: 100%">
+									<thead>
+										<tr>
+											<!-- <th>Date</th> -->
+											<th style="width: 5%">Sl.No</th>
+											<th>Project</th>
+											<th>Work Planned</th>
+											<th>Work Done</th>
+											<th>Reason for Delay</th>
+											<th>Remarks</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<tbody>
+										<tr t-foreach="o.report_line_ids" t-as="report">
+											<!-- <td> <t t-esc="activity.date" /> </td> -->
+											<td>
+												<t t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<t t-esc="report.project_id.name" />
+											</td>
+											<td>
+												<t t-esc="report.work_planned" />
+											</td>
+											<td>
+												<t t-esc="report.work_done" />
+											</td>
+											<td>
+												<t t-esc="report.reason" />
+											</td>
+											<td>
+												<t t-esc="report.remarks" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<t t-if="o.remark != False">
+								<div class="row">
+									<h3>
+										<span>
+											Remarks :-
+											<t t-esc="o.remark" />
+										</span>
+										<hr />
+									</h3>
+								</div>
+							</t>
+						</t>
+					</div>
+
+				</t>
+			</t>
+		</template>
+
+
+
+		<!-- ====================== Dpr Report ============================= -->
+
+		
+
+		<report id="view_dpr_report" string="View Report" model="daily.progress.report"
+			report_type="qweb-html" name="hiworth_construction.template_daily_progress_report" />
+
+		<report id="print_dpr_report" string="Print Report" model="daily.progress.report"
+			report_type="qweb-pdf" name="hiworth_construction.template_daily_progress_report" />
+
+		<template id="template_daily_progress_report">
+			<t t-call="report.html_container">
+
+				<t t-call="report.external_layout">
+
+					<div class="page">
+						<div>
+							<h2>
+								<center>
+									<span>
+										<u>
+											Daily Progress Report
+										</u>
+									</span>
+								</center>
+							</h2>
+						</div>
+						<t t-foreach="docs" t-as="o">
+							<div class="row">
+								<h3>
+									Date :
+									<span t-field="o.date">
+									</span>
+								</h3>
+							</div>
+							<div class="row">
+								<table class="table table-bordered" style="width: 100%">
+									<thead>
+										<tr>
+											<!-- <th>Date</th> -->
+											<th style="width: 5%;">Sl.No</th>
+											<th>Project</th>
+											<th>Contractor</th>
+											<th>Name of The Work</th>
+											<th>Category</th>
+											<th>Nos.</th>
+											<th>Rate</th>
+											<th>Amount</th>
+											<t t-if="o.inspect1.id != False">
+												<th>
+													<span t-field="o.inspect1.name" />
+												</th>
+											</t>
+											<t t-if="o.inspect2.id != False">
+												<th>
+													<span t-field="o.inspect2.name" />
+												</th>
+											</t>
+											<t t-if="o.inspect3.id != False">
+												<th>
+													<span t-field="o.inspect3.name" />
+												</th>
+											</t>
+											<t t-if="o.inspect4.id != False">
+												<th>
+													<span t-field="o.inspect4.name" />
+												</th>
+											</t>
+											<th>Remark</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<t t-set="total_nos" t-value="0" />
+									<t t-set="total_amount" t-value="0" />
+									<tbody>
+										<tr t-foreach="o.dpr_line_ids" t-as="report">
+											<!-- <td> <t t-esc="activity.date" /> </td> -->
+											<td>
+												<t t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<t t-esc="report.project_id.name" />
+											</td>
+											<td>
+												<t t-esc="report.partner_id.name" />
+											</td>
+
+											<td>
+												<t t-esc="report.name" />
+											</td>
+											<td>
+												<t t-esc="report.category" />
+											</td>
+											<td>
+												<t t-esc="report.nos" />
+												<t t-set="total_nos" t-value="total_nos+report.nos" />
+											</td>
+											<td>
+												<t t-esc="report.rate" />
+											</td>
+											<td>
+												<t t-esc="report.amount" />
+												<t t-set="total_amount" t-value="total_amount+report.amount" />
+											</td>
+											<t t-if="o.inspect1.id != False">
+												<td>
+													<t t-esc="report.qty1" />
+												</td>
+											</t>
+											<t t-if="o.inspect2.id != False">
+												<td>
+													<t t-esc="report.qty2" />
+												</td>
+											</t>
+											<t t-if="o.inspect3.id != False">
+												<td>
+													<t t-esc="report.qty3" />
+												</td>
+											</t>
+											<t t-if="o.inspect4.id != False">
+												<td>
+													<t t-esc="report.qty4" />
+												</td>
+											</t>
+											<td>
+												<t t-esc="report.remarks" />
+											</td>
+										</tr>
+										<tr>
+											<td>Total
+											</td>
+											<td>
+											</td>
+											<td>
+											</td>
+											<td>
+											</td>
+											<td>
+											</td>
+											<td>
+												<t t-esc="total_nos" />
+											</td>
+											<td>
+											</td>
+											<td>
+												<t t-esc="total_amount" />
+											</td>
+											<t t-if="o.inspect1.id != False">
+                                                <td>
+                                                </td>
+                                            </t>
+											<t t-if="o.inspect2.id != False">
+                                                <td>
+                                                </td>
+                                            </t>
+											<t t-if="o.inspect3.id != False">
+                                                <td>
+                                                </td>
+                                            </t>
+											<t t-if="o.inspect4.id != False">
+												<td>
+												</td>
+											</t>
+											<td>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<t t-if="o.remark != False">
+								<div class="row">
+									<span>
+										Remarks :-
+										<t t-esc="o.remark" />
+									</span>
+									<hr />
+								</div>
+							</t>
+						</t>
+					</div>
+
+				</t>
+			</t>
+		</template>
+
+
+
+
+
+
+
+
+	</data>
+</openerp>

@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<menuitem id="menu_stock_warehouse_reports" name="Reports"
+			parent="stock.menu_stock_root" sequence="4" />
+		<menuitem id="stock.menu_stock_inventory_control" name="Inventory Control"
+			parent="stock.menu_stock_root" sequence="2" />
+
+
+		<!-- <menuitem action="action_picking_tree_construction_inherited" name="Material
+			Allocation" id="menu_action_picking_type_form_ware_house" parent="stock.menu_stock_warehouse_mgmt"
+			sequence="1" /> -->
+
+		<!-- ============================Actions ===================== -->
+<!--		<record id="open_view_project_all_list" model="ir.actions.act_window">-->
+<!--			<field name="name">Projects</field>-->
+<!--			<field name="res_model">project.project</field>-->
+<!--			<field name="view_type">form</field>-->
+<!--			<field name="domain">[]</field>-->
+<!--			<field name="view_mode">kanban,tree,form,gantt</field>-->
+<!--			<field name="view_id" ref="view_project_changed" />-->
+<!--			<field name="search_view_id" ref="project.view_project_project_filter" />-->
+<!--			<field name="context">{'search_default_Current': 1}</field>-->
+<!--			<field name="help" type="html">-->
+<!--				<p class="oe_view_nocontent_create">-->
+<!--					Click to start a new project.-->
+<!--				</p>-->
+<!--				<p>-->
+<!--					Projects are used to organize your activities; plan-->
+<!--					tasks, track-->
+<!--					issues, invoice timesheets. You can define-->
+<!--					internal projects-->
+<!--					(R&amp;D, Improve Sales Process),-->
+<!--					private projects (My Todos) or-->
+<!--					customer ones.-->
+<!--				</p>-->
+<!--				<p>-->
+<!--					You will be able collaborate with internal users on-->
+<!--					projects or-->
+<!--					invite customers to share your activities.-->
+<!--				</p>-->
+<!--			</field>-->
+<!--		</record>-->
+
+<!-- 		<record id="action_view_task_lists" model="ir.actions.act_window">
+			<field name="name">Estimations</field>
+			<field name="res_model">project.task</field>
+			<field name="view_type">form</field>
+			<field name="domain">[["is_extra_work", "=", False]]</field>
+			<field name="view_mode">tree,form,kanban,gantt,graph</field>
+			<field name="view_id" ref="view_task_tree2_changed" />
+			<field name="search_view_id" ref="project.view_task_search_form" />
+			<field name="context">{'search_default_project':
+				1,'search_default_category': 1,'search_default_sub_category': 1}
+			</field> -->
+			<!-- <field name="help" type="html">
+				<p>
+					Odoo's project management allows you to manage the pipeline
+					of
+					tasks in order to get things done efficiently. You can
+					track
+					progress, discuss on tasks, attach documents, etc.
+				</p>
+			</field> -->
+		<!-- </record> -->
+
+
+
+		<menuitem name="Project Management" id="base.menu_main_pm"
+			groups="project.group_project_manager,project.group_project_user,group_estimation_user,group_project_management_user"
+			sequence="40" />
+
+
+<!--		<menuitem action="open_view_project_all_list" id="project.menu_projects"-->
+<!--			name="Projects" parent="project.menu_project_management" sequence="1" />-->
+
+		<!-- <menuitem action="action_view_task_lists" id="project.menu_action_view_task"
+			parent="project.menu_project_management" sequence="5"
+			groups="project.group_project_manager,hiworth_construction.group_estimation_user" /> -->
+
+<!--		<record id="action_view_extra_task_list2" model="ir.actions.act_window">-->
+<!--			<field name="name">Extra Works</field>-->
+<!--			<field name="res_model">project.task</field>-->
+<!--			<field name="view_type">form</field>-->
+<!--			<field name="domain">[["is_extra_work", "=", True]]</field>-->
+<!--			<field name="context">{'default_is_extra_work':-->
+<!--				1,'search_default_project':-->
+<!--				1,'search_default_category': 1}-->
+<!--			</field>-->
+<!--			<field name="view_mode">tree,form</field>-->
+<!--			<field name="view_id" ref="view_task_tree2_changed" />-->
+<!--			<field name="search_view_id" ref="view_task_search_form_changed" />-->
+<!--			&lt;!&ndash; <field name="context">{'search_default_extra_work': 1}</field> <field-->
+<!--				name="help" type="html"> <p> Odoo's project management allows you to manage-->
+<!--				the pipeline of tasks in order to get things done efficiently. You can track-->
+<!--				progress, discuss on tasks, attach documents, etc. </p> </field> &ndash;&gt;-->
+<!--		</record>-->
+
+		<record id="open_estimate_quantity_extra_request" model="ir.actions.act_window">
+			<field name="name">Extra Requests</field>
+			<field name="res_model">estimate.quantity.extra.request</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem action="open_estimate_quantity_extra_request" id="project.menu_estimate_extra_request"
+			name="Extra Requests" parent="project.menu_project_management"
+			groups="project.group_project_manager,hiworth_construction.group_estimation_user"
+			sequence="5" />
+
+<!--		<menuitem action="action_view_extra_task_list2" id="menu_action_view_extra_task"-->
+<!--			parent="project.menu_project_management" sequence="6"-->
+<!--			groups="project.group_project_manager,hiworth_construction.group_estimation_user" />-->
+
+
+		<!-- <menuitem action="mrp.mrp_production_action" id="menu_production_order"
+			name="Production Order" parent="project.menu_project_management" sequence="6"
+			/> -->
+
+		<menuitem id="base.menu_project_config_project" name="Stages"
+			parent="base.menu_definitions" sequence="50" groups="base.group_no_one" />
+
+
+		<record id="action_picking_tree_construction_inherited" model="ir.actions.act_window">
+			<field name="name">Material Allocations</field>
+			<field name="res_model">stock.picking</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[("is_other_move", "=", False),("is_stock_reciept",
+				"=", False),
+				'|',("is_eng_request","=",
+				False),("changed_to_allocation","=",True)]
+			</field>
+			<field name="context">{'default_is_task_related': 1}</field>
+			<field name="search_view_id" ref="stock.view_picking_internal_search" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a stock operation.
+				</p>
+				<!-- <p>
+					Most operations are prepared automatically by Odoo according
+					to
+					your preconfigured logistics rules, but you can also record
+					manual
+					stock movements.
+				</p> -->
+			</field>
+		</record>
+
+
+		<menuitem action="action_picking_tree_construction_inherited"
+			name="Material Allocation" id="menu_action_picking_type_form_ware_house"
+			parent="stock.menu_stock_warehouse_mgmt" sequence="1" groups="hiworth_construction.make_invisible"/>
+
+<!--		<menuitem id="menu_project_transfers_report" name="Material Allocation Report"-->
+<!--			parent="menu_stock_warehouse_reports" sequence="10"-->
+<!--			action="action_material_request_report_wizard" groups="hiworth_construction.make_invisible" />-->
+
+		<record id="action_picking_tree_construction_inherited_other_stock_move"
+			model="ir.actions.act_window">
+			<field name="name">Other Stock Move</field>
+			<field name="res_model">stock.picking</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[["is_other_move", "=", True]]</field>
+			<field name="context">{'default_is_task_related':
+				0,'default_is_other_move': 1}
+			</field>
+			<field name="search_view_id" ref="stock.view_picking_internal_search" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a stock operation.
+				</p>
+				<!-- <p>
+					Most operations are prepared automatically by Odoo according
+					to
+					your preconfigured logistics rules, but you can also record
+					manual
+					stock movements.
+				</p> -->
+			</field>
+		</record>
+
+		<menuitem
+			action="action_picking_tree_construction_inherited_other_stock_move"
+			name="Other Stock Move" id="menu_action_picking_type_form_ware_house_other_stock_move"
+			parent="stock.menu_stock_warehouse_mgmt" sequence="2" groups="hiworth_construction.make_invisible"/>
+
+
+
+		<record id="action_picking_tree_store_receipts" model="ir.actions.act_window">
+			<field name="name">Store Receipts</field>
+			<field name="res_model">stock.picking</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[["is_stock_reciept", "=", True]]</field>
+			<field name="context">{'default_is_stock_reciept':1,'default_picking_type_id':1}
+			</field>
+			<field name="search_view_id" ref="stock.view_picking_internal_search" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a stock operation.
+				</p>
+				<!-- <p>
+					Most operations are prepared automatically by Odoo according
+					to
+					your preconfigured logistics rules, but you can also record
+					manual
+					stock movements.
+				</p> -->
+			</field>
+		</record>
+
+		<menuitem action="action_picking_tree_store_receipts" name="Store Receipts"
+			id="menu_picking_tree_stote_receipts" parent="stock.menu_stock_warehouse_mgmt"
+			sequence="4" groups="hiworth_construction.make_invisible"/>
+
+
+		<record id="action_picking_tree_construction_inherited_request"
+			model="ir.actions.act_window">
+			<field name="name">Material Requests</field>
+			<field name="res_model">stock.picking</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[["is_eng_request", "=", True]]</field>
+			<field name="context">{'default_is_eng_request':
+				1,'default_is_task_related': 1}
+			</field>
+			<field name="search_view_id" ref="stock.view_picking_internal_search" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a stock operation.
+				</p>
+				<!-- <p>
+					Most operations are prepared automatically by Odoo according
+					to
+					your preconfigured logistics rules, but you can also record
+					manual
+					stock movements.
+				</p> -->
+			</field>
+		</record>
+
+
+
+
+		<menuitem name="Configuration" id="base.menu_definitions"
+			parent="base.menu_main_pm"
+			groups="project.group_project_manager,group_estimation_user,group_project_management_user"
+			sequence="60" />
+
+		<menuitem id="menu_project_products" name="Resources"
+			parent="base.menu_definitions" sequence="3"
+			groups="project.group_project_manager,group_estimation_user" />
+		<menuitem id="menu_project_products_resources" name="Resources"
+			action="mrp.product_template_action" parent="menu_project_products"
+			sequence="1" groups="project.group_project_manager,group_estimation_user" />
+		<menuitem id="menu_project_products_resources_category2" name="Resource Category"
+			action="action_product_category_hiworth" parent="menu_project_products"
+			sequence="2" groups="project.group_project_manager,group_estimation_user" />
+
+
+
+		<menuitem id="menu_project_bill_of_material" name="Specifications"
+			action="mrp.mrp_bom_form_action" parent="base.menu_definitions"
+			sequence="1" groups="project.group_project_manager,group_estimation_user" />
+
+<!--		<menuitem id="menu_account_contractor_under_project1" name="Contractors"-->
+<!--			parent="base.menu_definitions" action="action_partner_contractor_form"-->
+<!--			sequence="60" />-->
+
+		<menuitem id="menu_account_customer_under_project1" name="Customers"
+			parent="base.menu_definitions" action="base.action_partner_customer_form"
+			sequence="9" />
+
+
+<!--		<menuitem id="_project_task_estimation" name="Tasks"-->
+<!--			parent="base.menu_definitions" sequence="10"-->
+<!--			action="action_project_task_estimation2" groups="project.group_project_manager,group_estimation_user" />-->
+
+		<!-- <menuitem action="mrp_bom_form_action2" id="menu_mrp_bom_form_action2"
+			parent="menu_mrp_configuration" sequence="20"/> -->
+
+
+		<!-- <record id="action_activity_construction" model="ir.actions.act_window">
+			<field name="name">Activities</field> <field name="res_model">project.task.activity</field>
+			<field name="view_type">form</field> <field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_project_task_activity_tree_changed" /> <field
+			name="search_view_id" ref="" /> <field name="domain">[]</field> </record> -->
+
+		<!-- <menuitem name="Activities" id="project_task_activity.menu_activities"
+			sequence="10" action="action_activity_construction" parent="project.menu_project_management"
+			/> -->
+		<record id="form_new_request_for_quotation" model="ir.ui.view">
+            <field name="name">Request For Quotation</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+				<form string="Purchase Order"  create="false" edit="false" delete="false" options="{'no_create':True,'no_quick_create':True}">
+                <header>
+                    <button name="button_create_comparison" type="object" states="sent" string="Bid Received" class="oe_highlight"/>
+                  <button name="view_comparison" type="object" states="bid" string="View Comparison" class="oe_highlight"/>
+<!--                    <button name="wkf_send_rfq" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" class="oe_highlight"/>-->
+<!--                    <button name="wkf_send_rfq" states="sent" string="Re-Send RFQ by Email" type="object" context="{'send_rfq':True}"/>-->
+                    <button name="print_quotation" string="Print RFQ" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
+                    <button name="print_quotation" string="Re-Print RFQ" type="object" states="sent" groups="base.group_user"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,bid,"  />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <label string="Request for Quotation " />
+
+                            <field name="name" class="oe_inline" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="supplier_ids"  widget="many2many_tags" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
+
+
+                            <field name="currency_id"/>
+							<field name="project_id"/>
+                            <field name="location_id" string="Location"/>
+                            <field name="vehicle_id"/>
+							<field name="site_purchase_id" string="Purchase Request"/>
+							<field name="picking_type_id" />
+                        </group>
+                        <group>
+                            <field name="date_order" string="Quotation Request Date"/>
+							<field name="deliver_to" required="1"/>
+							<field name="company_contractor_id" required="1" readonly="1"/>
+							<field name="bid_validity" string="Quotation Valid Untill"/>
+                            </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name="order_line">
+                                <tree string="Purchase Order Lines" delete="false" create="0">
+                                    <field name="product_id" />
+                                    <field name="brand_name" string="Brand"/>
+                                    <field name="name"/>
+                                   <field name="product_qty" />
+                                    <field name="product_uom" groups="product.group_uom" />
+
+                                    <field name="state" required="0" invisible="1"/>
+                                </tree>
+                            </field>
+
+						</page>
+
+                    </notebook>
+					<group>
+						<group>
+							<field name="notes" placeholder="Terms and conditions..." string="Terms &amp; Conditions"/>
+						</group>
+					</group>
+					</sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+			</field>
+		</record>
+
+		<record id="tree_new_request_for_quotation" model="ir.ui.view">
+            <field name="name">Request For Quotation</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+				<tree fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('wait','confirmed');" string="Purchase Order" create="false">
+                    <field name="message_unread" invisible="1"/>
+                 <field name="site_purchase_id" string="P.R NO"/>
+                    <field name="name" string="RFQ NO"/>
+                    <field name="date_order"/>
+                    <field name="supplier_ids"/>
+                    <field name="company_contractor_id"/>
+
+
+
+                    <field name="state"/>
+                </tree>
+			</field>
+		</record>
+
+
+		<record id="purchase.purchase_rfq" model="ir.actions.act_window">
+			<field name="name">Request for Quotation</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">purchase.order</field>
+			<field name="context">{}</field>
+			<field name="domain">[('state','in',('draft','sent','bid')),('is_requisition','=',1)]
+			</field>
+			<field name="context">{'default_is_requisition': 1}
+			</field>
+			
+			<field name="view_mode">tree,form,graph,calendar</field>
+			<field name="search_view_id" ref="purchase.view_purchase_order_filter" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a request for quotation.
+				</p>
+				<p>
+					The quotation contains the history of the discussion/negotiation
+					you had with your supplier. Once confirmed, a request for
+					quotation
+					is converted into a purchase order.
+				</p>
+				<!-- <p>
+					Most propositions of purchase orders are created automatically
+					by
+					Odoo based on inventory needs.
+				</p> -->
+			</field>
+		</record>
+
+
+
+        <record id="action_view_requset_for_quotation_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_new_request_for_quotation" />
+            <field name="act_window_id" ref="purchase.purchase_rfq" />
+			<field name="sequence">20</field>
+        </record>
+		 <record id="action_view_requset_for_quotation_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="tree_new_request_for_quotation" />
+            <field name="act_window_id" ref="purchase.purchase_rfq" />
+			<field name="sequence">17</field>
+        </record>
+
+
+
+		<menuitem action="purchase.purchase_rfq" id="purchase.menu_purchase_rfq"
+			parent="purchase.menu_procurement_management" string="Request For Quotation"
+			sequence="1" />
+
+
+		<menuitem id="menu_customer_details_under_project" parent="base.menu_main_pm"
+			name="Project Partners" sequence="3"
+			groups="project.group_project_manager,project.group_project_user,group_estimation_user" />
+
+		<menuitem id="menu_stock_details_under_project" parent="base.menu_main_pm"
+			name="Stock" sequence="4" />
+		<!-- <menuitem action="stock_account.action_history_tree" id="menu_action_history_tree_project"
+			parent="menu_stock_details_under_project" sequence="1" /> -->
+
+		<menuitem id="menu_document_details_under_project" parent="base.menu_main_pm"
+			name="Directory Management" sequence="5" />
+
+		<menuitem action="document.action_document_directory_form"
+			id="document.menu_document_directories" parent="menu_document_details_under_project"
+			sequence="1" />
+
+
+		<!-- <menuitem id="menu_project_transfers" name="Material Allocations"
+			parent="menu_stock_details_under_project" sequence="2"
+			groups="project.group_project_manager,group_estimation_user" action="action_picking_tree_construction_inherited" /> -->
+
+		<menuitem parent="menu_stock_details_under_project" id="menu_report_location_stock1"
+			action="action_report_location_stock" name="Material/s Stock report" sequence="5" />
+
+<!--		<menuitem id="menu_product_to_location_wizard1" name="Location wise Inventory report"-->
+<!--			parent="menu_stock_details_under_project" sequence="10"-->
+<!--			action="action_product_to_location_wizard" />-->
+
+
+		<!-- <menuitem id="menu_project_transfers_report" name="Material Request
+			Report" parent="menu_stock_details_under_project" sequence="4" groups="base.group_no_one"
+			action="action_material_request_report_wizard" /> -->
+
+		<!-- <menuitem action="account.action_invoice_tree1" id="menu_action_invoice_tree1_in_project"
+			parent="menu_customer_details_under_project" sequence="1" /> -->
+
+
+		<record id="action_invoice_tree_constract_bill" model="ir.actions.act_window">
+			<field name="name">Contract Bill</field>
+			<field name="res_model">account.invoice</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field eval="False" name="view_id" />
+			<field name="domain">[('type','=','in_invoice'),('is_contractor_bill','=',True)]
+			</field>
+			<field name="context">{'default_type': 'in_invoice', 'type':
+				'in_invoice', 'journal_type': 'purchase',
+				'default_is_contractor_bill': 1,'default_task_related': 1}
+			</field>
+			<field name="search_view_id" ref="account.view_account_invoice_filter" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to record a new supplier invoice.
+				</p>
+				<!-- <p>
+					You can control the invoice from your supplier according to
+					what
+					you purchased or received. Odoo can also generate
+					draft invoices
+					automatically from purchase orders or receipts.
+				</p> -->
+			</field>
+		</record>
+
+		<!-- <menuitem action="action_invoice_tree_constract_bill" id="menu_action_supplier_invoice_tree1_in_project"
+			parent="menu_customer_details_under_project" sequence="5" /> -->
+
+<!-- 		<menuitem id="menu_account_customer_under_project" name="Customers"
+			parent="menu_customer_details_under_project" action="base.action_partner_customer_form"
+			sequence="3" /> -->
+		
+
+<!--		<record id="action_partner_contractor_form" model="ir.actions.act_window">-->
+<!--			<field name="name">Contractor</field>-->
+<!--			<field name="type">ir.actions.act_window</field>-->
+<!--			<field name="res_model">res.partner</field>-->
+<!--			<field name="view_type">form</field>-->
+<!--			<field name="domain">[('tender_contractor','=',True)]</field>-->
+<!--			<field name="view_mode">kanban,tree,form</field>-->
+<!--			<field name="context">{'search_default_tender_contractor': 1,'default_customer':-->
+<!--				0,'default_supplier': 0,'default_customer': 0,'default_tender_contractor':-->
+<!--				1,'form_view_ref':'hiworth_construction.view_partner_form_contractor'}-->
+<!--			</field>-->
+<!--			<field name="filter" eval="True" />-->
+<!--			<field name="help" type="html">-->
+<!--				<p class="oe_view_nocontent_create">-->
+<!--					Click to add a contact in your address book.-->
+<!--				</p>-->
+<!--				&lt;!&ndash; <p>-->
+<!--					Odoo helps you easily track all activities related to-->
+<!--					a supplier:-->
+<!--					discussions, history of purchases,-->
+<!--					documents, etc.-->
+<!--				</p> &ndash;&gt;-->
+<!--			</field>-->
+<!--		</record>-->
+<!-- 		<menuitem id="menu_account_contractor_under_project" name="Contractors"
+			parent="menu_customer_details_under_project" action="action_partner_contractor_form"
+			sequence="6" /> -->
+
+		
+
+		<menuitem id="menu_account_supplier_under_project" name="Suppliers"
+			parent="purchase.menu_purchase_config_purchase" action="base.action_partner_supplier_form"
+			sequence="7" />
+
+
+
+<!--		<menuitem id="menu_project_stages_view_tree" name="Stages"-->
+<!--			action="action_project_stages_view_tree" parent="base.menu_definitions"-->
+<!--			sequence="5" />-->
+
+		<menuitem id="account.menu_finance_receivables" name="Customers"
+			parent="account.menu_finance" sequence="4" />
+		<menuitem id="account.menu_finance_payables" name="Suppliers / Contractors"
+			parent="account.menu_finance" sequence="2" />
+
+		<menuitem id="account_stock_moves" name="Purchases &amp; Stock Moves"
+			parent="account.menu_finance" sequence="3" />
+		<menuitem action="action_picking_tree_construction_inherited"
+			name="Material Allocation" id="menu_action_picking_type_form_accounts"
+			parent="account_stock_moves" sequence="10" />
+		<menuitem
+			action="action_picking_tree_construction_inherited_other_stock_move"
+			name="Other Stock Move" id="menu_action_picking_type_form_other_stock_move_accounts"
+			parent="account_stock_moves" sequence="20" />
+
+		<menuitem action="account_voucher.action_vendor_payment"
+			icon="STOCK_JUSTIFY_FILL" sequence="12" name="Supplier Payments"
+			id="account_voucher.menu_action_vendor_payment" parent="account.menu_finance_payables" />
+		<menuitem action="account.action_invoice_tree4" id="account.menu_action_invoice_tree4"
+			parent="account.menu_finance_payables" name="Supplier Refunds" />
+		
+
+		<record id="account.action_invoice_tree2" model="ir.actions.act_window">
+            <field name="name">Supplier Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','in_invoice'),('not_visible','=',False)]</field>
+            <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to record a new supplier invoice.
+              </p><p>
+                You can control the invoice from your supplier according to
+                what you purchased or received. Odoo can also generate
+                draft invoices automatically from purchase orders or receipts.
+              </p>
+            </field>
+        </record>
+
+
+
+		<menuitem action="account.action_invoice_tree2" id="account.menu_action_invoice_tree2"
+			parent="account.menu_finance_payables" name="Supplier Invoices" />
+
+<!--		<menuitem id="menu_account_contractors" name="Contractors"-->
+<!--			parent="account.menu_finance_payables" action="action_partner_contractor_form"-->
+<!--			sequence="110" />-->
+
+		<!-- <record id="purchase_form_action_in_accounts" model="ir.actions.act_window">
+			<field name="name">Purchase Order</field> <field name="type">ir.actions.act_window</field>
+			<field name="res_model">purchase.order</field> <field name="view_mode">tree,form</field>
+			<field name="context">{}</field> <field name="domain"></field> <field name="search_view_id"
+			ref="purchase.view_purchase_order_filter"/> <field name="help" type="html">
+			<p class="oe_view_nocontent_create"> Click to create a quotation that will
+			be converted into a purchase order. </p><p> Use this menu to search within
+			your purchase orders by references, supplier, products, etc. For each purchase
+			order, you can track the related discussion with the supplier, control the
+			products received and control the supplier invoices. </p> </field> </record> -->
+
+		<menuitem action="purchase.purchase_form_action" id="menu_purchase_form_action_in_accounts"
+			parent="account_stock_moves" name="Purchase Order" sequence="1" />
+
+
+
+		<!-- ==================== Hiding unnecessary menus ============== -->
+		<!-- <record model="ir.ui.menu" id="base.menu_base_partner"> <field name="groups_id"
+			eval="[(6,0,[ref('make_invisible')])]" /> </record> -->
+
+		<record model="ir.ui.menu" id="base.menu_base_partner">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible_sale')])]" />
+		</record>
+
+		<!-- <record model="ir.ui.menu" id="hr.menu_hr_root">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible_hr')])]" />
+		</record> -->
+
+		<record model="ir.ui.menu" id="base.menu_management">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<!-- <record model="ir.ui.menu" id="base.menu_custom">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record> -->
+		<record model="ir.ui.menu" id="payment.root_payment_menu">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+
+		<!-- <record model="ir.ui.menu" id="base.module_mi"> <field name="groups_id"
+			eval="[(6,0,[ref('make_invisible')])]" /> </record> <record model="ir.ui.menu"
+			id="base.module_mi"> <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"
+			/> </record> -->
+
+		<!-- <record model="ir.ui.menu" id="base.menu_mrp_root">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record> -->
+
+		<record model="ir.ui.menu" id="project.menu_task_types_view">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<record model="ir.ui.menu" id="project.menu_project_category_act">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<record model="ir.ui.menu" id="purchase.menu_procurement_management_invoice">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+
+		<record model="ir.ui.menu" id="purchase.menu_procurement_management_invoice">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+
+		<record model="ir.ui.menu" id="purchase.menu_procurement_management_inventory">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+
+<!--		<record model="ir.ui.menu" id="fleet.fleet_vehicle_log_contract_menu">-->
+<!--			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />-->
+<!--		</record>-->
+
+
+	<!-- 	<menuitem id="menu_procurement_management_invoice" name="Invoice Control"
+        parent="base.menu_purchase_root" sequence="6"/>
+ -->
+
+
+<!--		<menuitem parent="account.final_accounting_reports" id="menu_report_location_wise"-->
+<!--			action="action_report_location_wise" name="Location Based Report"-->
+<!--			sequence="120" />-->
+
+		<menuitem parent="stock.menu_traceability" id="menu_report_location_stock"
+			action="action_report_location_stock" name="Material/s Stock report" sequence="2" />
+
+
+
+
+
+<!--		<record id="form_location_transport_report" model="ir.ui.view">-->
+<!--			<field name="name">form.product.location.transport</field>-->
+<!--			<field name="model">product.location.transport</field>-->
+<!--			<field name="arch" type="xml">-->
+<!--				<tree string="AAAAA">-->
+<!--					<field name="expense_account_id" />-->
+<!--					<field name="product_id" />-->
+<!--					<field name="product_qty" />-->
+<!--					<field name="avg_trasport" />-->
+<!--				</tree>-->
+<!--			</field>-->
+<!--		</record>-->
+
+<!--		<record id="action_location_transport_report" model="ir.actions.act_window">-->
+<!--			<field name="name">Contractor</field>-->
+<!--			<field name="type">ir.actions.act_window</field>-->
+<!--			<field name="res_model">product.location.transport</field>-->
+<!--			<field name="view_type">form</field>-->
+<!--			<field name="view_mode">tree,form</field>-->
+<!--		</record>-->
+
+
+
+		<menuitem id="stock.menu_pickingtype"
+				  name="Types of Operation"
+				  parent="stock.menu_stock_configuration"
+				  action="stock.action_picking_type_list"
+				groups="hiworth_construction.make_invisible"/>
+
+		<menuitem action="stock.action_orderpoint_form"
+				  id="stock.menu_stock_order_points"
+				  parent="stock.menu_stock_configuration"
+				  sequence="10"
+					groups="hiworth_construction.make_invisible"/>
+
+
+		   <menuitem id="stock.menu_procurement_rules"
+					 name="Procurement Rules"
+					 parent="stock.menu_stock_configuration"
+					 action="stock.procrules"
+					 groups="hiworth_construction.make_invisible"/>
+
+		 <menuitem action="stock.action_routes_form"
+				   id="stock.menu_stock_routes"
+				   parent="stock.menu_stock_configuration"
+				   sequence="11"
+		           groups="hiworth_construction.make_invisible"/>
+
+		  <menuitem action="stock.action_incoterms_tree"
+					id="stock.menu_action_incoterm_open"
+					parent="stock.menu_stock_configuration"
+					groups="hiworth_construction.make_invisible"
+					sequence="40"/>
+
+
+		 <menuitem id="stock.menu_stock_product"
+				   name="Products"
+				   parent="stock.menu_stock_root"
+				   sequence="6"
+		 			groups="hiworth_construction.make_invisible"/>
+
+
+
+
+
+
+		<!-- <record id="form_location_unloading_report" model="ir.ui.view">
+			<field name="name">product.location.unloading.tree</field>
+			<field name="model">product.location.unloading</field>
+			<field name="arch" type="xml">
+				<tree string="AAAAA">
+					<field name="expense_account_id" />
+					<field name="product_id" />
+					<field name="avg_trasport" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_location_unloading_report" model="ir.actions.act_window">
+			<field name="name">Contractor</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.location.unloading</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+
+
+		<menuitem parent="menu_stock_warehouse_reports" id="menu_location_unloading_report"
+			action="action_location_unloading_report" name="Location2" sequence="60" /> -->
+
+
+
+
+		<menuitem name="Warehouse" id="stock.menu_stock_root"
+			groups="stock.group_stock_manager,stock.group_stock_user,group_warehouse_user"
+			sequence="70" />
+
+
+		<menuitem id="stock.menu_stock_configuration" name="Configuration"
+			parent="stock.menu_stock_root" sequence="15"
+			groups="stock.group_stock_manager,group_warehouse_user" />
+
+		<menuitem id="stock.menu_product_in_config_stock" name="Products"
+			parent="stock.menu_stock_configuration" sequence="45"
+			groups="base.group_no_one,group_warehouse_user"/>
+
+		<menuitem name="Purchases" id="base.menu_purchase_root"
+			groups="purchase.group_purchase_manager,purchase.group_purchase_user,group_warehouse_user"
+			sequence="60" />
+
+		<menuitem action="stock.action_picking_type_form" groups="make_invisible"
+			id="stock.menu_action_picking_type_form" parent="stock.menu_stock_warehouse_mgmt"
+			sequence="1" />
+
+
+		<!-- <menuitem id="menu_email" name="" parent="base.menu_administration"
+			sequence="110" groups="base.group_no_one" /> -->
+		<menuitem id="base.menu_email" name="Email"
+			parent="base.menu_administration" sequence="110" />
+		<menuitem action="action_picking_tree_construction_inherited_request"
+			name="Material Request" id="menu_engineer_material_request" parent="stock.menu_stock_warehouse_mgmt"
+			sequence="9" groups="hiworth_construction.make_invisible" />
+
+<!-- 		<menuitem action="action_picking_tree_construction_inherited_request"
+			name="Material Request" id="menu_picking_tree_construction_inherited_request"
+			groups="project.group_project_manager,hiworth_construction.group_estimation_user"
+			parent="menu_stock_details_under_project" sequence="10" /> -->
+
+		<menuitem action="action_picking_tree_construction_inherited_request"
+			name="Material Request" id="menu_engineer_material_request" parent="stock.menu_stock_warehouse_mgmt"
+			sequence="9"  groups="hiworth_construction.make_invisible"/>
+
+
+
+
+
+
+
+
+	</data>
+</openerp>

@@ -1,0 +1,157 @@
+
+<openerp>
+	<data>
+
+
+		<record id="form_view_project_stages_prime" model="ir.ui.view">
+			<field name="name">Project Stages Form</field>
+			<field name="model">project.stage.prime</field>
+			<field name="arch" type="xml">
+				<form string="Stages">
+					<sheet>
+						<!-- <h1><center>Project Stages</center></h1> -->
+					<group col="4">
+						<field name="name" options="{'no_create': True}"/>
+						<field name="date"/>
+						<field name="contractor" options="{'no_create': True}" domain="[('contractor','=',True)]"/>
+						<field name="estimated_cost"/>
+					</group>
+					<notebook>
+						<page string="Stages">
+							<group>
+								<field name="stage_line" nolabel="1">
+									<tree editable="bottom">
+										<field name="name"/>
+										<field name="percent" sum="Percent"/>
+										<field name="amount" sum="Total"/>
+										<field name="approximated_amnt" sum="Approximated"/>
+									</tree>
+									<form>
+										<group col="4">
+											<field name="name"/>
+											<field name="percent"/>
+											<field name="amount"/>
+											<field name="approximated_amnt"/>
+										</group>
+									</form>
+								</field>
+							</group>
+						</page>
+						<page string="Project Details">
+							<group col="4">
+								<field name="location_id"/>
+								<field name="manager_id"/>
+								<field name="customer"/>
+								<field name="date_start"/>
+								<field name="date_end"/>
+								<!-- <field name="building_no"/> -->
+							</group>
+						</page>
+					</notebook>
+				</sheet>
+			
+
+				</form>
+
+			</field>
+		</record>
+
+		<record id="tree_view_project_stages_prime" model="ir.ui.view">
+			<field name="name">Project Stages Tree</field>
+			<field name="model">project.stage.prime</field>
+			<field name="arch" type="xml">
+				<tree string="Project Stages">
+					<field name="name"/>
+					<field name="date"/>
+					<field name="contractor"/>
+					<field name="estimated_cost"/>
+				</tree>
+
+			</field>
+		</record>
+		<record id="search_view_project_stages_prime" model="ir.ui.view">
+            <field name="name">Search Project Stages</field>
+            <field name="model">project.stage.prime</field>
+            <field name="arch" type="xml">
+                <search string="Stages">
+                    <field name="date" string="Date"/>
+                    <field name="name" string="Project" />
+                    <field name="contractor" string="Contractor"/>
+                </search>
+
+            </field>
+        </record>
+
+		<record id="action_view_project_stages_prime" model="ir.actions.act_window">
+			<field name="name">Project Stages</field>
+			<field name="res_model">project.stage.prime</field>
+			<field name="view_id" ref="tree_view_project_stages_prime" />
+		</record>
+
+    <menuitem name="Project Stages" id="menu_project_stages_prime" parent="base.menu_main_pm" sequence="3" />
+
+		<menuitem name="Project Stages" id="sub_project_stages" action="action_view_project_stages_prime" parent="menu_project_stages_prime" sequence="20"/>
+
+
+		<record id="form_view_project_stage_lines_prime" model="ir.ui.view">
+			<field name="name">Stage Lines</field>
+			<field name="model">stage.line.prime</field>
+			<field name="arch" type="xml">
+				<form string="Stages Lines" create="false" edit="false">
+					<sheet>
+						<!-- <h1><center>Project Stages</center></h1> -->
+					<group col="4">
+						<field name="project"/>
+						<field name="name"/>
+						<field name="percent"/>
+						<field name="amount"/>
+						<field name="approximated_amnt"/>
+						<field name="amount_paid"/>
+					</group>
+					
+				</sheet>
+			
+
+				</form>
+
+			</field>
+		</record>
+
+		<record id="tree_view_project_stage_line_prime" model="ir.ui.view">
+			<field name="name">Stage Line Tree</field>
+			<field name="model">stage.line.prime</field>
+			<field name="arch" type="xml">
+				<tree string="Stage Line" create="false">
+					<field name="project"/>
+					<field name="name"/>
+					<field name="percent"/>
+					<field name="amount"/>
+					<field name="approximated_amnt"/>
+				</tree>
+
+			</field>
+		</record>
+		<record id="search_view_project_stage_line_prime" model="ir.ui.view">
+            <field name="name">Project Stage Lines</field>
+            <field name="model">stage.line.prime</field>
+            <field name="arch" type="xml">
+                <search string="Stage Lines">
+                    <field name="name" string="Stage Name"/>
+                    <field name="percent" string="Percentage" />
+                    <field name="amount" string="Amount"/>
+                </search>
+
+            </field>
+        </record>
+
+		<record id="action_view_project_stage_line_prime" model="ir.actions.act_window">
+			<field name="name">Stage Lines</field>
+			<field name="res_model">stage.line.prime</field>
+			<field name="view_id" ref="tree_view_project_stage_line_prime" />
+		</record>
+
+
+		<!-- <menuitem name="Stage Lines" id="sub_sub_project_stages" action="action_view_project_stage_line_prime" parent="menu_project_stages_prime" sequence="25"/> -->
+
+		</data>
+	</openerp>

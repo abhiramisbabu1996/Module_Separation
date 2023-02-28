@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_invoice_rent_vehicle" model="ir.ui.view">
+			<field name="name">rent.vehicle.payment.wizard</field>
+			<field name="model">rent.vehicle.payment</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<field name="rec" invisible="1" />
+					</group>
+					<group col="4">
+						<field name="pay_amount" required="1" widget="char" />
+						<field name="journal_id" required="1" domain="[('type','in',('cash','bank'))]" />
+					</group>
+
+					<footer>
+						<button string="Invoice" type="object" class="oe_highlight" name="invoice_record" />
+						Or
+						<button string="Discard" class="btn-default" special="cancel"/>
+					</footer>
+				</form>
+
+			</field>
+		</record>
+
+
+		<record id="tree_rent_vehicle_statements" model="ir.ui.view">
+			<field name="name">tree.rent.vehicle.statement</field>
+			<field name="model">rent.vehicle.statement</field>
+			<field name="arch" type="xml">
+				<tree create="false">
+					<field name="date" />
+					<field name="vehicle_no" />
+					<field name="supervisor" />
+					<field name="crusher" />
+					<field name="site_id" />
+					<field name="item" />
+					<field name="balance" />
+					<field name="state" />
+				</tree>
+
+			</field>
+		</record>
+
+
+
+		<!-- ################  search view ######################### -->
+
+		<record id="rent_vehicle_statement_search_view" model="ir.ui.view">
+			<field name="name">rent.vehicle.statement.search.view</field>
+			<field name="model">rent.vehicle.statement</field>
+			<field name="arch" type="xml">
+				<search string="rent vehicle statement">
+					<field name="date" />
+					<field name="vehicle_no" />
+					<field name="supervisor" />
+					<group expand="0" string="group by">
+						<filter name="groupby_vehicle" string="Vehicle"
+								context="{'group_by':'vehicle_no'}"/>
+						<filter name="groupby_date" context="{'group_by': 'date'}" string="Date"  />
+						<filter name="groupby_supervisor" context="{'group_by': 'supervisor'}" string="Supervisor"  />
+					</group>
+				</search>
+			</field>
+		</record>
+
+
+		<record id="form_rent_vehicle_statement" model="ir.ui.view">
+			<field name="name">form.rent.vehicle.statement</field>
+			<field name="model">rent.vehicle.statement</field>
+			<field name="arch" type="xml">
+				<form create="false">
+					<header>
+						<!-- 		<button name="confirm_entry" string="Confirm" type="object" class="oe_highlight" states="draft"/>
+                                <button name="cancel_entry" string="Cancel" type="object" class="oe_highlight" states="confirm"/>
+                                <button name="set_to_draft" string="Set To Draft" type="object" class="oe_highlight" states="cancelled"/> -->
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+
+						<h1><center>
+							Rent
+							Vehicle Statement
+						</center></h1>
+
+						<group>
+							<group>
+								<field name="date" required="1" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="vehicle_no" required="1" domain="[('rent_vehicle','=',True)]" options="{'no_create':1}" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="vehicle_owner" invisible="1" />
+
+							</group>
+							<group>
+								<field name="supervisor" />
+								<field name="crusher" attrs="{'required':[('direct_crusher','=',True)],'invisible':[('direct_crusher','=',False)],'readonly':[('state','!=','draft')]}" options="{'no_create':1}" domain="[('crusher_bool','=',True)]" />
+
+							</group>
+						</group>
+						<group>
+							<group>
+								<field name="item" required="1" options="{'no_create':1}" attrs="{'readonly':[('state','!=','draft')]}"/>
+
+								<field name="qty" required="1" widget="char" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="rate" required="1" widget="char" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="material_cost" widget="char" />
+								<field name="direct_crusher" attrs="{'readonly':[('state','!=','draft')]}" string="Payment Directly To Crusher" />
+								<field name="move_id" invisible="1" />
+
+
+							</group>
+							<group>
+								<newline/>
+
+								<field name="site_id" required="1" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="based_on" attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="km" attrs="{'invisible':[('based_on','=','per_day')],'required':[('based_on','=','per_km')]}" />
+								<field name="trip" attrs="{'invisible':[('based_on','=','per_day')],'required':[('based_on','=','per_km')]}" />
+								<field name="rate_trip" attrs="{'invisible':[('based_on','=','per_day')],'required':[('based_on','=','per_km')]}" />
+								<field name="diesel_pump" attrs="{'required':[('diesel','!=',False)],'readonly':[('state','!=','draft')]}" options="{'no_create': True, 'no_create_edit':True}" domain="[('diesel_pump_bool','=',True)]" />
+								<field name="rent" widget="char"  />
+
+							</group>
+						</group>
+
+						<group>
+							<group>
+								<field name="diesel" attrs="{'required':[('diesel_pump','!=',False)],'readonly':[('state','!=','draft')]}" widget="char" />
+							</group>
+							<group>
+								<field name="advance" widget="char" attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="other_expenses" widget="char" attrs="{'readonly':[('state','!=','draft')]}"/>
+							</group>
+						</group>
+
+						<label for="remarks" string="Remarks" attrs="{'readonly':[('state','!=','draft')]}" />
+
+						<field name="remarks" required="1" placeholder="Remarks...." attrs="{'readonly':[('state','!=','draft')]}" />
+
+						<!--  <group col="6">
+                               <field name="verified_by" readonly="1" />
+                               <field name="approved_by" readonly="1" />
+                               <field name="checked_by" readonly="1" />
+                               <field name="date1" />
+                               <field name="date2" />
+                               <field name="date3" />
+                               <field name="sign1" widget="image" />
+                               <field name="sign2" widget="image" />
+                               <field name="sign3" widget="image" />
+                           </group> -->
+
+						<group class="oe_subtotal_footer oe_right">
+							<field name="balance" invisible="1"/>
+						</group>
+					</sheet>
+
+				</form>
+
+
+			</field>
+		</record>
+
+
+
+
+		<record id="action_rent_vehicle_statement" model="ir.actions.act_window">
+			<field name="name">Rent Vehicle Statements</field>
+			<field name="res_model">rent.vehicle.statement</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+
+		<menuitem id="menu_rent_vehicle_statements"
+				  parent="menu_partner_daily_statement_in_activity_report"
+				  action="action_rent_vehicle_statement"
+				  name="Rent Vehicle Statements"
+				  sequence="15"
+				  groups="base.group_erp_manager,hiworth_hr_attendance.group_admin"/>
+
+
+		<record id="tree_rent_vehicle_invoices" model="ir.ui.view">
+			<field name="name">tree.rent.vehicle.invoice</field>
+			<field name="model">rent.vehicle.invoice</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="vehicle_owner" />
+					<field name="date_from" />
+					<field name="date_to" />
+					<field name="state" />
+				</tree>
+
+			</field>
+		</record>
+
+
+		<!-- ################  search view ######################### -->
+
+		<record id="rent_vehicle_invoice_search_view" model="ir.ui.view">
+			<field name="name">rent.vehicle.invoice.search.view</field>
+			<field name="model">rent.vehicle.invoice</field>
+			<field name="arch" type="xml">
+				<search string="rent vehicle invoice">
+					<field name="vehicle_owner" />
+					<!-- <field name="employee_id" /> -->
+					<!-- <field name="department" /> -->
+					<group expand="0" string="group by">
+						<!-- <filter name="groupby_name" string="Category" 
+							context="{'group_by':'name'}"/> -->
+						<filter name="groupby_vehicle" context="{'group_by': 'vehicle_owner'}" string="Vehicle owner"  />
+						<!-- <filter name="groupby_category" context="{'group_by': 'category_id'}" string="category"  /> -->
+					</group>
+				</search>
+			</field>
+		</record>
+
+
+
+		<record id="form_rent_vehicle_invoices" model="ir.ui.view">
+			<field name="name">form.rent.vehicle.invoice</field>
+			<field name="model">rent.vehicle.invoice</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<button name="confirm_record" string="Confirm" type="object" class="oe_highlight" states="draft" />
+						<button name="pay_amount" string="Pay Amount" type="object" class="oe_highlight" states="confirmed" groups="base.group_erp_manager,account.group_account_user,account.group_account_manager"/>
+						<button name="verify_record" string="Verify" type="object" class="oe_highlight" states="paid" groups="base.group_erp_manager,account.group_account_user,account.group_account_manager"/>
+						<button name="approve_record" string="Approve" type="object" class="oe_highlight" states="verified" groups="base.group_erp_manager,account.group_account_user,account.group_account_manager"/>
+						<button name="check_record" string="Check" type="object" class="oe_highlight" states="approved" groups="base.group_erp_manager,account.group_account_user,account.group_account_manager"/>
+						<field name="state" widget="statusbar" />
+					</header>
+					<h1><center>Invoice Receipt</center></h1>
+
+
+					<group>
+						<group>
+							<field name="date_from" required="1" attrs="{'readonly':[('state','=','invoiced')]}" />
+							<field name="vehicle_owner" required="1" options="{'no_create':1}" attrs="{'readonly':[('state','=','invoiced')]}"/>
+
+						</group>
+						<group>
+							<field name="date_to" required="1" attrs="{'readonly':[('state','=','invoiced')]}" />
+							<field name="tds_applicable" readonly="1" invisible="1" />
+
+						</group>
+					</group>
+					<group>
+						<field name="invoice_lines" nolabel="1" attrs="{'readonly':[('state','=','invoiced')]}" >
+							<tree editable="bottom" create="false">
+								<field name="date" />
+								<field name="vehicle_no" />
+								<field name="vehicle_owner" invisible="1" />
+								<field name="supervisor" invisible="1" />
+								<field name="based_on" invisible="1" />
+								<field name="crusher" />
+								<field name="direct_crusher" invisible="1" />
+								<field name="site_id" />
+								<field name="item" />
+								<field name="qty" />
+								<field name="rate" />
+								<field name="material_cost" />
+								<field name="km" />
+								<field name="trip" invisible="1" />
+								<field name="rate_trip" />
+								<field name="rent" />
+								<field name="diesel" />
+								<field name="diesel_pump" />
+								<field name="advance" />
+								<field name="vehicle_stmt_id" invisible="1" />
+
+							</tree>
+						</field>
+					</group>
+					<group>
+						<group>
+							<field name="tds_account" attrs="{'invisible':[('tds_applicable','=',False)],'required':[('tds_applicable','=',True)]}" />
+							<field name="tds" string="TDS Amount" widget="char" attrs="{'invisible':['|',('multiple_line','=',True),('tds_applicable','=',False)]}" />
+							<field name="multiple_line" string="multiple TDS?" attrs="{'invisible':[('tds_applicable','=',False)]}" />
+							<field name="tds_line" nolabel="1" attrs="{'invisible':[('multiple_line','=',False)]}">
+								<tree editable="bottom">
+									<field name="name" string="Section" />
+									<field name="amount" widget="char" />
+								</tree>
+							</field>
+						</group>
+
+						<group class="oe_subtotal_footer oe_right">
+							<div class="oe_subtotal_footer_separator oe_inline">
+								<label for="total_rent" />
+							</div>
+							<field name="total_rent" nolabel="1" class="oe_subtotal_footer_separator" widget="char"/>
+
+							<div class="oe_subtotal_footer_separator oe_inline">
+								<label for="opening" />
+							</div>
+							<field name="opening" nolabel="1" class="oe_subtotal_footer_separator" widget="char"/>
+
+							<div class="oe_subtotal_footer_separator oe_inline">
+								<label for="advance" />
+							</div>
+							<field name="advance" nolabel="1" class="oe_subtotal_footer_separator" widget="char"/>
+
+							<div class="oe_subtotal_footer_separator oe_inline">
+								<label for="diesel_amt" />
+							</div>
+							<field name="diesel_amt" nolabel="1" class="oe_subtotal_footer_separator" widget="char"/>
+
+							<!-- <div class="oe_subtotal_footer_separator oe_inline">
+                            <label for="tds" />
+                            </div>
+                            <field name="tds" nolabel="1" class="oe_subtotal_footer_separator" widget="char" /> -->
+
+							<div class="oe_subtotal_footer_separator oe_inline">
+								<label for="balance" />
+							</div>
+							<field name="balance" nolabel="1" class="oe_subtotal_footer_separator" widget="char"/>
+
+
+							<div class="oe_subtotal_footer_separator oe_inline" attrs="{'invisible':[('tds_applicable','=',False)]}">
+								<label for="tds_amount" />
+							</div>
+							<field name="tds_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="char" attrs="{'invisible':[('multiple_line','=',False)]}"/>
+
+
+							<div class="oe_subtotal_footer_separator oe_inline">
+								<label for="net_balance" />
+							</div>
+							<field name="net_balance" nolabel="1" class="oe_subtotal_footer_separator" widget="char"/>
+
+							<div class="oe_subtotal_footer_separator oe_inline">
+								<label for="paid_amount" />
+							</div>
+							<field name="paid_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="char"/>
+
+							<div class="oe_subtotal_footer_separator oe_inline">
+								<label for="closing_balance" />
+							</div>
+							<field name="closing_balance" nolabel="1" class="oe_subtotal_footer_separator" widget="char"/>
+
+						</group>
+					</group>
+
+
+				</form>
+
+
+			</field>
+		</record>
+
+
+
+		<record id="action_rent_vehicle_invoices" model="ir.actions.act_window">
+			<field name="name">Rent Vehicle Invoices</field>
+			<field name="res_model">rent.vehicle.invoice</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+
+		<menuitem id="menu_rent_vehicle_invoices"
+				  parent="menu_partner_daily_statement_in_activity_report"
+				  action="action_rent_vehicle_invoices"
+				  name="Rent Vehicle Invoice"
+				  sequence="16"
+				  groups="hiworth_hr_attendance.group_supervisor,base.group_erp_manager,hiworth_hr_attendance.group_admin"/>
+
+
+	</data>
+</openerp>

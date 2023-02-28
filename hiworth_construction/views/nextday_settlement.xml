@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_send_approval_form" model="ir.ui.view">
+				<field name="name">send.approval.form</field>
+				<field name="model">send.approval</field>
+				<field name="arch" type="xml">
+					<form>
+						<sheet>
+							<!-- <group> -->
+								<group>
+									<field name="rec" invisible="1"/>
+									<field name="users" widget="many2many_tags" string="Approvers"/>
+								</group>
+								<!-- <group>
+								</group>
+							</group> -->
+						</sheet>
+
+						<footer>
+								<button name="send_approve" string="Send Approval" type="object" class="oe_highlight" /> Or 
+	                        <button string="Cancel" class="btn-default" special="cancel"/>
+						</footer>
+
+					</form>
+				</field>
+			</record>
+
+			<record id="nextday_settlement_tree" model="ir.ui.view">
+				<field name="name">nextday.settlement.tree</field>
+				<field name="model">nextday.settlement</field>
+				<field name="arch" type="xml">
+					<tree>
+						<field name="date" />
+					</tree>
+					</field>
+			</record>
+
+			<record id="nextday_settlement_form" model="ir.ui.view">
+				<field name="name">nextday.settlement.form</field>
+				<field name="model">nextday.settlement</field>
+				<field name="arch" type="xml">
+					<form>
+						<header>
+							<button name="approve_entry" string="Approve" type="object" class="oe_highlight" states="send_approval,approved" groups="hiworth_construction.group_nextday_settl_button_approve,base.group_erp_manager"/>
+							<button name="send_approval" string="Send For Approval" type="object" class="oe_highlight" states="draft"/>
+							<button name="validate_entry" string="Validate" type="object" class="oe_highlight" states="approved"/>
+							<field name="state" widget="statusbar" />
+						</header>
+						<sheet>
+							<group>
+								<field name="journal_id"/>
+								<group>
+									<field name="total_balance" readonly="1"/>
+								</group>
+								<group>
+									<field name="date"/>
+								</group>
+							</group>
+							<notebook>
+								<page string="Settlement">
+									<group>
+										<field name="settlement_line" nolabel="1" domain="[('state','=','approve')]">
+											<tree editable="bottom" colors="blue:yesterdays_cancel == True;">
+												<field name="particulars" />
+												<field name="journal_id"/>
+												<field name="credit_ac_balance"/>
+												<field name="account_id" />
+												<field name="debit_ac_balance" />
+												<field name="amount" sum="Total"/>
+												<field name="tds_amount" sum="Total"/>
+												<field name="tds_account" attrs="{'required':[('tds_amount', '>', '0.0')]}"/>
+												<field name="total" />
+												<field name="yesterdays_cancel" invisible="1"/>
+												<field name="state"/>
+												<button name="journal_line" icon="gtk-apply" type="object" class="oe_highlight" attrs="{'invisible':[('head_state','in',('draft','send_approval','approved'))]}" help="Payment"/>
+												<button name="approve_line" icon="gtk-apply" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','=','approve'),('head_state','in',('draft','validate','approved'))]}" help="Line Approve"/>
+												<button name="cancel_line" icon="gtk-cancel" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','=','cancel'),('head_state','in',('draft','send_approval','approved'))]}" help="Line Cancel"/>
+
+												<button name="tally_line" icon="gtk-apply" type="object" class="oe_highlight" attrs="{'invisible':['|',('head_state','in',('draft','validate','send_approval')),('tally','=',True)]}" help="Tally"/>
+
+
+												<field name="head_state" invisible="1"/>
+												<field name="tally" invisible="1"/>
+											</tree>
+										</field>
+									</group>
+									<group string="Bank To Bank">
+										<field name="settlement_bank_line" nolabel="1">
+											<tree editable="bottom" >
+												<field name="particulars"/>
+												<field name="bank_from"/>
+												<field name="bank_from_balance"/>
+												<field name="bank_to" />
+												<field name="bank_to_balance"/>
+												<field name="amount" sum="Total"/>
+												<field name="state"/>
+												<button name="journal_line" icon="gtk-apply" type="object" class="oe_highlight" attrs="{'invisible':[('head_state','in',('draft','send_approval','approved'))]}" help="Payment"/>
+												<button name="approve_line" icon="gtk-apply" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','=','approve'),('head_state','in',('draft','validate','approved'))]}" help="Line Approve"/>
+												<button name="cancel_line" icon="gtk-cancel" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','=','cancel'),('head_state','in',('draft','send_approval','approved'))]}" help="Line Cancel"/>
+
+												<button name="tally_line" icon="gtk-apply" type="object" class="oe_highlight" attrs="{'invisible':['|',('head_state','in',('draft','validate','send_approval')),('tally','=',True)]}" help="Tally"/>
+												<field name="head_state" invisible="1"/>
+												<field name="tally" invisible="1"/>
+											</tree>
+										</field>
+									</group>
+									<group string="Other Settlements">
+										<field name="other_settlement_line" nolabel="1">
+											<tree editable="bottom" >
+												<field name="particulars"/>
+												<field name="amount"/>
+											</tree>
+										</field>
+									</group>
+									<group string="Cancelled Entries" attrs="{'invisible':[('state','=','draft')]}">
+										<field name="cancelled_line" nolabel="1" domain="[('state','=','cancel')]">
+											<tree editable="bottom" >
+												<field name="particulars"/>
+												<field name="journal_id"/>
+												<field name="credit_ac_balance"/>
+												<field name="account_id" />
+												<field name="debit_ac_balance"/>
+												<field name="amount"/>
+												<field name="tds_amount" sum="Total"/>
+												<field name="tds_account" attrs="{'required':[('tds_amount', '>', '0.0')]}"/>
+												<field name="total"/>
+												<field name="yesterdays_cancel" invisible="1"/>
+												<field name="state"/>
+											</tree>
+										</field>
+									</group>
+								</page>
+								<page string="Approvers">
+									<group>
+										<field name="approvers_line" nolabel="1" readonly="1">
+											<tree editable="bottom">
+												<field name="name" />
+												<field name="status" />
+												<field name="date_approved" string="Approved Date"/>
+											</tree>
+										</field>
+									</group>
+								</page>
+							</notebook>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+		<record id="action_nextday_settlement" model="ir.actions.act_window">
+			<field name="name">Nextday Settlement</field>
+			<field name="res_model">nextday.settlement</field>
+			<field name="view_id" ref="nextday_settlement_tree" />
+		</record>
+
+    <menuitem
+			name="Nextday Settlement" id="menu_nextday_settlement" parent="menu_hiworth_finance_root"
+			sequence="52" />
+
+			 <menuitem
+			name="Nextday Settlement" id="menu_sub_nextday_settlement" parent="menu_nextday_settlement"
+			sequence="9" action="action_nextday_settlement"/>
+
+	</data>
+</openerp>

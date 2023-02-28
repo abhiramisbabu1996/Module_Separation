@@ -1,0 +1,1298 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+
+		<report id="print_partner_daily_report" string="Supervisor Daily - Print Report"
+			model="partner.daily.statement" report_type="qweb-pdf"
+			name="hiworth_construction.report_partner_daily_statement" />
+			
+
+		<report id="view_partner_daily_report" string="Supervisor Daily - View Report"
+			model="partner.daily.statement" report_type="qweb-html"
+			name="hiworth_construction.report_partner_daily_statement" />
+
+			<record id="hiworth_construction.print_partner_daily_report" model="ir.actions.report.xml">
+			<field name="paperformat_id" ref="hiworth_construction.report_paperformat" />
+		</record>
+
+		<template id="report_partner_daily_statement">
+			<t t-call="report.html_container">
+
+				<t t-call="report.external_layout">
+
+					<div class="page">
+						<div>
+							<h2>
+								<center>
+									<span>
+										<u>
+											Supervisor Daily Statement Report
+										</u>
+									</span>
+								</center>
+							</h2>
+						</div>
+						<t t-foreach="docs" t-as="o">
+							<div class="row">
+							<div class="col-xs-12">
+								<div class="col-xs-6 text-left">
+									
+										Supervisor :
+										<t t-esc="o.employee_id.name" />
+									</div>
+									<div class="col-xs-6 text-right">
+								
+										Date :
+										<t t-esc="o.date" />
+									</div>
+									
+							</div>
+						</div>
+						<div class="row">
+
+							<div class="col-xs-12">
+								<div class="col-xs-6 text-left">
+									
+										Account :
+										<t t-esc="o.account_id.name" />
+									</div>
+									<div class="col-xs-6 text-right">
+								
+										Site :
+										<t t-esc="o.location_ids.name" />
+									</div>
+									
+							</div>
+						</div>
+
+							<t t-if="o.line_ids">
+								Labour Details
+
+							<table class="table" style="width: 100%;border: 1px solid black;">
+									<thead>
+										<tr style="border: 1px solid black;">
+											<th style="width: 5%;border: 1px solid black;">Sl.No</th>
+											<th style="border: 1px solid black;">Particulars</th>
+											<th style="border: 1px solid black;">Work</th>
+											<th style="border: 1px solid black;">Qty</th>
+											<th style="border: 1px solid black;">Rate</th>
+											<th style="border: 1px solid black;" align="right">Payment</th>
+											<th style="border: 1px solid black;">Voucher No</th>
+											<th style="border: 1px solid black;">Remarks</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<t t-set="payment" t-value="0" />
+
+									<tbody>
+										<tr t-foreach="o.line_ids" t-as="line" style="border: 1px solid black;">
+											<td style="border: 1px solid black;">
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.account_id.name" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.item_id.name" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.qty_char" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.rate_char" />
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.payment_total)" />
+												<t t-set="payment" t-value="payment + line.payment_total" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.vr_no" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.remarks" />
+											</td>
+											
+										</tr>
+										<tr>
+											<td ></td>
+
+											<td style="border: 1px solid black;"></td>
+											<td style="border: 1px solid black;"></td>
+											<td style="border: 1px solid black;"></td>
+											<td style="border: 1px solid black;" align="right"><b>Total</b></td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<b><span t-esc="'{0:,.2f}'.format(payment)" /></b>
+											</td>
+											<td style="border: 1px solid black;"></td>
+											<td style="border: 1px solid black;"></td>
+											
+										</tr>
+									</tbody>
+								</table>
+
+							</t>
+							<t t-if="o.expense_line_ids">
+
+							Expense Details
+							<table class="table" style="width: 100%">
+									<thead>
+										<tr>
+											<th style="width: 5%;border: 1px solid black;">Sl.No</th>
+											<th style="border: 1px solid black;">Expenses</th>
+											<th style="border: 1px solid black;">Description</th>
+											<th style="border: 1px solid black;">Qty</th>
+											<th style="border: 1px solid black;">Rate</th>
+											<th style="width: 15%;border: 1px solid black;">Total</th>
+											<th style="width: 10%;border: 1px solid black;" align="right">Payment</th>
+											<th style="border: 1px solid black;">Voucher No</th>
+											<th style="border: 1px solid black;">Remarks</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<t t-set="quantity" t-value="0" />
+									<t t-set="total" t-value="0" />
+									<tbody>
+										<tr t-foreach="o.expense_line_ids" t-as="line">
+											<td style="border: 1px solid black;">
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.expense_char" />
+											</td>
+												<td style="border: 1px solid black;">
+												<span t-field="line.desc" />
+											</td>
+											
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.quantity)" />
+
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.rate)" />
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.total)" />
+
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.expense_payment)" />
+												<t t-set="total" t-value="total + line.expense_payment" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.vr_no" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.remarks" />
+											</td>
+											
+										</tr>
+										<tr>
+											<td style="border: 1px solid black;"></td>
+											<td style="border: 1px solid black;"></td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+
+											</td>
+											<td style="border: 1px solid black;"></td>
+											<td style="border: 1px solid black;"></td>
+											<td style="border: 1px solid black;" align="right"><b>Total</b></td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<b><span t-esc="'{0:,.2f}'.format(total)" /></b>
+											</td>
+											<td style="border: 1px solid black;"></td>
+											<td style="border: 1px solid black;"></td>
+											
+										</tr>
+
+									</tbody>
+								</table>
+
+							</t>
+
+							<t t-if="o.mou_expense_line_ids">
+
+							MOU Expenses
+							<table class="table table-bordered" style="width: 100%">
+									<thead>
+										<tr>
+											<th style="width: 5%;border: 1px solid black;">Sl.No</th>
+											<th style="border: 1px solid black;">MOU Contractor</th>
+											<th style="border: 1px solid black;">MOU No</th>
+											<th style="border: 1px solid black;">Payment</th>
+											<th style="width: 20%;border: 1px solid black;">Remarks</th>
+
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<t t-set="quantity" t-value="0" />
+									<t t-set="total" t-value="0" />
+									<tbody>
+										<tr t-foreach="o.mou_expense_line_ids" t-as="line">
+											<td style="border: 1px solid black;">
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.partner_id.name" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.mou_id.name" />
+											</td>
+
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.amount)" />
+												<t t-set="quantity" t-value="quantity + line.amount" />
+											</td>
+
+											<td style="border: 1px solid black;">
+												<span t-field="line.remarks" />
+											</td>
+
+										</tr>
+										<tr>
+											<td style="border: 1px solid black;"></td>
+
+
+											<td style="border: 1px solid black;"></td>
+											<td style="border: 1px solid black;"><b>Total</b></td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<b><span t-esc="'{0:,.2f}'.format(quantity)" /></b>
+											</td>
+
+
+
+											<td style="border: 1px solid black;"></td>
+
+										</tr>
+
+									</tbody>
+								</table>
+
+							</t>
+
+								<t t-if="o.rent_vehicle_stmts">
+
+								Rent Vehicle Statements
+								<table class="table" style="width: 100%">
+									<thead>
+										<tr>
+											<th style="width: 5%;border: 1px solid black;">Sl.No</th>
+											<th style="border: 1px solid black;">Vehicle Owner</th>
+											<th style="border: 1px solid black;">Vehicle No</th>
+											<th style="border: 1px solid black;">MOU</th>
+											<th style="border: 1px solid black;">Site</th>
+											<th style="border: 1px solid black;">Item</th>
+											<th style="border: 1px solid black;">Qty</th>
+											<th style="border: 1px solid black;">Rate</th>
+											<th style="border: 1px solid black;">Full Cost</th>
+											<th style="border: 1px solid black;">Bill No</th>
+											<th style="border: 1px solid black;">Crusher</th>
+											<th style="border: 1px solid black;">Qty</th>
+											<th style="border: 1px solid black;">Rate</th>
+											<th style="border: 1px solid black;">Invoice Value</th>
+											<th style="border: 1px solid black;">Rent</th>
+
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<t t-set="full_cost" t-value="0" />
+									<t t-set="qty" t-value="0" />
+									<t t-set="material_cost" t-value="0" />
+									<t t-set="rent" t-value="0" />
+									<t t-set="diesel" t-value="0" />
+									<t t-set="advance" t-value="0" />
+										
+									<tbody>
+										<tr t-foreach="o.rent_vehicle_stmts" t-as="line">
+											<td style="border: 1px solid black;">
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.vehicle_owner.name" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.vehicle_no.name" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.mou.name" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.site_id.name" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.item.name" />
+											</td>
+
+											<td style="border: 1px solid black;">
+												<span t-field="line.fullsupply_qty" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.fullsupply_rate" />
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.full_cost)" />
+
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-field="line.bill_no" />
+
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-field="line.crusher.name" />
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-field="line.qty" />
+
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.rate" />
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.invoice_value)" />
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-field="line.rent" />
+
+											</td>
+
+											
+										</tr>
+
+									</tbody>
+								</table>
+
+									<table class="table" style="width: 100%">
+									<thead>
+										<tr>
+											<th style="width: 5%;border: 1px solid black;">Sl.No</th>
+											<th style="border: 1px solid black;">Fuel Item</th>
+											<th style="border: 1px solid black;">Diesel Pump</th>
+											<th style="border: 1px solid black;">Diesel Litre</th>
+											<th style="border: 1px solid black;">Diesel Rate</th>
+											<th style="border: 1px solid black;">Diesel</th>
+											<th style="border: 1px solid black;">Bill No</th>
+											<th style="border: 1px solid black;">Advance</th>
+											<th style="border: 1px solid black;">Other Expense</th>
+											<th style="border: 1px solid black;">Other Expense Account</th>
+											<th style="border: 1px solid black;">Remarks</th>
+
+
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<t t-set="full_cost" t-value="0" />
+									<t t-set="qty" t-value="0" />
+									<t t-set="material_cost" t-value="0" />
+									<t t-set="rent" t-value="0" />
+									<t t-set="diesel" t-value="0" />
+									<t t-set="advance" t-value="0" />
+
+									<tbody>
+										<tr t-foreach="o.rent_vehicle_stmts" t-as="line">
+											<td style="border: 1px solid black;">
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.fuel_item.name" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.diesel_pump.name" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.diesel_litre" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.diesel_rate" />
+											</td>
+
+											<td style="border: 1px solid black;">
+												<span t-field="line.diesel" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-field="line.pump_bill_no" />
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.advance)" />
+												<t t-set="advance" t-value="advance + line.advance" />
+
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-field="line.other_expenses" />
+												<t t-set="diesel" t-value="diesel + line.other_expenses" />
+
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-field="line.other_account_id.name" />
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<span t-field="line.remarks" />
+
+											</td>
+
+
+
+										</tr>
+										<tr>
+												<td style="border: 1px solid black;">
+
+											</td>
+											<td style="border: 1px solid black;">
+
+											</td>
+											<td style="border: 1px solid black;">
+
+											</td>
+											<td style="border: 1px solid black;">
+
+											</td>
+											<td style="border: 1px solid black;">
+
+											</td>
+
+											<td style="border: 1px solid black;">
+
+											</td>
+											<td style="border: 1px solid black;" align="right">
+												<span><b>Total</b></span>
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<b><span t-esc="'{0:,.2f}'.format(advance)" /></b>
+
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+												<b><span t-esc="'{0:,.2f}'.format(diesel)" /></b>
+
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+
+											</td>
+											<td style="padding-right: 1px;border: 1px solid black;" align="right">
+
+
+											</td>
+										</tr>
+
+									</tbody>
+								</table>
+
+							</t>
+
+							<t t-if="o.operator_daily_stmts">
+
+							Machinery Statements
+							<table class="table table-bordered" style="width: 100%">
+									<thead>
+										<tr>
+											<th style="width: 5%">Sl.No</th>
+											<th>Date</th>
+											<th>Operator</th>
+											<th>Machinery</th>
+											<th>Running Km</th>
+											<th>Start Reading</th>
+											<th>End Reading</th>
+											<th>Working Hours</th>
+											<th>Machinery Rent</th>
+											<th>Quantity</th>
+											<th>Operator Amount</th>
+											<th>Machinery Expense</th>
+											<th>Advance</th>
+											<th>Other Expense</th>
+											<th>Other Expense Account</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<t t-set="machinery_rent" t-value="0" />
+									<t t-set="quantity" t-value="0" />
+									<t t-set="operator_amt" t-value="0" />
+									<t t-set="expense" t-value="0" />
+									<t t-set="advance" t-value="0" />
+									<tbody>
+									<t t-set="expense" t-value="0" />
+										<tr t-foreach="o.operator_daily_stmts" t-as="line">
+											<td>
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<span t-field="line.date" />
+											</td>
+											<td>
+												<span t-field="line.employee_id.name" />
+											</td>
+											<td>
+												<span t-field="line.machinery_id.name" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.running_km)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.start_reading)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.end_reading)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.working_hours)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.machinery_rent)" />
+												<t t-set="machinery_rent" t-value="machinery_rent+line.machinery_rent" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.quantity)" />
+												<t t-set="quantity" t-value="quantity+line.quantity" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.operator_amt)" />
+												<t t-set="operator_amt" t-value="operator_amt+line.operator_amt" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.expense)" />
+
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.advance)" />
+												<t t-set="advance" t-value="advance+line.advance" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.other_expenses)" />
+												<t t-set="expense" t-value="expense+line.other_expenses" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-field="line.other_account_id.name" />
+
+											</td>
+											
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td style="padding-right: 1px" align="right">
+
+											</td>
+											<td style="padding-right: 1px" align="right">
+
+											</td>
+											<td style="padding-right: 1px" align="right">
+
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<b>Total</b>
+											</td>
+											<td style="padding-right: 1px" align="right">
+											<b>	<span t-esc="'{0:,.2f}'.format(advance)" /></b>
+											</td>
+											<td style="padding-right: 1px" align="right">
+											<b>	<span t-esc="'{0:,.2f}'.format(expense)" /></b>
+											</td>
+											<td style="padding-right: 1px" align="right">
+
+											</td>
+											
+										</tr>
+
+									</tbody>
+								</table>
+
+							</t>
+
+
+							<t t-if="o.operator_daily_stmts_rent">
+
+							Rent Machinery Statements
+							<table class="table table-bordered" style="width: 100%">
+									<thead>
+										<tr>
+											<th style="width: 5%">Sl.No</th>
+											<th>Date</th>
+											<th>Rent Machinery Owner</th>
+											<th>Machinery</th>
+											<th>MOU</th>
+											<th>Running Km</th>
+											<th>Start Reading</th>
+											<th>End Reading</th>
+											<th>Working Hours</th>
+											<th>Machinery Rent</th>
+											<th>Quantity</th>
+											<th>Operator Amount</th>
+											<th>Machinery Expense</th>
+											<th>Advance</th>
+											<th>Other Expenses</th>
+											<th>Other Expense Account</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<t t-set="machinery_rent" t-value="0" />
+									<t t-set="quantity" t-value="0" />
+									<t t-set="operator_amt" t-value="0" />
+									<t t-set="expense" t-value="0" />
+									<t t-set="advance" t-value="0" />
+									<tbody>
+									<t t-set="expense" t-value="0" />
+										<tr t-foreach="o.operator_daily_stmts_rent" t-as="line">
+											<td>
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<span t-field="line.date" />
+											</td>
+											<td>
+												<span t-field="line.employee_id.name" />
+											</td>
+											<td>
+												<span t-field="line.machinery_id.name" />
+											</td>
+												<td>
+												<span t-field="line.mou.name" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.running_km)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.start_reading)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.end_reading)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.working_hours)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.machinery_rent)" />
+												<t t-set="machinery_rent" t-value="machinery_rent+line.machinery_rent" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.quantity)" />
+												<t t-set="quantity" t-value="quantity+line.quantity" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.operator_amt)" />
+												<t t-set="operator_amt" t-value="operator_amt+line.operator_amt" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.expense)" />
+
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.advance)" />
+												<t t-set="advance" t-value="advance+line.advance" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.other_expenses)" />
+												<t t-set="expense" t-value="expense+line.other_expenses" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-field="line.other_account_id.name" />
+
+											</td>
+
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td style="padding-right: 1px" align="right">
+
+											</td>
+											<td style="padding-right: 1px" align="right">
+
+											</td>
+											<td style="padding-right: 1px" align="right">
+
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<b>Total</b>
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<b><span t-esc="'{0:,.2f}'.format(advance)" /></b>
+											</td>
+											<td>
+												<b><span t-esc="'{0:,.2f}'.format(expense)" /></b>
+											</td>
+											<td>
+
+											</td>
+										</tr>
+
+									</tbody>
+								</table>
+
+							</t>
+							<t t-if="o.machinery_fuel_collection">
+
+									Machinery Fuel Collection
+										<table class="table table-bordered" style="width: 100%">
+											<thead>
+											<tr>
+											<th>Sl No</th>
+											<th>Date</th>
+											<th>Diesel Pump</th>
+											<th>Site</th>
+											<th>Diesel Type</th>
+											<th>Unit</th>
+											<th>Quantity</th>
+											<th>Amount Per Unit</th>
+												<th>Total Amount</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<tbody>
+										<tr t-foreach="o.machinery_fuel_collection" t-as="line">
+											<td>
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<span t-field="line.date" />
+											</td>
+											<td>
+												<span t-field="line.pump_id.name" />
+											</td>
+												<td>
+												<span t-field="line.site_id.name" />
+											</td>
+											<td>
+												<span t-field="line.product_id.name" />
+											</td>
+											<td>
+												<span t-field="line.uom_id.name" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.quantity)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.amount_per_unit)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.total_amount)" />
+											</td>
+
+
+										</tr>
+									</tbody>
+
+										</table>
+
+									</t>
+								<t t-if="o.machinery_fuel_allocation">
+
+									Machinery Fuel Allocation
+										<table class="table table-bordered" style="width: 100%">
+											<thead>
+											<tr>
+											<th>Sl No</th>
+											<th>Date</th>
+											<th>Machinery</th>
+											<th>Site</th>
+											<th>Diesel Type</th>
+											<th>Unit</th>
+												<th>Available Quantity</th>
+											<th>Quantity</th>
+												<th>Current Quantity</th>
+											<th>Amount Per Unit</th>
+												<th>Total Amount</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<tbody>
+										<tr t-foreach="o.machinery_fuel_allocation" t-as="line">
+											<td>
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<span t-field="line.date" />
+											</td>
+											<td>
+												<span t-field="line.machinery_id.name" />
+											</td>
+												<td>
+												<span t-field="line.site_id.name" />
+											</td>
+											<td>
+												<span t-field="line.product_id.name" />
+											</td>
+											<td>
+												<span t-field="line.uom_id.name" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.available_quantity)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.quantity)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.current_quantity)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.amount_per_unit)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.total_amount)" />
+											</td>
+
+
+										</tr>
+									</tbody>
+
+										</table>
+
+									</t>
+								<t t-if="o.fuel_transfer_ids">
+
+									Machinery Fuel Transfer
+										<table class="table table-bordered" style="width: 100%">
+											<thead>
+											<tr>
+											<th>Sl No</th>
+												<th>Machinery</th>
+											<th>Fuel</th>
+											<th>From Location</th>
+											<th>To Location</th>
+												<th>Unit</th>
+											<th>Available Quantity</th>
+
+											<th>Quantity</th>
+												<th>Current Quantity</th>
+											<th>Amount Per Unit</th>
+												<th>Total Amount</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<tbody>
+										<tr t-foreach="o.fuel_transfer_ids" t-as="line">
+											<td>
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+												<td>
+												<span t-field="line.machinery_id.name" />
+											</td>
+											<td>
+												<span t-field="line.product_id.name" />
+											</td>
+											<td>
+												<span t-field="line.site_id.name" />
+											</td>
+												<td>
+												<span t-field="line.to_location_id.name" />
+											</td>
+											<td>
+												<span t-field="line.uom_id.name" />
+											</td>
+											<td>
+												<span t-field="line.available_quantity" />
+											</td>
+
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.transfer_quantity)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.current_quantity)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.amount_per_unit)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.total_amount)" />
+											</td>
+
+
+										</tr>
+									</tbody>
+
+										</table>
+
+									</t>
+
+								<t t-if="o.rent_machinery_fuel_allocation">
+
+									Rent Machinery Fuel Allocation
+										<table class="table table-bordered" style="width: 100%">
+											<thead>
+											<tr>
+											<th>Sl No</th>
+											<th>Date</th>
+											<th>Machinery</th>
+											<th>Site</th>
+											<th>Diesel Type</th>
+											<th>Unit</th>
+												<th>Available Quantity</th>
+											<th>Quantity</th>
+												<th>Current Quantity</th>
+											<th>Amount Per Unit</th>
+												<th>Total Amount</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<tbody>
+										<tr t-foreach="o.rent_machinery_fuel_allocation" t-as="line">
+											<td>
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<span t-field="line.date" />
+											</td>
+											<td>
+												<span t-field="line.machinery_id.name" />
+											</td>
+												<td>
+												<span t-field="line.site_id.name" />
+											</td>
+											<td>
+												<span t-field="line.product_id.name" />
+											</td>
+											<td>
+												<span t-field="line.uom_id.name" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.available_quantity)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.quantity)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.current_quantity)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.amount_per_unit)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.total_amount)" />
+											</td>
+
+
+										</tr>
+									</tbody>
+
+										</table>
+
+									</t>
+								<t t-if="o.rent_fuel_transfer_ids">
+
+									Rent Machinery Fuel Transfer
+										<table class="table table-bordered" style="width: 100%">
+											<thead>
+											<tr>
+											<th>Sl No</th>
+												<th>Machinery</th>
+											<th>Fuel</th>
+											<th>From Location</th>
+											<th>To Location</th>
+												<th>Unit</th>
+											<th>Available Quantity</th>
+
+											<th>Quantity</th>
+												<th>Current Quantity</th>
+											<th>Amount Per Unit</th>
+												<th>Total Amount</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<tbody>
+										<tr t-foreach="o.rent_fuel_transfer_ids" t-as="line">
+											<td>
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<span t-field="line.machinery_id.name" />
+											</td>
+											<td>
+												<span t-field="line.product_id.name" />
+											</td>
+											<td>
+												<span t-field="line.site_id.name" />
+											</td>
+												<td>
+												<span t-field="line.to_location_id.name" />
+											</td>
+											<td>
+												<span t-field="line.uom_id.name" />
+											</td>
+											<td>
+												<span t-field="line.available_quantity" />
+											</td>
+
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.transfer_quantity)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.current_quantity)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.amount_per_unit)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.total_amount)" />
+											</td>
+
+
+										</tr>
+									</tbody>
+
+										</table>
+
+									</t>
+
+
+							<div class="col-xs-12">
+								<t t-if="o.received_ids">
+
+									DETAILS OF RECEPTION
+										<table class="table table-bordered" style="width: 100%">
+											<thead>
+											<tr>
+											<th>Sl No</th>
+											<th>Vehicle</th>
+											<th>From</th>
+											<th>Item</th>
+											<th>Qty</th>
+											<th>Rate</th>
+											<th>Voucher No</th>
+											<th>Remarks</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<tbody>
+										<tr t-foreach="o.received_ids" t-as="line">
+											<td>
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<span t-field="line.vehicle_id.name" />
+											</td>
+											<td>
+												<span t-field="line.from_id2.name" />
+											</td>
+											<td>
+												<span t-field="line.item_expense2.name" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.qty)" />
+											</td>
+											<td style="padding-right: 1px" align="right">
+												<span t-esc="'{0:,.2f}'.format(line.rate)" />
+											</td>
+											<td>
+												<span t-field="line.voucher_no" />
+											</td>
+											<td>
+												<span t-field="line.remarks" />
+											</td>
+											
+										</tr>
+									</tbody>
+
+										</table>
+
+									</t>
+							</div>
+								<div class="col-xs-12">
+									<div class="col-xs-6"></div>
+							<div class="col-xs-6  text-right">
+								<div>
+									<div>
+										<tr>
+											<div class="row">
+
+												<table class="table table-bordered">
+													<tr>
+														<td>
+															PRE-BALANCE
+														</td>
+														<td style="padding-right: 1px" align="right">
+															<span t-esc="'{0:,.2f}'.format(o.pre_balance)" />
+														</td>
+														
+
+													</tr>
+													<tr>
+														<td>RECEIVED Rs</td>
+														<td style="padding-right: 1px" align="right"><span t-esc="'{0:,.2f}'.format(o.receipts)"/></td>
+													</tr>
+													<tr>
+														<td>TOTAL</td>
+														<td style="padding-right: 1px" align="right"><span t-esc="'{0:,.2f}'.format(o.total)"/></td>
+													</tr>
+													<tr>
+														<td>EXPENSE</td>
+														<td style="padding-right: 1px" align="right"><span t-esc="'{0:,.2f}'.format(o.expense)"/></td>
+													</tr>
+													<tr>
+														<td>TRANSFER AMOUNT</td>
+														<td style="padding-right: 1px" align="right"><span t-esc="'{0:,.2f}'.format(o.transfer_amount)"/></td>
+													</tr>
+
+													<tr>
+														<td>BALANCE</td>
+														<td style="padding-right: 1px" align="right"><span t-esc="'{0:,.2f}'.format(o.balance)"/></td>
+													</tr>
+													<tr>
+														<td>THEORETICAL BALANCE</td>
+														<td style="padding-right: 1px" align="right"><span t-esc="'{0:,.2f}'.format(o.theoretical_balance)"/></td>
+													</tr>
+												</table>
+
+											</div>
+										</tr>
+									</div>
+								</div>
+							</div>
+							</div>
+
+						<!-- <div class="col-xs-12">
+							<div class="col-xs-6 text-left">
+									
+										DETAILS OF ITEMS
+										<table class="table table-bordered">
+											<thead>
+											<tr>
+											<th>Sl No</th>
+											<th>Date</th>
+											<th>Item</th>
+											<th>PreBalance</th>
+											<th>Receipts</th>
+											<th>Total</th>
+											<th>Usage</th>
+											<th>Balance</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<tbody>
+										<tr t-foreach="o.received_ids" t-as="line">
+											<td>
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<span t-field="line.date" />
+											</td>
+											<td>
+												<span t-field="line.product_id.name" />
+											</td>
+											<td>
+												<span t-field="line.pre_qty" />
+											</td>
+											<td>
+												<span t-field="line.receipts" />
+											</td>
+											<td>
+												<span t-field="line.total" />
+											</td>
+											<td>
+												<span t-field="line.usage" />
+											</td>
+											<td>
+												<span t-field="line.balance" />
+											</td>
+											
+										</tr>
+									</tbody>
+
+										</table>
+							</div>
+							<div class="col-xs-6 text-right">
+								<div>
+									<div>
+										<tr>
+											<div class="row">
+
+												<h5>Details Of Work Done At Site</h5>
+												<tr>
+													<span t-field="o.work_details"/>
+												</tr>
+
+											</div>
+										</tr>
+									</div>
+								</div>
+							</div>
+						</div> -->
+
+					<!-- 	<div class="col-xs-12">
+							<div class="col-xs-6 text-left">
+									
+										DETAILS OF REQUIRED ITEMS
+										<table class="table table-bordered">
+											<thead>
+											<tr>
+											<th>Sl No</th>
+											<th>Date</th>
+											<th>Item</th>
+											<th>Description</th>
+											<th>Required Qty</th>
+											
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<tbody>
+										<tr t-foreach="o.received_ids" t-as="line">
+											<td>
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<span t-field="line.date" />
+											</td>
+											<td>
+												<span t-field="line.product_id.name" />
+											</td>
+											<td>
+												<span t-field="line.name" />
+											</td>
+											<td>
+												<span t-field="line.rqrd_qty" />
+											</td>
+											
+											
+										</tr>
+									</tbody>
+
+										</table>
+							</div>
+							<div class="col-xs-6 text-right">
+								<div>
+									<div>
+										<tr>
+											<div class="row">
+
+												<h5>Tomorrow's Work Arrangements</h5>
+												<tr>
+													<span t-field="o.tmrw_work_arrangement"/>
+												</tr>
+
+											</div>
+										</tr>
+									</div>
+								</div>
+							</div>
+						</div> -->
+						</t>
+					</div>
+
+				</t>
+			</t>
+		</template>
+
+
+		</data>
+	</openerp>

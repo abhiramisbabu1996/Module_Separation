@@ -1,0 +1,35 @@
+@charset "utf-8";
+.my_class_palathra{
+	width: 125px;
+	max-width: 125px;
+
+	
+}
+
+.my_field_palathra{
+
+	width: 125px;
+	max-width: 125px;
+
+
+
+
+}
+.my_div_palathra{
+
+	max-width: 90%;
+
+
+
+}
+.my_tree_palathra{
+	column-width: 90%;
+	max-width: 90%;
+
+}
+.my_form_palathra{
+	max-width: 90%;
+}
+.my_note_palathra{
+	max-width: 700px;
+}

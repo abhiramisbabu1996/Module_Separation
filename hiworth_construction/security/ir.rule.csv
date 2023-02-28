@@ -1,0 +1,8 @@
+id,name,model_id/id,domain_force,perm_read,perm_write,perm_create,perm_unlink
+,,,,,,,
+,,,,,,,
+
+
+
+
+_export__.ir_site_purchase,SitePurchaseRule,hiworth_construction.model_site_purchase,"[('supervisor_id','=',user.employee_id.id)]",True,True,True,False

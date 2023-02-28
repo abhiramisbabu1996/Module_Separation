@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+<!--        		<record id="project_account_payment_schedule_form11" model="ir.ui.view">-->
+<!--			<field name="name">project.project.form.new1</field>-->
+<!--			<field name="model">project.project</field>-->
+<!--			&lt;!&ndash; <field name="inherit_id" ref="project.edit_project" /> &ndash;&gt;-->
+<!--			<field name="arch" type="xml">-->
+<!--				<form>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--                </record>-->
+<!--        		<record id="project_account_payment_schedule_tree11" model="ir.ui.view">-->
+<!--			<field name="name">project.project.tree.new1</field>-->
+<!--			<field name="model">project.project</field>-->
+<!--			&lt;!&ndash; <field name="field_parent">child_ids</field> &ndash;&gt;-->
+<!--			&lt;!&ndash; <field name="inherit_id" ref="project.view_project" /> &ndash;&gt;-->
+<!--			<field name="arch" type="xml">-->
+<!--				<tree>-->
+<!--					<field name="name" string="Project Name" />-->
+<!--					&lt;!&ndash; <field name="location_id" string="Project Location" /> &ndash;&gt;-->
+<!--					&lt;!&ndash; <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>-->
+<!--					<field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/> &ndash;&gt;-->
+<!--				</tree>-->
+<!--			</field>-->
+<!--		</record>-->
+        <record model="ir.ui.view" id="view_stock_kanban">
+            <field name="name">stock.history.kanban</field>
+            <field name="model">stock.history</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="location_id" >
+                    <field name="product_id"/>
+                    <field name="location_id"/>
+                    <field name="product_categ_id"/>
+                    <field name="quantity"/>
+                    <field name="price_unit_on_quant"/>
+                    <field name="inventory_value"/>
+                    <field name="source"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <a type="open" href="#" class="oe_kanban_action oe_kanban_action_a">
+                                    <img t-att-src="kanban_image('fleet.vehicle', 'image_small', record.id.value)"/>
+                                </a>
+                                <div class="oe_kanban_details">
+                                    <h4 class="oe_partner_heading">
+                                        <a type="open">
+                                            <field name="product_id"/><br/>
+                                            <field name="quantity"/>
+                                        </a>
+                                    </h4>
+<!--                                    <t t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value">-->
+<!--                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a" data-context="{&quot;xml_id&quot;:&quot;fleet_vehicle_log_contract_act&quot;}">-->
+<!--                                            <span class="oe_tag oe_kanban_color_3"><field name="location_id"/>-->
+<!--                                               <t t-if="record.contract_renewal_total.raw_value &gt; 0"> and <field name="product_categ_id"/> other(s) </t>-->
+<!--                                            </span>-->
+<!--                                        </a>-->
+<!--                                    </t>-->
+
+<!--                                    <t t-if="record.contract_renewal_overdue.raw_value">-->
+<!--                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a" data-context="{&quot;xml_id&quot;:&quot;fleet_vehicle_log_contract_act&quot;}">-->
+<!--                                            <span class="oe_tag oe_kanban_color_2"><field name="inventory_value"/>-->
+<!--                                                <t t-if="record.contract_renewal_total.raw_value &gt; 0"> and <field name="price_unit_on_quant"/> other(s) </t>-->
+<!--                                            </span>-->
+<!--                                        </a>-->
+<!--                                    </t>-->
+
+<!--                                    <ul>-->
+<!--                                        <li>-->
+<!--                                            <t t-if="record.driver_id.raw_value"><field name="price_unit_on_quant"/></t>-->
+<!--                                        </li>-->
+<!--&lt;!&ndash;                                        <li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <t t-if="record.location.raw_value"><field name="location"/></t>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </li>&ndash;&gt;-->
+
+<!--                                    </ul>-->
+
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+			</field>
+		</record>
+
+
+
+
+<!--        <record model="ir.ui.view" id="view_stock_kanban">-->
+<!--            <field name="name">stock.history.kanban</field>-->
+<!--            <field name="model">stock.history</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <kanban default_group_by="location_id" >-->
+<!--                    <field name="product_id"/>-->
+<!--                    <field name="location_id"/>-->
+<!--                    <field name="product_categ_id"/>-->
+<!--                    <field name="quantity"/>-->
+<!--                    <field name="price_unit_on_quant"/>-->
+<!--                    <field name="inventory_value"/>-->
+<!--                    <field name="source"/>-->
+<!--                    <templates>-->
+<!--                        <t t-name="kanban-box">-->
+<!--                            <div class="oe_kanban_vignette oe_semantic_html_override">-->
+<!--                                <a type="open" href="#" class="oe_kanban_action oe_kanban_action_a">-->
+<!--                                    <img t-att-src="kanban_image('fleet.vehicle', 'image_small', record.id.value)"/>-->
+<!--                                </a>-->
+<!--                                <div class="oe_kanban_details">-->
+<!--                                    <h4 class="oe_partner_heading">-->
+<!--                                        <a type="open">-->
+<!--                                            <field name="product_id"/><br/>-->
+<!--                                            <field name="quantity"/>-->
+<!--                                        </a>-->
+<!--                                    </h4>-->
+<!--&lt;!&ndash;                                    <t t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a" data-context="{&quot;xml_id&quot;:&quot;fleet_vehicle_log_contract_act&quot;}">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <span class="oe_tag oe_kanban_color_3"><field name="location_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                               <t t-if="record.contract_renewal_total.raw_value &gt; 0"> and <field name="product_categ_id"/> other(s) </t>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </t>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                    <t t-if="record.contract_renewal_overdue.raw_value">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a" data-context="{&quot;xml_id&quot;:&quot;fleet_vehicle_log_contract_act&quot;}">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <span class="oe_tag oe_kanban_color_2"><field name="inventory_value"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <t t-if="record.contract_renewal_total.raw_value &gt; 0"> and <field name="price_unit_on_quant"/> other(s) </t>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </t>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                    <ul>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <t t-if="record.driver_id.raw_value"><field name="price_unit_on_quant"/></t>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </li>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                        <li>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                            <t t-if="record.location.raw_value"><field name="location"/></t>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                        </li>&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                    </ul>&ndash;&gt;-->
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </t>-->
+<!--                    </templates>-->
+<!--                </kanban>-->
+<!--			</field>-->
+<!--		</record>-->
+
+
+
+
+<!--&lt;!&ndash;        <record model="ir.ui.view" id="view_stock_kanban">&ndash;&gt;-->
+<!--&lt;!&ndash;            <field name="name">stock.history.kanban</field>&ndash;&gt;-->
+<!--&lt;!&ndash;            <field name="model">stock.history</field>&ndash;&gt;-->
+<!--&lt;!&ndash;            <field name="arch" type="xml">&ndash;&gt;-->
+<!--&lt;!&ndash;                <kanban default_group_by="location_id" >&ndash;&gt;-->
+<!--&lt;!&ndash;                    <field name="product_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <field name="location_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <field name="product_categ_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <field name="quantity"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <field name="price_unit_on_quant"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <field name="inventory_value"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <field name="source"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                      <templates>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <t t-name="kanban-box">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                            <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                <span class="oe_e">í</span>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                <ul class="oe_dropdown_menu">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <li>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                      <ul class="oe_kanban_project_times" groups="project.group_time_work_estimation_tasks">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                        <li><a name="set_remaining_time_1" type="object" class="oe_kanban_button">1</a></li>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                        <li><a name="set_remaining_time_2" type="object" class="oe_kanban_button">2</a></li>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                        <li><a name="set_remaining_time_5" type="object" class="oe_kanban_button">5</a></li>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                        <li><a name="set_remaining_time_10" type="object" class="oe_kanban_button">10</a></li>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                      </ul>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    </li>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <br/>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                </ul>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                            </div>&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <div class="oe_kanban_content">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div><b><field name="location_id"/></b></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <field name="product_id"/><br/>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div class="oe_kanban_footer_left">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <field name="quantity"/>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <span groups="project.group_time_work_estimation_tasks" title="Remaining hours">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                        <span class="oe_e">N</span>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                        <t t-esc="Math.round(record.remaining_hours.raw_value)"/>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    </span>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div class="oe_kanban_footer_left" style="margin-top:5px;">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <field name="inventory_value"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <field name="price_unit_on_quant"/>&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;                                    <t t-raw="record.message_summary.raw_value"/>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <field name="categ_ids"/>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div class="oe_kanban_bottom_right">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                        <div class="pull-left" groups="base.group_user">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                            <field name="kanban_state" widget="kanban_state_selection"/>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                            <field name="priority" widget="priority"/>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                        </div>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div class="oe_clear"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </t>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </templates>&ndash;&gt;-->
+<!--&lt;!&ndash;                </kanban>&ndash;&gt;-->
+<!--&lt;!&ndash;            </field>&ndash;&gt;-->
+<!--&lt;!&ndash;         </record>&ndash;&gt;-->
+
+
+<!--        <record id="stock_account.action_history_tree" model="ir.actions.act_window">-->
+<!--            <field name="name">Location Wise Inventory Value</field>-->
+<!--            <field name="res_model">stock.history</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d %H:%M:%S'))]</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,graph</field>-->
+<!--            <field name="context">{'search_default_group_by_product': True, 'search_default_group_by_location': True}</field>-->
+<!--        </record>-->
+
+<!--        <record id="action_main_stock_valuation_history" model="ir.actions.act_window">-->
+<!--            <field name="name">Store Inventory Valuation</field>-->
+<!--            <field name="res_model">stock.history</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d %H:%M:%S')),('location_id','=',507)]</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,graph</field>-->
+<!--            <field name="context">{'search_default_group_by_product': True}</field>-->
+<!--        </record>-->
+
+<!--	    <record id="action_sub_1_stock_valuation_history" model="ir.actions.act_window">-->
+<!--            <field name="name">Store Inventory Valuation</field>-->
+<!--            <field name="res_model">stock.history</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d %H:%M:%S')),('location_id','=',514)]</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,graph</field>-->
+<!--            <field name="context">{'search_default_group_by_product': True}</field>-->
+<!--        </record>-->
+
+<!--        <record id="action_sub_2_stock_valuation_history" model="ir.actions.act_window">-->
+<!--            <field name="name">Store Inventory Valuation</field>-->
+<!--            <field name="res_model">stock.history</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d %H:%M:%S')),('location_id','=',515)]</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,graph</field>-->
+<!--            <field name="context">{'search_default_group_by_product': True}</field>-->
+<!--        </record>-->
+
+<!--        <record id="action_site_store_valuation_history" model="ir.actions.act_window">-->
+<!--            <field name="name">Store Inventory Valuation</field>-->
+<!--            <field name="res_model">stock.history</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d %H:%M:%S')),('location_id','not in',[507,514,515])]</field>-->
+<!--&lt;!&ndash;            <field name="view_id" ref="view_stock_kanban"/>&ndash;&gt;-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,kanban,graph</field>-->
+<!--            <field name="context">{'search_default_group_by_location': True,'search_default_group_by_product': True}</field>-->
+<!--        </record>-->
+
+<!--        <menuitem-->
+<!--                id="menu_store_details_id"-->
+<!--                name="Store Details"-->
+<!--                parent="stock.menu_stock_root"-->
+<!--                sequence="1"-->
+<!--        />-->
+
+<!--        <menuitem-->
+<!--                id="action_main_stock_valuation_history"-->
+<!--                name="BG Main Store"-->
+<!--                action="action_main_stock_valuation_history"-->
+<!--                parent="menu_store_details_id"-->
+<!--                sequence="1"-->
+<!--        />-->
+
+<!--        <menuitem-->
+<!--                id="menu_action_main_sub_1_store_history"-->
+<!--                name="BG Sub Store1"-->
+<!--                action="action_sub_1_stock_valuation_history"-->
+<!--                parent="menu_store_details_id"-->
+<!--                sequence="2"-->
+<!--        />-->
+
+<!--        <menuitem-->
+<!--                id="menu_action_main_store_sub_2_history"-->
+<!--                name="BG Sub Store2"-->
+<!--                action="action_sub_2_stock_valuation_history"-->
+<!--                parent="menu_store_details_id"-->
+<!--                sequence="3"-->
+<!--        />-->
+<!--        <menuitem-->
+<!--                id="menu_action_main_site_store_history"-->
+<!--                name="Site Store Details"-->
+<!--                action="action_site_store_valuation_history"-->
+<!--                parent="menu_store_details_id"-->
+<!--                sequence="4"-->
+<!--        />-->
+
+<!--        <menuitem id="stock.menu_stock_warehouse_mgmt" name="Operations" parent="stock.menu_stock_root" sequence="2"/>-->
+
+<!--&lt;!&ndash;        <menuitem id="menu_stock_warehouse_mgmt" name="Operations" parent="menu_stock_root" sequence="1"/>&ndash;&gt;-->
+
+
+
+
+
+    </data>
+</openerp>

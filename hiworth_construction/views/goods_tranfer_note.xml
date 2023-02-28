@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="form_goods_tranfer_note" model="ir.ui.view">
+			<field name="name">form.goods.tranfer.note</field>
+			<field name="model">goods.transfer.note.in</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+
+
+						<button name="approve_purchase3" type="object" class="oe_highlight" string="Receive Products"
+
+								states="transfer"
+								/>
+
+						<button name="action_transfer" type="object" class="oe_highlight" string="Transfer"
+								states="draft"
+
+								/>
+
+
+
+						<field name="state" widget="statusbar"/>
+					</header>
+					<div class="oe_title">
+
+                        
+                        	<group col="4">
+                        		<field name="gtn_no" string='GTN NO' readonly="1"/>
+                        		<field name='date' required="1" attrs="{'readonly':[('state','=','recieve')]}"/>
+								<field name="goods_transfer_bool" invisible="1"/>
+                        	</group>
+                    </div>
+
+					<group col="4">
+						<field name="user_id" required="1" attrs="{'readonly':[('state','=','recieve')]}" options="{'no_create':True, 'no_create_edit':True}"/>
+						<field name="store_manager_id" required="1" attrs="{'readonly':[('state','=','recieve')]}" options="{'no_create':True, 'no_create_edit':True}"/>
+						<field name="transfer_gtn_id" invisible="1"/>
+					</group>
+					<group col='4'>
+							<field name='project_id' required="1" attrs="{'readonly':[('state','=','recieve')]}" string='From Project Name' options="{'no_create':True, 'no_create_edit':True}"/>
+							<field name='to_project_id' required="1" attrs="{'readonly':[('state','=','recieve')]}" string='To Project Name' options="{'no_create':True, 'no_create_edit':True}"/>
+						</group>
+					
+						<group col='4'>
+                            <field name="project_location_ids" invisible="1"/>
+                            <field name="to_project_location_ids" invisible="1"/>
+							<field name='site_from' required="1" attrs="{'readonly':[('state','=','recieve')]}" domain="[('usage','=','internal'),('id','in',project_location_ids and project_location_ids[0] and project_location_ids[0][2] or [])]" options="{'no_create':True, 'no_create_edit':True}"/>
+							<field name='site_to'  required="1" attrs="{'readonly':[('state','=','recieve')]}" domain="[('usage','=','internal'),('id','in',to_project_location_ids and to_project_location_ids[0] and to_project_location_ids[0][2] or [])]"  options="{'no_create':True, 'no_create_edit':True}"/>
+							<field name="category_ids" required="1" attrs="{'readonly':[('state','=','recieve')]}"/>
+						</group>
+						
+							<field name='transfer_list_ids' attrs="{'readonly':[('state','=','recieve')]}" required="1" context="{'source_location':site_from,'category_id':category_ids}">
+								<tree editable="bottom">
+									<field name='item_id'/>
+									<field name='desc'/>
+									<!--<field name='specs'/>-->
+									<field name='stock_balance'/>
+									<field name='qty'/>
+									<field name='rate'/>
+									<field name='value'/>
+									<field name='remarks'/>
+								</tree>
+							</field>
+
+						 <div class="oe_chatter">
+                    		<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    		<field name="message_ids" widget="mail_thread"/>
+                		</div>
+				</form>
+			</field>
+		</record>
+
+		<record id="tree_goods_transfer_note" model="ir.ui.view">
+			<field name="name">tree.goods.transfer.note.in</field>
+			<field name="model">goods.transfer.note.in</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="gtn_no" string='GTN NO'/>
+                                        <field name="date"/>
+					<field name="site_from" domain="[('usage','=','internal')]"/>
+					<field name="site_to" domain="[('usage','=','internal')]"/>
+		
+
+					<field name="state"/>
+					<field name="goods_transfer_bool" invisible="1"/>
+				</tree>
+			</field>
+		</record>
+
+
+
+		<record id="goods_transfer_note_in_search" model="ir.ui.view">
+			<field name="name">tree.goods.transfer.note.in</field>
+			<field name="model">goods.transfer.note.in</field>
+			<field name="arch" type="xml">
+				<search>
+					<field name="site_from" domain="[('usage','=','internal')]"/>
+					<field name="site_to" domain="[('usage','=','internal')]"/>
+					<field name="project_id"/>
+					<field name="date"/>
+
+
+					<group>
+						<filter string="Site From" name="site_from" domain="[]" context="{'group_by':'site_from'}"/>
+						<filter string="Site To" name="site_to" domain="[]" context="{'group_by':'site_to'}"/>
+						<filter string="Date" name="date" domain="[]" context="{'group_by':'date'}"/>
+						<filter string="Project" name="project_id" domain="[]" context="{'group_by':'project_id'}"/>
+
+					</group>
+				</search>
+			</field>
+		</record>
+
+
+		<record id="action_goods_transfer_note" model="ir.actions.act_window">
+			<field name="name">Site to Site</field>
+			<field name="res_model">goods.transfer.note.in</field>
+			<!--field name="type">ir.actions.act_window</field-->
+			<field name="view_type">form</field>
+			<field name="search_view_id" ref="goods_transfer_note_in_search"/>
+			<!--field name="domain">[('general_purchase','=',True)]</field-->
+			<field name="view_id" ref="tree_goods_transfer_note"/>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+
+
+
+
+
+		<menuitem id="menu_goods_transfer_note"
+				  parent="stock.menu_stock_warehouse_mgmt"
+				  name="Site to Site"
+				  sequence="3"
+				  action="action_goods_transfer_note"
+				  groups="base.group_erp_manager,hiworth_construction.group_warehouse_user"/>
+
+
+		<report id="report_goods_transfer_note" string="Goods Transfer Reports"
+                model="goods.transfer.note.in" report_type="qweb-pdf"
+                name="hiworth_construction.report_goods_transfer_note_template"
+
+			/>
+    <template id="external_layout_inherit_goods_transfer">
+    <!-- Multicompany -->
+    <t t-if="o and 'company_id' in o">
+        <t t-set="company" t-value="o.company_id"></t>
+    </t>
+    <t t-if="not o or not 'company_id' in o">
+        <t t-set="company" t-value="res_company"></t>
+    </t>
+
+    <t t-call="hiworth_construction.external_layout_header_inherit_goods_transfer" />
+    <t t-raw="0" />
+    <t t-call="hiworth_construction.external_layout_footer_inherit_goods_transfer" />
+</template>
+
+<template id="external_layout_header_inherit_goods_transfer">
+    <div class="header">
+        <div class="row">
+            <div class="col-xs-3">
+                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 80px;"/>
+            </div>
+            <div class="col-xs-9 text-left" style="font-size: 20px;margin-top:30px;" t-field="company.rml_header1"/>
+        </div>
+            <div class="col-xs-12 text-center" style="font-size: 20px;margin-top:10px;">
+                <div style="border-style:solid;"><b>GOODS TRANSFER NOTE</b></div>
+        </div>
+        <div class="row zero_min_height">
+            <div class="col-xs-12">
+                <div style="border-bottom: 1px solid black;"></div>
+            </div>
+        </div>
+        <!--div class="row">
+            <div class="col-xs-3">
+                <div t-field="company.partner_id"
+                    t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
+                    style="border-bottom: 1px solid black;"/>
+            </div>
+        </div-->
+    </div>
+</template>
+
+<template id="external_layout_footer_inherit_goods_transfer">
+    <div class="footer">
+        <div class="text-center" style="border-top: 1px solid black;">
+            <ul t-if="not company.custom_footer" class="list-inline">
+                <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
+
+                <li t-if="company.fax and company.phone">&amp;bull;</li>
+                <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
+
+                <li t-if="company.email">&amp;bull;</li>
+                <li t-if="company.email">Email: <span t-field="company.email"/></li>
+
+                <li t-if="company.website">&amp;bull;</li>
+                <li t-if="company.website">Website: <span t-field="company.website"/></li>
+            </ul>
+
+            <t t-if="company.custom_footer">
+                <span t-raw="company.rml_footer"/>
+            </t>
+
+            <ul class="list-inline">
+                <li>Page:</li>
+                <li><span class="page"/></li>
+                <li>/</li>
+                <li><span class="topage"/></li>
+            </ul>
+        </div>
+    </div>
+</template>
+ 		<template id="report_goods_transfer_note_template">
+            <t t-call="report.html_container">
+                <t t-call="hiworth_construction.external_layout_inherit_goods_transfer">
+                    <div class="page">
+                        <t t-foreach="docs" t-as="o">
+
+                                    <table class="table table-bordered" align="left" cellpadding="10" style="font-size:16px;width:30%">
+                                        <tr>
+                                            <td>From:<span t-esc="o.site_from.name" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td>To : <span t-esc="o.site_to.name"/></td>
+                                        </tr>
+                                    </table>
+                                    <table class="table table-bordered" align="right" cellpadding="10" style="font-size:16px;width:30%">
+                                        <tr>
+                                            <td>Project : <span t-esc="o.project_id.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>GTN No: <span t-esc="o.gtn_no"/></td>
+                                        </tr>
+                                        <tr >
+                                        	<td>Date : <span t-esc="o.date"/></td>
+                                        </tr>
+                                    </table>
+
+
+
+                            <t t-set="sl_no" t-value="1"/>
+                            <table class="table table-bordered" >
+                                <thead>
+                                    <tr >
+                                        <th>Sl.No</th>
+                                        <th>Um</th>
+                                        <th>Description/ Nomenclature</th>
+                                        <th>Part No./ Specification</th>
+                                        <th>Qty</th>
+                                        <th>Rate</th>
+                                        <th>Value</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.goods_transfer_report()" t-as="line">
+                                        <tr >
+                                            <td>
+                                                <span t-esc="sl_no"/>
+                                            </td>
+                                                <td>
+                                                    <span t-esc="line.get('item_id')"/>
+                                                </td>
+
+                                                <td>
+                                                    <span t-esc="line.get('desc')"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="line.get('specs')"/>
+                                                </td>
+
+                                            <td>
+                                                <span t-esc="line.get('qty')"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('rate')"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('value')"/>
+                                            </td>
+                                            <td>
+
+                                                    <span t-esc="line.get('remarks')"/>
+                                            </td>
+
+                                        </tr>
+                                        <t t-set="sl_no" t-value="sl_no+1"/>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <table class="table table-bordered">
+                                    <tr>
+                                        <td>Requested By : <span t-esc = "o.user_created.name"/></td>
+                                        <td>Authorised By :<span t-esc = "o.project_manager.name"/> </td>
+                                        <td>Transferred By :<span t-esc = "o.purchase_manager.name"/> </td>
+                                        <td>Received By :<span t-esc = "o.dgm_id.name"/> </td>
+                                    </tr>
+
+                            </table>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+	</data>
+</openerp>

@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<record id="form_vehicle_emi_report" model="ir.ui.view">
+			<field name="name">vechicle.emi.report.form</field>
+			<field name="model">vehicle.emi.report.wizard</field>
+			<field name="arch" type="xml">
+				<form >
+					<group>
+						<group>
+							<field name="from_date" required="1"/>
+						</group>
+						<group>
+							<field name="to_date"  required="1"/>
+						</group>
+					</group>
+					<footer>
+						<button type="object" name="view_vehicle_emi_report"
+							string="View" class="oe_highlight" />
+						<button type="object" name="print_vehicle_emi_report"
+							string="Print" class="oe_highlight" />
+						<button special="cancel" string="Cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_form_vehicle_emi_report" model="ir.actions.act_window">
+			<field name="name">Vehicle Emi report</field>
+			<field name="res_model">vehicle.emi.report.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		 <menuitem name="Vehicle Emi Report" parent="hiworth_construction.menu_hiworth_fleet_finance" id="vehicle_emi_report" action="action_form_vehicle_emi_report" />
+
+		<report id="report_vehicle_emi_report" string="Vehicle Emi Report"
+		model="vehicle.emi.report.wizard" report_type="qweb-html"
+		name="hiworth_construction.report_vehicle_emi_report_template" />
+
+
+		<template id="report_vehicle_emi_report_template">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<t t-foreach="docs" t-as="o">
+						<div class="page">
+							<div class="col-xs-12" style='font-size:20px'>
+								<center><b>VEHICLE EMI REPORT</b></center>
+							</div>
+							<table class="table table-bordered ">
+								<tr>
+									<td style='font-size:15px'><b>Sl No</b></td>
+									<td style='font-size:15px'><b>Loan No</b></td>
+									<td style='font-size:15px'><b>Vehicle Reg No</b></td>
+									<td style='font-size:15px'><b>Vehicle Type</b></td>
+									<td style='font-size:15px'><b>Account</b></td>
+									<td style='font-size:15px'><b>Amount Financed</b></td>
+									<td style='font-size:15px'><b>Emi Bank</b></td>
+									<td style='font-size:15px'><b>Emi Amount</b></td>
+									<td style='font-size:15px'><b>Tenure(In Months)</b></td>
+									<td style='font-size:15px'><b>Approved</b></td>
+									<td style='font-size:15px'><b>Closed</b></td>
+									<td style='font-size:15px'><b>NoC Recieved</b></td>
+									<td style='font-size:15px'><b>Documents Recieved</b></td>
+									<td style='font-size:15px'><b>Hypothecation</b></td>
+								</tr>
+								<t t-set="sl_no" t-value="0"/>
+								<t t-foreach="o.get_vehicle_emi()" t-as="line">
+								
+								<tr>
+									<td style='font-size:15px'><span t-esc="sl_no"/></td>
+									<t t-set="sl_no" t-value="sl_no+1" />
+									<td style='font-size:15px'><span t-esc="line.name"/></td>
+									<td style='font-size:15px'><span t-esc="line.vehicle_id.license_plate"/></td>
+									<td style='font-size:15px'><span t-esc="line.category_id.name"/></td>
+									<td style='font-size:15px'><span t-esc="line.loan_account_id.name"/></td>
+									<td style='font-size:15px'><span t-esc="line.loan_amount"/></td>
+									<td style='font-size:15px'><span t-esc="line.bank_id.bank.name"/></td>
+									<td style='font-size:15px'><span t-esc="line.emi_amount"/></td>
+									<td style='font-size:15px'><span t-esc="line.period"/></td>
+									<t t-if="line.state in ['approved','closed','noc','documents','hypothecation']">
+										<td style='font-size:15px'><span>Approved</span></td>
+									</t>
+									<t t-if="line.state not in ['approved','closed','noc','documents','hypothecation']">
+										<td style='font-size:15px'><span>NO</span></td>
+									</t>
+									<t t-if="line.state in ['closed','noc','documents','hypothecation']">
+										<td style='font-size:15px'><span>Closed</span></td>
+									</t>
+									<t t-if="line.state not in ['closed','noc','documents','hypothecation']">
+										<td style='font-size:15px'><span>NO</span></td>
+									</t>
+									<t t-if="line.state in ['noc','documents','hypothecation']">
+										<td style='font-size:15px'><span>YES</span></td>
+									</t>
+									<t t-if="line.state not in ['noc','documents','hypothecation']">
+										<td style='font-size:15px'><span>NO</span></td>
+									</t>
+									<t t-if="line.state in ['documents','hypothecation']">
+										<td style='font-size:15px'><span>YES</span></td>
+									</t>
+									<t t-if="line.state not in ['documents','hypothecation']">
+										<td style='font-size:15px'><span>NO</span></td>
+									</t>
+									<t t-if="line.state in ['hypothecation']">
+										<td style='font-size:15px'><span>YES</span></td>
+									</t>
+									<t t-if="line.state not in ['hypothecation']">
+										<td style='font-size:15px'><span>NO</span></td>
+									</t>
+
+
+									
+									
+								</tr>
+
+								</t>
+							</table>
+
+
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+
+	</data>
+</openerp>

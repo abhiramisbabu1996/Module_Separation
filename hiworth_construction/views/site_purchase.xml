@@ -1,0 +1,1370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+    <record id="form_site_purchase_view" model="ir.ui.view">
+            <field name="name">form.site.purchase</field>
+            <field name="model">site.purchase</field>
+            <field name="enlarge_form">False</field>
+            <field name="arch" type="xml" >
+                  <form>
+
+                    <header>
+                      <button name="confirm_purchase" type="object" class="oe_highlight" string="Request" states="draft"  />
+                        <button name="action_request_init" type="object" class="oe_highlight" string="Accept" states="confirm" groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                     <button name="button_create_purchase" type="object" class="oe_highlight" string="Create Quotation" states="accept"  groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                       <button name="button_create_comparison" type="object" class="oe_highlight" string="Create Direct PO" states="accept"  confirm="You are proceeding without a quotation and a comparison. Proceed Yes or No?" groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                        <button name="%(action_view_stock_history)d" states="confirm,accept"
+                            string="View Stock history" type="action" />
+
+                       <button name="cancel_purchase" type="object" class="oe_highlight" string="Cancel"  />
+                      <button name="set_draft" type="object" class="oe_highlight" string="Set Draft" states="cancel" />
+                      <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accept,order,received,cancel"/>
+
+                    </header>
+                    <sheet>
+                      <!-- <div class="oe_right oe_button_box" name="buttons" >
+                        <button class="oe_inline oe_stat_button" type="object" name="view_invoices" icon="fa-tasks" string="View Invoices" attrs="{'invisible':[('state','!=','invoice')]}"/>
+                      </div> -->
+                    <div class="oe_title">
+                      <h1>
+                        <field name="name" />
+                      </h1>
+                    </div>
+                    <group>
+                      <group>
+                        <!-- <field name="supervisor_id" /> -->
+                         <field name="order_by" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="mode_of_order" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="responsible" attrs="{'readonly':[('state','in',['order','received'])]}" invisible="1"/>
+                           <field name="project_id" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="site" required="1" attrs="{'readonly':[('state','in',['order','received'])]}" domain="[('usage','=','internal')]" />
+
+
+
+                        <field name="general_purchase" attrs="{'readonly':[('state','in',['order','received'])]}" invisible="1"  />
+                          <field name="item_ids" widget="many2many_tags" attrs="{'readonly':[('state','in',['order','received'])]}" invisible="1"/>
+                          <field name="estimated_amt" invisible="1"/>
+                      </group>
+                      <group>
+                        <field name="order_date" required="1" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="min_expected_date" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="max_expected_date" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                      </group>
+
+
+                    </group>
+                    <group >
+                      <group string="Item details">
+                           <field name="site_purchase_item_line_ids" nolabel="1" attrs="{'readonly':[('state','in',['approved1','approved2','order','received'])]}">
+                              <tree editable="bottom">
+                                  <field name="item_id" required="1" />
+                                  <field name="brand_name" string="Brand"/>
+                                    <field name="desc" required="1" />
+                                <field name="unit" required="1" />
+                                <field name="quantity" widget="char" required="1" sum="Total" />
+                               <field name="project_approved_qty" readonly="1" invisible="1"/>
+                                  <field name="processed_qty" readonly="1" invisible="1"/>
+                              </tree>
+
+
+                          </field>
+
+
+                      </group>
+
+                    </group>
+
+                 <!-- <group string="Approvals" attrs="{'invisible':[('state','in',('draft','confirm'))]}">
+                    <group>
+                      <field name="project_manager" readonly="1" 
+                        attrs="{'invisible':[('state','in',('draft','confirm'))]}" />
+                      <field name="sign_purchase_manager"  nolabel="1" attrs="{'invisible':[('state','in',('draft','confirm'))],'readonly':[('state','in',['order','received'])]}" />
+                    </group>
+                    <group>
+                      <field name="purchase_manager" readonly="1" attrs="{'invisible':[('state','in',('draft','confirm','approved1'))]}" />
+                       <field name="sign_general_manager"  nolabel="1" attrs="{'invisible':[('state','in',('draft','confirm','approved1'))],'readonly':[('state','in',['order','received'])]}" />
+                    </group>
+                  </group>-->
+                </sheet>
+                    
+                   
+                  </form>
+
+            </field>
+        </record>
+
+
+    
+
+
+        <record id="tree_site_purchase_statements" model="ir.ui.view">
+            <field name="name">tree.site.purchase</field>
+            <field name="model">site.purchase</field>
+            <field name="arch" type="xml">
+                  <tree colors="red:state=='cancel'">
+                    <field name="name" string="P.R NO"/>
+                  <!--   <field name="supervisor_id" /> -->
+                   <field name="order_by"/>
+                        <field name="mode_of_order"/>
+                    <field name="responsible" invisible="1"/>
+
+                    <field name="order_date" />
+                    <field name="min_expected_date" />
+                    <field name="max_expected_date" />
+                   
+
+                 
+                    <field name="state"/>
+                  </tree>
+
+            </field>
+        </record>
+
+
+
+
+        <record id="action_site_purchase2" model="ir.actions.act_window">
+            <field name="name">General - Purchase</field>
+            <field name="res_model">site.purchase</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="context">{'default_general_purchase':1}</field>
+            <field name="domain">[('general_purchase','=',True)]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+         <record id="action_view_general_purchase_tree1" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="tree_site_purchase_statements" />
+            <field name="act_window_id" ref="action_site_purchase2" />
+             <field name="sequence">1</field>
+        </record>
+
+        <record id="action_view_general_purchase_form1" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_site_purchase_view" />
+            <field name="act_window_id" ref="action_site_purchase2" />
+              <field name="sequence">2</field>
+        </record>
+
+        <menuitem name="Purchase Request"
+            id="departmentwise_purchase_requisitions"
+            parent="base.menu_purchase_root"
+            sequence="0"/>
+
+        <menuitem id="menu_site_purchase" 
+          parent="departmentwise_purchase_requisitions"
+          action="action_site_purchase2" 
+          name="Office Purchase/Site"
+          sequence="2"
+          />
+
+
+
+        <record id="form_bitumen_purchase_view" model="ir.ui.view">
+            <field name="name">form.bitumen.purchase</field>
+            <field name="model">site.purchase</field>
+            <field name="arch" type="xml">
+                  <form>
+
+                    <header>
+                     <button name="confirm_purchase" type="object" class="oe_highlight" string="Request" states="draft"  />
+                        <button name="action_request_init" type="object" class="oe_highlight" string="Accept" states="confirm" groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                     <button name="button_create_purchase" type="object" class="oe_highlight" string="Create Quotation" states="accept"  groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                       <button name="button_create_comparison" type="object" class="oe_highlight" string="Create Direct PO" states="accept" confirm="You are proceeding without a quotation and a comparison. Proceed Yes or No?" groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+
+                       <button name="cancel_purchase" type="object" class="oe_highlight" string="Cancel"  />
+                      <button name="set_draft" type="object" class="oe_highlight" string="Set Draft" states="cancel" />
+                      <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                      <!-- <div class="oe_right oe_button_box" name="buttons" >
+                        <button class="oe_inline oe_stat_button" type="object" name="view_invoices" icon="fa-tasks" string="View Invoices" attrs="{'invisible':[('state','!=','invoice')]}"/>
+                      </div> -->
+                    <div class="oe_title">
+                      <h1>
+                        <field name="name"/>
+                      </h1>
+                    </div>
+                    <group>
+                      <group>
+                      <!--   <field name="supervisor_id"/> -->
+                          <field name="project_id" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="site" attrs="{'readonly':[('state','in',['order','received'])]}" required="1" domain="[('usage','=','internal')]" />
+
+                        <field name="general_purchase" invisible="1"  />
+                        <!--<field name="bitumen_agent" attrs="{'readonly':[('state','in',['order','received'])]}" domain="[('supplier','=',True)]" context="{'default_supplier':True, 'default_customer': False}"/>
+                        --><field name="vehicle_agent" attrs="{'readonly':[('state','in',['order','received'])]}" domain="[('supplier','=',True)]" context="{'default_supplier':True, 'default_customer': False}"/>
+                        <!-- <field name="bank_id" /> -->
+                        <field name="order_by" />
+
+                          <field name="item_ids" widget="many2many_tags" invisible="1"/>
+                          <field name="estimated_amt" invisible="1"/>
+                      </group>
+                      <group>
+                        
+                        <field name="order_date" attrs="{'readonly':[('state','in',['order','received'])]}" required="1" />
+                        <field name="min_expected_date" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="max_expected_date" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                         <field name="mode_of_order" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                                               <!--  <field name="doc_no" /> -->
+                        <field name="bitumen_purchase" invisible="1"/>
+                      </group>
+                    </group>
+                    <group >
+                     <group string="Item details">
+                          <field name="site_purchase_item_line_ids" nolabel="1" attrs="{'readonly':[('state','in',['order','received'])]}">
+                              <tree editable="bottom">
+                                  <field name="item_id" required="1" />
+                                  <field name="brand_name" string="Brand"/>
+                                    <field name="desc" required="1" />
+                                <field name="unit" required="1" />
+                                <field name="quantity" widget="char" required="1" />
+                                 <field name="project_approved_qty" readonly="1" invisible="1"/>
+                                  <field name="processed_qty" readonly="1" invisible="1"/>
+
+                              </tree>
+
+
+                          </field>
+
+                      </group>
+
+                    </group>
+
+                 <!-- <group string="Approvals" attrs="{'invisible':[('state','in',('draft','confirm'))]}">
+                    <group>
+                      <field name="project_manager" readonly="1" 
+                        attrs="{'invisible':[('state','in',('draft','confirm'))]}" />
+                       <field name="sign_purchase_manager" readonly="1" nolabel="1" attrs="{'invisible':[('state','in',('draft','confirm'))]}" />
+                    </group>
+                    <group>
+                      <field name="purchase_manager" readonly="1" attrs="{'invisible':[('state','in',('draft','confirm','approved1'))]}" />
+                       <field name="sign_general_manager" readonly="1" nolabel="1" attrs="{'invisible':[('state','in',('draft','confirm','approved1'))]}" />
+                    </group>
+                  </group>-->
+                </sheet>
+                    
+                   
+                  </form>
+
+            </field>
+        </record>
+
+
+        <record id="action_bitumen_purchase2" model="ir.actions.act_window">
+            <field name="name">Bitumen - Purchase</field>
+            <field name="res_model">site.purchase</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="context">{'default_bitumen_purchase':1}</field>
+            <field name="domain">[('bitumen_purchase','=',True)]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+         <record id="action_view_general_purchase_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="tree_site_purchase_statements" />
+            <field name="act_window_id" ref="action_bitumen_purchase2" />
+              <field name=" ">1</field>
+        </record>
+
+        <record id="action_view_general_purchase_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_bitumen_purchase_view" />
+            <field name="act_window_id" ref="action_bitumen_purchase2" />
+             <field name="sequence">2</field>
+        </record>
+
+
+   
+
+
+
+
+<!--     <menuitem name="Bitumen - Purchase"-->
+<!--            id="BCPL_purchase_requisitions"-->
+<!--            parent="hiworth_construction.departmentwise_purchase_requisitions"-->
+<!--            action= "action_bitumen_purchase2"-->
+<!--            sequence="1"/>-->
+
+         
+
+
+
+<!-- vehicle department -->
+
+
+
+           <record id="form_vehicle_dept" model="ir.ui.view">
+            <field name="name">form.site.purchase</field>
+            <field name="model">site.purchase</field>
+            <field name="arch" type="xml">
+                  <form>
+
+                    <header>
+                     <button name="confirm_purchase" type="object" class="oe_highlight" string="Request" states="draft"  />
+                        <button name="action_request_init" type="object" class="oe_highlight" string="Accept" states="confirm" groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                     <button name="button_create_purchase" type="object" class="oe_highlight" string="Create Quotation" states="accept"  groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                       <button name="button_create_comparison" confirm="You are proceeding without a quotation and a comparison. Proceed Yes or No?" type="object" class="oe_highlight" string="Create Direct PO" states="accept"  groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+
+                       <button name="cancel_purchase" type="object" class="oe_highlight" string="Cancel"  />
+                      <button name="set_draft" type="object" class="oe_highlight" string="Set Draft" states="cancel" />
+                      <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                      <!-- <div class="oe_right oe_button_box" name="buttons" >
+                        <button class="oe_inline oe_stat_button" type="object" name="view_invoices" icon="fa-tasks" string="View Invoices" attrs="{'invisible':[('state','!=','invoice')]}"/>
+                      </div> -->
+                    <div class="oe_title">
+                      <h1>
+                        <field name="name" />
+                      </h1>
+                    </div>
+                    <group>
+                      <group>
+                        <!-- <field name="supervisor_id" /> -->
+                        <field name="order_by" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="mode_of_order" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="responsible" invisible="1"/>
+                           <field name="vehicle_id" attrs="{'readonly':[('state','in',['order','received'])]}" required="1"/>
+                       <field name="project_id" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="site" attrs="{'readonly':[('state','in',['order','received'])]}" domain="[('usage','=','internal')]" />
+
+
+                        <field name="general_purchase" invisible="1"  />
+                          <field name="item_ids" widget="many2many_tags" invisible="1"/>
+                          <field name="estimated_amt" invisible="1"/>
+                      </group>
+                      <group>
+                        <field name="order_date" attrs="{'readonly':[('state','in',['order','received'])]}" required="1" />
+                        <field name="min_expected_date" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="max_expected_date" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                      </group>
+                    </group>
+                    <group >
+                     <group string="Item details">
+                          <field name="site_purchase_item_line_ids" attrs="{'readonly':[('state','in',['order','received'])]}" nolabel="1">
+                              <tree editable="bottom">
+                                  <field name="item_id" required="1" />
+                                  <field name="brand_name" string="Brand"/>
+                                  <field name="model_name" string="Model"/>
+                                  <field name="desc" required="1" />
+                                  <field name="unit" required="1" />
+                                <field name="quantity" widget="char" required="1" />
+                              <field name="project_approved_qty" readonly="1" invisible="1"/>
+                                  <field name="processed_qty" readonly="1" invisible="1"/>
+
+                              </tree>
+
+
+                          </field>
+
+                      </group>
+
+                    </group>
+
+                <!--  <group string="Approvals" attrs="{'invisible':[('state','in',('draft','confirm'))]}">
+                    <group>
+                      <field name="project_manager" readonly="1"  attrs="{'invisible':[('state','in',('draft','confirm'))]}"/>
+                       <field name="sign_purchase_manager" readonly="1" nolabel="1" attrs="{'invisible':[('state','in',('draft','confirm'))]}" />
+                    </group>
+                    <group>
+                      <field name="purchase_manager" readonly="1" 
+                        attrs="{'invisible':[('state','in',('draft','confirm','approved1'))]}"
+                         />
+                       <field name="sign_general_manager" readonly="1" nolabel="1" attrs="{'invisible':[('state','in',('draft','confirm','approved1'))]}" />
+                    </group>
+                  </group>-->
+                </sheet>
+                    
+                   
+                  </form>
+
+            </field>
+        </record>
+
+
+
+        <record id="action_vehicle_dept" model="ir.actions.act_window">
+            <field name="name">Vehicle &amp; Spare Purchase</field>
+            <field name="res_model">site.purchase</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="context">{'default_vehicle_purchase':1}</field>
+            <field name="domain">[('vehicle_purchase','=',True)]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+         <record id="action_view_vehicle_dept_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="tree_site_purchase_statements" />
+            <field name="act_window_id" ref="action_vehicle_dept" />
+              <field name="sequence">1</field>
+        </record>
+
+        <record id="action_view_vehicle_dept_purchase_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_vehicle_dept" />
+            <field name="act_window_id" ref="action_vehicle_dept" />
+             <field name="sequence">2</field>
+        </record>
+
+
+<!--    <menuitem id="menu_vehicle_dept_purchase" -->
+<!--          parent="departmentwise_purchase_requisitions"-->
+<!--          action="action_vehicle_dept" -->
+<!--          name="Vehicle &amp; Spare Purchase"-->
+<!--          sequence="3" -->
+<!--                  />&ndash;&gt;-->
+
+<!-- Teleco department -->
+
+
+     <record id="form_telecom_dept" model="ir.ui.view">
+            <field name="name">form.site.purchase</field>
+            <field name="model">site.purchase</field>
+            <field name="arch" type="xml">
+                  <form>
+
+                    <header>
+                      <button name="confirm_purchase" type="object" class="oe_highlight" string="Request" states="draft"  />
+                        <button name="action_request_init" type="object" class="oe_highlight" string="Accept" states="confirm" groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                     <button name="button_create_purchase" type="object" class="oe_highlight" string="Create Quotation" states="accept"  groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                       <button name="button_create_comparison" confirm="You are proceeding without a quotation and a comparison. Proceed Yes or No?" type="object" class="oe_highlight" string="Create Direct PO" states="accept"  groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+
+                       <button name="cancel_purchase" type="object" class="oe_highlight" string="Cancel"  />
+                      <button name="set_draft" type="object" class="oe_highlight" string="Set Draft" states="cancel" />
+                      <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                      <!-- <div class="oe_right oe_button_box" name="buttons" >
+                        <button class="oe_inline oe_stat_button" type="object" name="view_invoices" icon="fa-tasks" string="View Invoices" attrs="{'invisible':[('state','!=','invoice')]}"/>
+                      </div> -->
+                    <div class="oe_title">
+                      <h1>
+                        <field name="name" />
+                      </h1>
+                    </div>
+                    <group>
+                      <group>
+                        <field name="supervisor_id" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="responsible" invisible="1"/>
+                           <field name="project_id"/>
+                        <field name="site" required="1" domain="[('usage','=','internal')]" />
+
+                        <field name="expected_supplier" options="{'no_create':1}" attrs="{'required':[('state','=','approved2')]}" />
+                        <field name="general_purchase" invisible="1"  />
+                          <field name="item_ids" widget="many2many_tags" invisible="1"/>
+                          <field name="estimated_amt" invisible="1"/>
+                      </group>
+                      <group>
+                        <field name="order_date" required="1" />
+                        <field name="min_expected_date" />
+                        <field name="max_expected_date" />
+                      </group>
+                    </group>
+                    <group >
+                      <group string="Item details">
+                          <field name="site_purchase_item_line_ids" nolabel="1">
+                              <tree editable="bottom">
+                                  <field name="item_id" required="1" />
+                                  <field name="brand_name" string="Brand"/>
+                                    <field name="desc" required="1" />
+                                <field name="unit" required="1" />
+                                <field name="quantity" widget="char" required="1" />
+                                <field name="project_approved_qty" readonly="1" invisible="1"/>
+                                  <field name="processed_qty" readonly="1" invisible="1"/>
+
+                              </tree>
+
+
+                          </field>
+
+                      </group>
+
+                    </group>
+
+                 <!-- <group string="Approvals" attrs="{'invisible':[('state','in',('draft','confirm'))]}">
+                    <group>
+                      <field name="project_manager" readonly="1" 
+                        attrs="{'invisible':[('state','in',('draft','confirm'))]}"/>
+                       <field name="sign_purchase_manager" readonly="1" nolabel="1" attrs="{'invisible':[('state','in',('draft','confirm'))]}" />
+                    </group>
+                    <group>
+                      <field name="purchase_manager" readonly="1" 
+                       attrs="{'invisible':[('state','in',('draft','confirm','approved1'))]}"  />
+                       <field name="sign_general_manager" readonly="1" nolabel="1" attrs="{'invisible':[('state','in',('draft','confirm','approved1'))]}" />
+                    </group>
+                  </group>-->
+                </sheet>
+                    
+                   
+                  </form>
+
+            </field>
+        </record>
+
+
+
+
+        <record id="action_telecom_dept" model="ir.actions.act_window">
+            <field name="name">Telecom Department</field>
+            <field name="res_model">site.purchase</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="context">{'default_telecom_purchase':1}</field>
+            <field name="domain">[('telecom_purchase','=',True)]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+         <record id="action_view_telecom_dept_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="tree_site_purchase_statements" />
+            <field name="act_window_id" ref="action_telecom_dept" />
+              <field name="sequence">1</field>
+        </record>
+
+        <record id="action_view_telecom_dept_purchase_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_telecom_dept" />
+            <field name="act_window_id" ref="action_telecom_dept" />
+             <field name="sequence">2</field>
+        </record>
+
+
+
+
+
+
+          <!-- interlocks department -->
+
+
+
+
+    <record id="form_interlocks_dept" model="ir.ui.view">
+            <field name="name">form.site.purchase</field>
+            <field name="model">site.purchase</field>
+            <field name="arch" type="xml">
+                  <form>
+
+                    <header>
+                      <button name="confirm_purchase" type="object" class="oe_highlight" string="Request" states="draft"  />
+                        <button name="action_request_init" type="object" class="oe_highlight" string="Accept" states="confirm" groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                     <button name="button_create_purchase" type="object" class="oe_highlight" string="Create Quotation" states="accept"  groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                       <button name="button_create_comparison"  confirm="You are proceeding without a quotation and a comparison. Proceed Yes or No?" type="object" class="oe_highlight" string="Create Direct PO" states="accept"  groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+
+                       <button name="cancel_purchase" type="object" class="oe_highlight" string="Cancel"  />
+                      <button name="set_draft" type="object" class="oe_highlight" string="Set Draft" states="cancel" />
+                      <field name="state" widget="statusbar" />
+                      </header>
+                      <sheet>
+                        <!-- <div class="oe_right oe_button_box" name="buttons" >
+                          <button class="oe_inline oe_stat_button" type="object" name="view_invoices" icon="fa-tasks" string="View Invoices" attrs="{'invisible':[('state','!=','invoice')]}"/>
+                        </div> -->
+                      <div class="oe_title">
+                        <h1>
+                          <field name="name" />
+                        </h1>
+                      </div>
+                      <group>
+                        <group>
+                          <!-- <field name="supervisor_id" /> -->
+                           <field name="order_by" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="mode_of_order" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                          <field name="responsible" invisible="1"/>
+                             <field name="project_id" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                          <field name="site" required="1" attrs="{'readonly':[('state','in',['order','received'])]}" domain="[('usage','=','internal')]" />
+                        <!--   <field name="expected_supplier" options="{'no_create':1}" attrs="{'required':[('state','=','approved2')]}" /> -->
+
+                          <field name="general_purchase" invisible="1"  />
+                            <field name="item_ids" widget="many2many_tags" invisible="1"/>
+                          <field name="estimated_amt" invisible="1"/>
+                        </group>
+                        <group>
+                          <field name="order_date" attrs="{'readonly':[('state','in',['order','received'])]}" required="1" />
+                          <field name="min_expected_date" attrs="{'readonly':[('state','in',['order','received'])]}" />
+                          <field name="max_expected_date" attrs="{'readonly':[('state','in',['order','received'])]}" />
+                        </group>
+                      </group>
+                      <group >
+                        <group string="Item details">
+                          <field name="site_purchase_item_line_ids" attrs="{'readonly':[('state','in',['order','received'])]}" nolabel="1">
+                              <tree editable="bottom">
+                                  <field name="item_id" required="1" />
+                                  <field name="brand_name" string="Brand"/>
+                                    <field name="desc" required="1" />
+                                <field name="unit" required="1" />
+                                <field name="quantity" widget="char" required="1" />
+                                 <field name="project_approved_qty" readonly="1" invisible="1"/>
+                                  <field name="processed_qty" readonly="1" invisible="1"/>
+
+                              </tree>
+
+
+                          </field>
+
+                      </group>
+
+                      </group>
+
+                   <!-- <group string="Approvals" attrs="{'invisible':[('state','in',('draft','confirm'))]}">
+                      <group>
+                        <field name="project_manager" readonly="1" attrs="{'invisible':[('state','in',('draft','confirm'))]}" />
+                         <field name="sign_purchase_manager" readonly="1" nolabel="1" attrs="{'invisible':[('state','in',('draft','confirm'))]}" />
+                      </group>
+                      <group>
+
+                        <field name="purchase_manager" readonly="1" 
+                        attrs="{'invisible':[('state','in',('draft','confirm','approved1'))]}"  />
+                         <field name="sign_general_manager" readonly="1" nolabel="1" attrs="{'invisible':[('state','in',('draft','confirm','approved1'))]}" />
+                      </group>
+                    </group>-->
+                  </sheet>
+                   
+                  </form>
+
+            </field>
+        </record>
+
+
+        <record id="action_interlocks_dept" model="ir.actions.act_window">
+            <field name="name">Interlocks - Purchase</field>
+            <field name="res_model">site.purchase</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="context">{'default_interlocks_purchase':1}</field>
+            <field name="domain">[('interlocks_purchase','=',True)]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+         <record id="action_view_interlocks_dept_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="tree_site_purchase_statements" />
+            <field name="act_window_id" ref="action_interlocks_dept" />
+              <field name="sequence">1</field>
+        </record>
+
+        <record id="action_view_interlocks_dept_purchase_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_interlocks_dept" />
+            <field name="act_window_id" ref="action_interlocks_dept" />
+             <field name="sequence">2</field>
+        </record>
+
+
+<!--    <menuitem id="menu_interlocks_dept_purchase" -->
+<!--          parent="departmentwise_purchase_requisitions"-->
+<!--          action="action_interlocks_dept" -->
+<!--          name="Interlocks - Purchase"-->
+<!--          sequence="3" -->
+<!--         />-->
+
+
+
+
+
+<!-- Workshop Department -->
+
+
+
+      <record id="form_workshop_depts" model="ir.ui.view">
+            <field name="name">form.site.purchase</field>
+            <field name="model">site.purchase</field>
+            <field name="arch" type="xml">
+                  <form>
+
+                    <header>
+                        <button name="confirm_purchase" type="object" class="oe_highlight" string="Request" states="draft"  />
+                        <button name="action_request_init" type="object" class="oe_highlight" string="Accept" states="confirm" groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                     <button name="button_create_purchase" type="object" class="oe_highlight" string="Create Quotation" states="accept"  groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                       <button name="button_create_comparison" type="object" class="oe_highlight" string="Create Direct PO" states="accept" confirm="You are proceeding without a quotation and a comparison. Proceed Yes or No?" groups="base.group_erp_manager,purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                                                <button name="%(action_view_stock_history)d" states="confirm,accept"
+                            string="View Stock history" type="action" />
+
+                       <button name="cancel_purchase" type="object" class="oe_highlight" string="Cancel"  />
+                      <button name="set_draft" type="object" class="oe_highlight" string="Set Draft" states="cancel" />
+                      <field name="state" widget="statusbar" />
+                      </header>
+                      <sheet>
+                        <!-- <div class="oe_right oe_button_box" name="buttons" >
+                          <button class="oe_inline oe_stat_button" type="object" name="view_invoices" icon="fa-tasks" string="View Invoices" attrs="{'invisible':[('state','!=','invoice')]}"/>
+                        </div> -->
+                      <div class="oe_title">
+                        <h1>
+                          <field name="name" />
+                        </h1>
+                      </div>
+                      <group>
+                        <group>
+                         <!--  <field name="supervisor_id" /> -->
+                          <field name="order_by" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        <field name="mode_of_order" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                          <field name="responsible" invisible="1"/>
+                             <field name="project_id" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                          <field name="site" required="1" attrs="{'readonly':[('state','in',['order','received'])]}" domain="[('usage','=','internal')]" />
+                         <!--  <field name="expected_supplier" options="{'no_create':1}" attrs="{'required':[('state','=','approved2')]}" /> -->
+
+                          <field name="general_purchase" invisible="1"  />
+                            <field name="item_ids" invisible="1"/>
+                            <field name="estimated_amt" invisible="1"/>
+
+                        </group>
+                        <group>
+                          <field name="order_date" attrs="{'readonly':[('state','in',['order','received'])]}" required="1" />
+                          <field name="min_expected_date" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                          <field name="max_expected_date" attrs="{'readonly':[('state','in',['order','received'])]}"/>
+                        </group>
+                      </group>
+                      <group >
+                       <group string="Item details">
+                          <field name="site_purchase_item_line_ids" attrs="{'readonly':[('state','in',['order','received'])]}" nolabel="1">
+                              <tree editable="bottom">
+                                  <field name="item_id" required="1" />
+                                  <field name="brand_name" string="Brand"/>
+                                  <field name="model_name" string="Model"/>
+                                    <field name="desc" required="1" />
+                                <field name="unit" required="1" />
+                                <field name="quantity" widget="char" required="1" />
+                             <field name="project_approved_qty" readonly="1" invisible="1"/>
+                                  <field name="processed_qty" readonly="1" invisible="1"/>
+                              </tree>
+                          </field>
+
+                      </group>
+
+                      </group>
+
+                  <!--  <group string="Approvals" attrs="{'invisible':[('state','in',('draft','confirm'))]}">
+                      <group>
+                        <field name="project_manager" readonly="1" attrs="{'invisible':[('state','in',('draft','confirm'))]}" />
+                         <field name="sign_purchase_manager" readonly="1" nolabel="1" attrs="{'invisible':[('state','in',('draft','confirm'))]}" />
+                      </group>
+                      <group>
+
+                        <field name="purchase_manager" readonly="1" 
+                        attrs="{'invisible':[('state','in',('draft','confirm','approved1'))]}"  />
+                         <field name="sign_general_manager" readonly="1" nolabel="1" attrs="{'invisible':[('state','in',('draft','confirm','approved1'))]}" />
+                      </group>
+                    </group>-->
+                  </sheet>
+                   
+                  </form>
+
+            </field>
+        </record>
+
+
+        <record id="search_workshop_depts" model="ir.ui.view">
+            <field name="name">search.site.purchase</field>
+            <field name="model">site.purchase</field>
+            <field name="arch" type="xml">
+            <search string="Daily Statement">
+              <field name="name" />
+              <field name="site" />
+                <field name="order_by" />
+                <field name="mode_of_order"/>
+              <field name="supervisor_id" />
+                 <field name="project_id"/>
+
+
+              <field name="order_date" />
+              <field name="min_expected_date" />
+              <field name="max_expected_date" />
+              <field name="item_ids" />
+              <!-- <filter string="To Receive" icon="terp-go-month" domain="[('state','=','order')]" name="group_to_receive" />
+ -->
+
+              <filter icon="terp-check" name="to_receive" string="To Receive" domain="[('state','=','order')]" />
+              <filter icon="terp-check" name="to_approve" string="To Approve" domain="[('state','=','received')]" />
+              <group expand="0" string="Group By">
+                <filter string="Month" icon="terp-go-month" domain="[]"
+                  name="group_month" context="{'group_by':'order_date'}" />
+
+                <filter string="Site" icon="terp-go-month" domain="[]"
+                  name="group_location" context="{'group_by':'site'}" />
+                <filter string="User" icon="terp-go-month" domain="[]"
+                  name="group_user" context="{'group_by':'supervisor_id'}" />
+                <filter string="Product" icon="terp-go-month" domain="[]"
+                name="group_item" context="{'group_by':'item_id'}" />
+              </group>
+            </search>
+
+          </field>
+        </record>
+
+
+        <record id="action_workshop_dept" model="ir.actions.act_window">
+            <field name="name">Workshop Department</field>
+            <field name="res_model">site.purchase</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <!-- <field name="context">{'default_workshop_purchase':1}</field>
+            <field name="domain">[('workshop_purchase','=',True)]</field> -->
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+         <record id="action_view_workshop_dept_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="tree_site_purchase_statements" />
+            <field name="act_window_id" ref="action_workshop_dept" />
+              <field name="sequence">1</field>
+        </record>
+
+        <record id="action_view_workshop_dept_purchase_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_workshop_depts" />
+            <field name="act_window_id" ref="action_workshop_dept" />
+             <field name="sequence">2</field>
+        </record>
+
+
+    <menuitem id="menu_workshop_dept_purchase" 
+          parent="departmentwise_purchase_requisitions"
+          action="action_workshop_dept" 
+          name="Workshop Department" 
+          sequence="3" 
+          />
+
+
+
+     <record id="action_all_depts" model="ir.actions.act_window">
+            <field name="name">Site Request - Purchase</field>
+
+            <field name="res_model">site.purchase</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="tree_site_purchase_statements" />
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_site_request':1}</field>
+            <field name="domain">[('site_request','=',True)]</field> 
+        </record>
+
+
+         <record id="action_view_all_dept_trees" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="tree_site_purchase_statements" />
+            <field name="act_window_id" ref="action_all_depts" />
+              <field name="sequence">1</field>
+        </record>
+
+        <record id="action_view_all_dept_purchase_forms" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_workshop_depts" />
+            <field name="act_window_id" ref="action_all_depts" />
+             <field name="sequence">2</field>
+        </record>
+
+
+    <menuitem id="menu_workshop_dept_purchase" 
+          parent="departmentwise_purchase_requisitions"
+          action="action_all_depts" 
+          name="Site Purchase Request"
+          sequence="18" 
+          groups="base.group_erp_manager"/>
+
+
+
+  <!--       <record id="action_all_depts" model="ir.actions.act_window">
+            <field name="name">All Department</field>
+            <field name="res_model">site.purchase</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="tree_site_purchase_statements" />
+            <field name="view_mode">tree,form</field>
+        </record>
+ -->
+<!-- 
+         <record id="action_view_all_dept_trees" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="tree_site_purchase_statements" />
+            <field name="act_window_id" ref="action_all_depts" />
+        </record>
+
+        <record id="action_view_all_dept_purchase_forms" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_workshop_depts" />
+            <field name="act_window_id" ref="action_all_depts" />
+        </record>
+ -->
+
+
+
+         <record id="action_all_depts_to_receive2" model="ir.actions.act_window">
+            <field name="name">Items To Receive</field>
+            <field name="res_model">site.purchase</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','in',['order','received','invoice'])]</field>
+             <field name="context">{'search_default_to_receive':1}</field>
+
+            <field name="view_id" ref="tree_site_purchase_statements" />
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+         <record id="action_view_all_dept_trees_to_receive" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="tree_site_purchase_statements" />
+            <field name="act_window_id" ref="action_all_depts_to_receive2" />
+        </record>
+
+        <record id="action_view_all_dept_form_to_receive" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_site_purchase_view" />
+            <field name="act_window_id" ref="action_all_depts_to_receive2" />
+        </record>
+
+
+
+
+<!--        <menuitem id="menu_all_depts_supervisor2" parent="root_activity_reports_menu"-->
+<!--            name="Items Reception" sequence="21"/>-->
+
+<!--        <menuitem id="menu_all_depts_supervisor2_child" parent="menu_all_depts_supervisor2" action="action_all_depts_to_receive2"-->
+<!--            name="Items Reception" sequence="10" />-->
+
+
+         <record id="action_all_depts_to_accounts_approve31" model="ir.actions.act_window">
+            <field name="name">Items To Receive</field>
+            <field name="res_model">purchase.order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="domain">[]</field>
+
+            <field name="view_mode">tree,form</field>
+        </record>
+
+         <record id="category_purchase_receipts" model="ir.actions.server">
+            <field name="name">Purchase Orders</field>
+            <field name="model_id" ref="hiworth_construction.model_material_issue_slip"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_purchase_receipts()
+            </field>
+        </record>
+
+
+        <menuitem id="menu_purchase_receipts_warehouse"
+                  name="Purchase Orders"
+                  action="category_purchase_receipts"
+                    parent="stock.menu_stock_warehouse_mgmt"
+          sequence="4" />
+
+          <record id="category_merged_purchase_order" model="ir.actions.server">
+            <field name="name">Purchase Orders</field>
+            <field name="model_id" ref="hiworth_construction.model_material_issue_slip"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_merge_purchase_order()
+            </field>
+        </record>
+
+
+        <menuitem id="menu_purchase_receipts_warehouse_merged"
+                  name="Merged - Purchase Orders"
+                  action="category_merged_purchase_order"
+                    parent="stock.menu_stock_warehouse_mgmt"
+          sequence="5" />
+
+        <record id="category_goods_receipt_invoice" model="ir.actions.server">
+            <field name="name">Goods Receipt &amp; Invoice Entry</field>
+            <field name="model_id" ref="hiworth_construction.model_material_issue_slip"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_goods_receipts()
+            </field>
+        </record>
+
+
+        <menuitem id="menu_purchase_receipts_warehouse_goods_in"
+                  name="Goods Receipt &amp; Invoice Entry"
+                  action="category_goods_receipt_invoice"
+                    parent="stock.menu_stock_warehouse_mgmt"
+          sequence="6" />
+
+
+
+        <!--  <record id="action_view_all_dept_trees_to_receive" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="tree_site_purchase_statements" />
+            <field name="act_window_id" ref="action_all_depts_to_accounts_approve31" />
+        </record>
+
+        <record id="action_view_all_dept_form_to_receive" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_site_purchase_view" />
+            <field name="act_window_id" ref="action_all_depts_to_accounts_approve31" />
+        </record> -->
+
+
+        <menuitem id="menu_all_depts_accounts" parent="account.menu_finance"
+            name="Purchase" sequence="1"/>
+
+        <menuitem id="menu_all_depts_accounts_sub1" parent="menu_all_depts_accounts" action="action_all_depts_to_accounts_approve31"
+            name="Purchase To Approve" sequence="10" />
+
+
+
+
+
+
+
+    <record id="form_current_inventory_valuation_dept" model="ir.ui.view">
+            <field name="name">form.inventory.department</field>
+            <field name="model">inventory.department</field>
+            <field name="arch" type="xml">
+                  <form create="false" edit="false">
+
+                    
+                    <sheet create="false" edit="false">
+                    
+                    <group  create="false" edit="false">
+                    
+                        <field name="name"  />
+                        <field name="department" />
+                        <field name="name"  />
+                        <field name="date" />
+                        <field name="location_id" />
+                        <field name="qty" />
+                        <field name="rate" />
+                        <field name="inventory_value" />
+                        <field name="site_purchase_id" invisible="1" />
+                  
+                  </group>
+                </sheet>
+                    
+                   
+                  </form>
+
+            </field>
+        </record>
+
+
+    
+
+
+        <record id="tree_inventory_dept" model="ir.ui.view">
+            <field name="name" >tree.inventory.department</field>
+            <field name="model" >inventory.department</field>
+            <field name="arch" type="xml" >
+                  <tree create="false" edit="false">
+                    <field name="department" />
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="location_id" />
+                    <field name="qty" sum="QTY"/>
+                    <field name="rate" sum="RATE" />
+                    <field name="inventory_value" sum="INVENTORY VALUE" />
+                    <field name="site_purchase_id" invisible="1" />
+                  </tree>
+
+            </field>
+        </record>
+
+
+
+
+
+
+
+      <record id="action_current_inventory_department" model="ir.actions.act_window">
+            <field name="name">Current Inventory Valuation</field>
+            <field name="res_model">inventory.department</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="context">{'group_by':'department'}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+   
+
+
+
+
+
+
+
+    <record id="site_purchase_group" model="ir.ui.view">
+            <field name="name">Merge Site Purchases</field>
+            <field name="model">site.purchase.group</field>
+            <field name="arch" type="xml">
+               <form string="Merge orders">
+                    <group>
+                        <separator string="Are you sure you want to merge these requests?"/>
+                        <label string="
+Please note that: &#10; &#10;
+Orders will only be merged if: &#10;
+*Purchase requests are in approved state and the same supplier &#10;" colspan="4"/>
+                    </group>
+                    
+                    <footer>
+                        <button name="merge_orders" string="Merge Requests" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window name="Create Purchase order"
+            context="{'search_default_draft': 1, 'search_default_approved': False}"
+            res_model="site.purchase.group"
+            src_model="site.purchase"
+            view_mode="form"
+            target="new"
+            multi="True"
+            key2="client_action_multi"
+            id="action_site_purchase_group"/>
+
+
+         <record id="form_goods_recive_form_view" model="ir.ui.view">
+            <field name="name">form.goods.receive.report</field>
+            <field name="model">goods.recieve.report</field>
+            <field name="arch" type="xml">
+                 <form create="true" edit="false" delete="false">
+                    <header>
+
+                        <button name="action_return" string="Cancel" states="received" type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+
+                    <sheet>
+                      <!-- <div class="oe_right oe_button_box" name="buttons" >
+                        <button class="oe_inline oe_stat_button" type="object" name="view_invoices" icon="fa-tasks" string="View Invoices" attrs="{'invisible':[('state','!=','invoice')]}"/>
+                      </div> -->
+                    <div class="oe_title">
+                      <h1>
+
+                        <field name="grr_no" readonly="1"/>
+                      </h1>
+                    </div>
+                    <group>
+                      <group>
+                          <field name="foreclosure_bool" invisible="1"/>
+                          <field name="site" required="1" domain="[('usage','=','internal')]" />
+                         <field name="site_purchase_ids"  widget="many2many_tags" string="Purchase Request Nos"/>
+                          <field name="merged_po" invisible="1"/>
+						   <field name="mpr_id" domain="[('site','=',site),('state','=','order')]" attrs="{'readonly':[('merged_po','=', True)]}"/>
+						  <field name="purchase_id" domain="[('state','=','approved')]"/>
+
+                        <field name="project_id"/>
+                            <field name="vehicle_id"/>
+<!--<field name="vehicle_agent_id" readonly="1"/>-->
+
+<!--                        <field name="supplier_id" options="{'no_create':1}" readonly="1" domain="[('supplier','=',True)]"  />-->
+<!--                    <field name="account_move_id" readonly="1"/>-->
+                      </group>
+                      <group>
+                        <field name="Date" required="1" />
+<!--                           <field name="company_contractor_id" readonly="1" options="{'no_create':True}"/>-->
+<!--                        <field name="is_tax_invoice"/>-->
+<!--                        <field name="invoice_no"/>-->
+<!--                        <field name="invoice_date"/>-->
+                        
+                        <field name="journal"/>
+                   
+                      </group>
+
+
+                    </group>
+
+                    <group >
+                      <group string="Item details">
+
+
+                           <field name="goods_recieve_report_line_ids"  nolabel="1" >
+
+							   <tree editable="bottom" delete="false" create="false">
+                                  <field name="item_id" readonly="1" required="1" />
+                                  <field name="brand_name" readonly="1" string="Brand"/>
+                                    <field name="desc" required="1" />
+                                <field name="unit_id" readonly="1" required="1" />
+                                   <field name="tax_ids" readonly="1" widget='many2many_tags'/>
+                                <field name="po_quantity" readonly="1" widget="char" required="1" sum="Total" />
+
+                                   <field name="quantity_accept"  widget="char" required="1" sum="Total"/>
+
+                                     <field name="rate" widget="char" required="1" />
+
+                                    <field name="taxable_amount" sum="Total"/>
+
+
+
+                              </tree>
+
+
+
+
+                          </field>
+
+
+                      </group>
+
+
+
+
+                    </group>
+                        <group>
+                              <group name="Other Charge Details">
+                        <field name="other_charge_details_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="other_charge_id"/>
+                                <field name="is_tax_applicable"/>
+                                <field name="tax_id" attrs="{'readonly':[('is_tax_applicable','=',False)]}"/>
+                                <field name="amount"/>
+                            </tree>
+                        </field>
+                    </group>
+
+                        </group>
+<!--                        <group class="text-right">-->
+<!--                            <field name="taxable_amount"/>-->
+<!--                            <field name="cgst_amount"/>-->
+<!--                            <field name="sgst_amount"/>-->
+<!--                            <field name="igst_amount"/>-->
+<!--                            <field name="non_taxable_amount"/>-->
+<!--                            <field name="other_charge"/>-->
+<!--                            <field name="round_off_amount"/>-->
+<!--                            <field name="total_amount"/>-->
+<!--                        </group>-->
+                      <group string="Previous Entry details">
+
+
+                           <field name="previous_goods_receipt_entries_ids"  nolabel="1">
+
+							   <tree delete="false"  create="false">
+
+                                  <field name="item_id"  />
+                                    <field name="desc" />
+                                <field name="unit_id"  />
+                                   <field name="tax_ids" />
+                                <field name="po_quantity"  sum="Total" />
+
+                                   <field name="quantity_accept"   sum="Total"/>
+                                   <field name="quantity_reject" sum="Total"/>
+                                     <field name="rate"  />
+
+                                    <field name="amount" sum="Total"/>
+
+
+
+                              </tree>
+
+
+
+
+                          </field>
+
+
+                      </group>
+
+
+                </sheet>
+
+
+                  </form>
+            </field>
+         </record>
+
+        <record id="form_goods_recive_tree_view_line" model="ir.ui.view">
+            <field name="name">tree.goods.receive.report.line</field>
+            <field name="model">goods.recieve.report.line</field>
+            <field name="arch" type="xml">
+                <tree delete="false" colors="red:entry_created_fleet==False">
+                    <field name="date"/>
+                     <field name="grr_no"/>
+                    <field name="supplier_id"/>
+									 <field name="item_id"/>
+                    	<field name="amount" sum="Total"/>
+                    <field name="entry_created_fleet" />
+                    <button name="button_entry_created" string="Details Entry" type="object" attrs="{'invisible':[('entry_created_fleet','=',True)]}" class="oe_highlight"/>
+
+
+                  </tree>
+            </field>
+        </record>
+
+        <record id="action_goods_recieve_report_line" model="ir.actions.act_window">
+            <field name="name">Goods Recieve Report Line</field>
+            <field name="res_model">goods.recieve.report.line</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="context">{}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record id="form_goods_recive_tree_view" model="ir.ui.view">
+            <field name="name">tree.goods.receive.report</field>
+            <field name="model">goods.recieve.report</field>
+            <field name="arch" type="xml">
+                <tree delete="false">
+                     <field name="site_purchase_ids" readonly="1" widget="many2many_tags" string="Purchase Request Nos"/>
+									 <field name="mpr_id" string="P.R No"/>
+                    	<field name="purchase_id"/>
+                   					 <field name="grr_no" string="GRN"/>
+
+                    				<field name="Date" />
+
+									 <field name="supplier_id"   />
+                    <field name="company_contractor_id"/>
+
+
+                  </tree>
+            </field>
+        </record>
+
+
+          <record id="search_goods_recieve_report" model="ir.ui.view">
+            <field name="name">search.goods.recieve.report</field>
+            <field name="model">goods.recieve.report</field>
+            <field name="arch" type="xml">
+            <search string="Goods Recieve Report">
+              <field name="grr_no" />
+              <field name="site" />
+                <field name="purchase_id" />
+                <field name="project_id"/>
+              <field name="vehicle_id" />
+                 <field name="supplier_id"/>
+
+
+              <field name="Date" />
+              <field name="invoice_no" />
+              <field name="invoice_date" />
+              <field name="journal" />
+                <field name="vehicle_agent_id" />
+                <field name="company_contractor_id"/>
+              <!-- <filter string="To Receive" icon="terp-go-month" domain="[('state','=','order')]" name="group_to_receive" />
+ -->
+
+              <group expand="0" string="Group By">
+                <filter string="Supplier" icon="terp-go-month" domain="[]"
+                  name="group_supplier_id" context="{'group_by':'supplier_id'}" />
+
+                <filter string="Site" icon="terp-go-month" domain="[]"
+                  name="group_location" context="{'group_by':'site'}" />
+                <filter string="Purchase" icon="terp-go-month" domain="[]"
+                  name="group_purchase_id" context="{'group_by':'purchase_id'}" />
+                <filter string="Vehicle Agent" icon="terp-go-month" domain="[]"
+                name="group_vehicle_agent_id" context="{'group_by':'vehicle_agent_id'}" />
+             <filter string="Company" icon="terp-go-month" domain="[]"
+                name="group_company_contractor_id" context="{'group_by':'company_contractor_id'}" />
+              </group>
+            </search>
+
+          </field>
+        </record>
+
+
+
+
+</data>
+</openerp>

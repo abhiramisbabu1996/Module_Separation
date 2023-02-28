@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="1">
+
+		<record  forcecreate="1" model="ir.sequence.type" id="seq_type_work_order2">
+			<field name="name">Work Order No</field>
+			<field name="code">nos</field>
+		</record>
+		<record forcecreate="1" model="ir.sequence" id="seq_work_order2">
+			<field name="name">Work Order No</field>
+			<field name="code">nos</field>
+			<field name="prefix"></field>
+			<field name="padding">1</field>
+		</record>
+
+	</data>
+</openerp>

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+<record id="form_accounts_report_wizard_daily" model="ir.ui.view">
+			<field name="name">Bank Accounts Report</field>
+			<field name="model">accounts.report.wizard</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+
+						<group>
+								<field name="month"/>
+							<field name="from_date"/>
+							<field name="to_date" />
+
+						</group>
+					</group>
+					<footer>
+
+						<button type="object" name="generate_xls_report"
+							string="Print" class="oe_highlight" />
+						<button special="cancel" string="Cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+		<record id="action_report_account_wizard" model="ir.actions.act_window">
+			<field name="name">Bank Accounts Report</field>
+			<field name="res_model">accounts.report.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+		<report
+            id="accouts_report_wizard"
+            model="accounts.report.wizard"
+            string="Accounts Report"
+            name="AccountsReport.xlsx"
+            file="AccountsReport.xlsx"
+            menu="False"
+        />
+
+
+
+
+
+
+
+
+
+
+
+	</data>
+</openerp>

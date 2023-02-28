@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+<!--        <record id="stock_location_product_consumption" model="stock.location">-->
+<!--            <field name="name">Product Consumed</field>-->
+<!--            <field name="location_id">3</field>-->
+<!--            <field name="usage">inventory</field>-->
+<!--       </record>-->
+
+        <record model="ir.sequence.type" id="tender_code_seq3_type">
+		    <field name="name">Tender Code4</field>
+		    <field name="code">hiworth.tender.code</field>
+		</record>
+
+        <record id="tender_code_seq3" model="ir.sequence">
+			<field name="name">Tender Code3</field>
+			<field name="code">hiworth.tender.code</field>
+			<field name="prefix">Tender</field>
+			<field name="padding">3</field>
+		</record>
+
+        <!-- Data - Bank Account Type -->
+
+        <record model="res.bank.type" id="bank_account_type_od">
+            <field name="name">OD Account</field>
+        </record>
+
+        <record model="res.bank.type" id="bank_account_type_current">
+            <field name="name">Current Account</field>
+        </record>
+
+        <!-- Cron - Popup creation -->
+
+      <!--    <record model="ir.cron" id="daily_payment_cron">
+            <field name="name">EMI Payment Creation</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'fleet.emi'"/>
+            <field name="function" eval="'_cron_emi_payment'"/>
+            <field name="args" eval="'()'" />
+            <field name="nextcall" >2018-03-28 00:00:01</field>
+        </record> -->
+
+
+        <record model="ir.cron" id="daily_payment_popup_cron">
+            <field name="name">Vehicle EMI-Popup Creation</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'fleet.emi'"/>
+            <field name="function" eval="'_cron_payment_pop_up'"/>
+            <field name="args" eval="'()'" />
+            <field name="nextcall" >2018-10-12 00:00:01</field>
+        </record>
+
+        <record model="ir.cron" id="esi_pf_payment_popup_cron12">
+            <field name="name">ESI-EPF Popup Creation</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'hr.employee'"/>
+            <field name="function" eval="'_cron_esi_pf_payment_pop_up13'"/>
+            <field name="args" eval="'()'" />
+            <field name="nextcall" >2018-10-12 00:00:01</field>
+        </record>
+
+        <record model="ir.cron" id="veh_document_renewal_popup_cron">
+            <field name="name">Vehicle Documents Renewal Popup Creation</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'fleet.vehicle.documents'"/>
+            <field name="function" eval="'_cron_veh_document_renewal_pop_up'"/>
+            <field name="args" eval="'()'" />
+            <field name="nextcall" >2018-10-12 00:00:01</field>
+        </record>
+
+       
+    </data>
+</openerp>

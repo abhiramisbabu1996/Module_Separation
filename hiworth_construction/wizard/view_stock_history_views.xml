@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record model='ir.ui.view' id='view_stock_history_form'>
+    		<field name="name">view.stock.history.form</field>
+    		<field name="model">view.stock.history</field>
+    		<field name="arch" type="xml">
+    			<form>
+    					<group col='4'>
+    						<field name="products_id" widget='many2many_tags'/>
+    						
+    					</group>
+    					<footer>
+    						<button name="stock_history_submit" string='submit' type='object'/>
+                            <button name="stock_history_cancel" string='cancel' special='cancel'/>
+    					</footer>
+    			</form>
+    		</field>
+    	</record>				
+    	<record  id='action_view_stock_history' model='ir.actions.act_window'>
+    		<field name="name">Stock History</field>
+    		<field name='res_model'>view.stock.history</field>
+    		<field name='type'>ir.actions.act_window</field>
+    		<field name='view_id' ref='view_stock_history_form'/>
+    		<field name='view_type'>form</field>
+    		<field name='target'>new</field>
+    	</record>
+
+    	
+    </data>
+</openerp>    

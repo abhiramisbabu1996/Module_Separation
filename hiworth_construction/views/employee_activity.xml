@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+		<record id="form_employee_activity" model="ir.ui.view">
+			<field name="name">form.employee.activity</field>
+			<field name="model">employee.activity</field>
+			<field name="arch" type="xml">
+				<form string="Engineer Activity">
+					<header>
+						<button string="Approve" type="object" name="action_start" states="draft"/>
+						<button string="Cancel" type="object" name="action_cancel" states="draft,approve"/>
+    						<button string="Set to Draft" type="object" name="action_draft" states="cancel"/>
+						<field name="state" widget="statusbar"/>
+
+					</header>
+					<sheet>
+						<group col="4">
+							<field name="date" required="True" />
+							<field name="employee_id" required="True" string="Employee" />
+
+						</group>
+						<group>
+							<notebook>
+								<page string="Activity Lines">
+									<field name="activity_line_ids" nolabel="1">
+										<tree editable="bottom">
+											<field name="date" required="True" />
+											<field name="location_id" domain="[('usage','not in',['view'])]"/>
+											<field name="binary_field"/>
+											<field name="name" required="True"  string="Activities done" />
+											<field name="remarks" />
+
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</group>
+						<group>
+							<field name="remark" placeholder="Note...." />
+						</group>
+					</sheet>
+				</form>
+
+			</field>
+		</record>
+
+		<record id="tree_employee_activity" model="ir.ui.view">
+			<field name="name">tree.employee.activity</field>
+            <field name="model">employee.activity</field>
+			<field name="arch" type="xml">
+				<tree string="Activity">
+					<field name="date" />
+					<field name="employee_id" />
+				
+				</tree>
+
+			</field>
+		</record>
+		<record id="search_employee_activity" model="ir.ui.view">
+            <field name="name">search.employee.activity</field>
+            <field name="model">employee.activity</field>
+			<field name="arch" type="xml">
+				<search string="Activity">
+					<field name="date" />
+					<field name="employee_id" />
+					<group expand="0" string="Group By">
+						<filter string="Engineer" icon="terp-stock_effects-object-colorize"
+							domain="[]" name="group_employee" context="{'group_by':'employee_id'}" />
+						<filter string="Month" icon="terp-go-month" domain="[]"
+							name="group_month" context="{'group_by':'date'}" />
+					</group>
+				</search>
+
+			</field>
+		</record>
+
+		<record id="action_employee_activity" model="ir.actions.act_window">
+			<field name="name">Activities</field>
+			<field name="res_model">employee.activity</field>
+			<field name="context">{'search_default_group_employee':1,'search_default_group_month': 1}</field>
+			<field name="view_id" ref="tree_employee_activity" />
+		</record>
+
+		<menuitem id="menu_employee_activity_in_activity_report" parent="root_activity_reports_menu"
+			name="Activities" sequence="20"
+			groups="project.group_project_manager,group_estimation_user" />
+
+		<menuitem id="menu_employee_activity" parent="menu_employee_activity_in_activity_report"
+			action="action_employee_activity" name="Activities" sequence="10" />
+
+
+	</data>
+</openerp>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+        <record id="form_view_project_status_tracker" model="ir.ui.view">
+			<field name="name">form_view_project_status_tracker</field>
+			<field name="model">tracker.project.status</field>
+			<field name="arch" type="xml">
+				<form string="Activity">
+
+					<sheet>
+
+						<group col="4">
+							<field name="project_id" required="True" />
+							<field name="location_id" required="True" />
+
+						</group>
+                        <group col="4">
+							<field name="date" required="True" />
+							<field name="document_no" required="True" />
+
+						</group>
+                         <group col="4">
+							<field name="document_id" required="True" />
+							<field name="status_id" required="True" />
+
+						</group>
+                         <group col="4">
+							<field name="remarks" required="True" />
+
+
+						</group>
+
+							<notebook>
+								<page string="Tracker Line">
+									<field name="tracker_ids" nolabel="1">
+										<tree editable="bottom">
+											<!-- <field name="line_no" /> -->
+											<field name="date" />
+											<field name="document_no" filename="filename" />
+											<field name="document_id" />
+											<field name="status_id"/>
+                                            <field name="remarks"/>
+										</tree>
+									</field>
+								</page>
+							</notebook>
+
+					</sheet>
+				</form>
+
+			</field>
+		</record>
+
+		<record id="tree_view_project_status_tracker" model="ir.ui.view">
+			<field name="name">tree_view_project_status_tracker</field>
+			<field name="model">tracker.project.status</field>
+			<field name="arch" type="xml">
+				<tree string="Activity">
+					<!-- <field name="sequence" widget="handle"/> -->
+					<field name="date" />
+                    <field name="document_no" filename="filename" />
+                    <field name="document_id" />
+                    <field name="status_id"/>
+                    <field name="remarks"/>
+				</tree>
+
+			</field>
+		</record>
+		<record id="search_view_project_status_tracker" model="ir.ui.view">
+			<field name="name">search_view_project_status_tracker</field>
+			<field name="model">tracker.project.status</field>
+			<field name="arch" type="xml">
+				<search string="Project Lines">
+					<field name="project_id" />
+                    <field name="location_id"/>
+					<field name="document_id" />
+
+				</search>
+
+			</field>
+		</record>
+
+
+  <record id="action_project_status_tracker" model="ir.actions.act_window">
+			<field name="name">Project Status Tracker</field>
+			<field name="res_model">tracker.project.status</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field name="view_id" ref="tree_view_project_status_tracker"/>
+	   </record>
+
+
+		<menuitem id="menu_activity_details_under_project" parent="base.menu_main_pm"
+				  name="Tracker" sequence="2"
+                  action = "action_project_status_tracker"
+				   />
+
+
+    </data>
+</openerp>

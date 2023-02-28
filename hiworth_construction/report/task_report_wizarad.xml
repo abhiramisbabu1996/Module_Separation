@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<record id="form_task_report_wizard" model="ir.ui.view">
+			<field name="name">form.task.report.wizard</field>
+			<field name="model">task.report.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Task Reports">
+					<group>
+						<group >
+							<field name="company_id" required="1" />
+							<field name="subcategory_wise" />
+						</group>
+						<group>
+							<field name="project_id" required="1"/>
+						</group>
+					</group>
+					<group>
+						<group>
+							<div>
+								<label for="categ_id" string="Category" attrs="{'invisible':[('subcategory_wise','=', True)]}" class="oe_inline"/>
+								<label for="categ_id" string="Sub Categoryads" attrs="{'invisible':[('subcategory_wise','!=', True)]}" class="oe_inline"/>
+								<field name="categ_id"  required="1" class="oe_inline" />
+							</div>
+						</group>
+						<group>
+						</group>
+					</group>
+
+					<footer>
+						<button type="object" name="view_task_estimation" string="View"
+							class="oe_highlight" />
+						<button type="object" name="print_task_estimation" string="Print"
+							class="oe_highlight" />
+						<button special="cancel" string="Cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+		<!-- Material request wizard action -->
+		<record id="action_task_report_wizard" model="ir.actions.act_window">
+			<field name="name">Task Report</field>
+			<field name="res_model">task.report.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+
+
+		<menuitem id="menu_task_report_wizard" parent="menu_project_report"
+			name="Task Estimation Report" sequence="20" action="action_task_report_wizard"
+			groups="project.group_project_manager,project.group_project_user,group_estimation_user" />
+
+
+		<report id="report_task_report_wizard" model="task.report.wizard"
+			string="Task Estimation Report" report_type="qweb-pdf"
+			name="hiworth_construction.task_estimation_report_template" file="hiworth_construction.task_estimation_report_template"
+			menu="False" />
+
+
+
+		<template id="task_estimation_report_template">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+
+						<div class="row">
+							<h2 class="text-center">
+								<t t-esc="docs.project_id.name" />
+							</h2>
+						</div>
+
+
+						<t t-if="docs.subcategory_wise == False">
+							<div>
+								<h1 class="text-left">
+									<t t-esc="docs.categ_id.name" />
+								</h1>
+							</div>
+						</t>
+						<t t-if="docs.subcategory_wise == True">
+							<div>
+								<h1 class="text-left">
+									<t t-esc="docs.categ_id.name" />
+								</h1>
+							</div>
+						</t>
+						<t t-set="debit_total" t-value="0" />
+						<t t-set="credit_total" t-value="0" />
+						<div class="row">
+							<table class="table table-bordered">
+								<thead>
+									<tr style="width: 100%;">
+										<th style="width: 5%;">Sl.No</th>
+										<th style="width: 45%;">Task Summary</th>
+										<th style="width: 15%;">Contractor</th>
+										<th style="width: 10%;">Start Date</th>
+										<th style="width: 10%;">End Date</th>
+										<th style="width: 15%;">Estimated Cost</th>
+									</tr>
+								</thead>
+								<tbody>
+									<t t-set="sl_no" t-value="1" />
+									<t t-set="cost" t-value="0" />
+									<tr t-foreach="docs.get_tasks()" t-as="task">
+										<td>
+											<t t-esc="sl_no" />
+											<t t-set="sl_no" t-value="sl_no+1" />
+										</td>
+										<td>
+											<t t-esc="task.name" />
+										</td>
+										<t t-if="task.civil_contractor != False">
+											<td>
+												<t t-esc="task.civil_contractor.name" />
+											</td>
+										</t>
+										<td>
+											<t t-esc="task.date_start" />
+										</td>
+										<td>
+											<t t-esc="task.date_end" />
+										</td>
+										<td class="text-right">
+											<t t-esc="round(task.estimated_cost,2)" />
+											<t t-set="cost" t-value="cost+task.estimated_cost" />
+										</td>
+									</tr>
+									<tr>
+										<th>
+										</th>
+										<th class="text-left">Total</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+											<t t-esc="round(cost,2)" />
+										</th>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- <div class="col-xs-12"> <div class="pull-right">Total inventory
+							value: <strong><span t-field="o.inventory_value" /></strong></div> </div> -->
+						<!-- </div> -->
+						<!-- </t> -->
+
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+
+
+	</data>
+</openerp>

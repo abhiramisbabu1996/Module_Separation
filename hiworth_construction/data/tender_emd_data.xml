@@ -1,0 +1,157 @@
+<openerp>
+    <data>
+
+       <!-- <record id="seq_type_purchase_comparison" model="ir.sequence.type">
+            <field name="name">Purchase Comparison Code</field>
+            <field name="code">purchase.comparison</field>
+        </record>
+
+        <record id="purchase_comparison_seq" model="ir.sequence">
+            <field name="name">Purchase Comparison Code</field>
+            <field name="code">purchase.comparison</field>
+            <field name="prefix">EMD/</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>-->
+
+           <record id="seq_type_mct" model="ir.sequence.type">
+            <field name="name">MCT Code</field>
+            <field name="code">mct.code</field>
+        </record>
+
+        <record id="mct_seq" model="ir.sequence">
+            <field name="name">MCT Code</field>
+            <field name="code">mct.code</field>
+            <field name="prefix">MCT/</field>
+            <field name="padding">3</field>
+             <field name="implementation">no_gap</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_type_mrn" model="ir.sequence.type">
+            <field name="name">MRN Code</field>
+            <field name="code">mrn.code</field>
+        </record>
+
+        <record id="mrn_seq" model="ir.sequence">
+            <field name="name">MRN Code</field>
+            <field name="code">mrn.code</field>
+            <field name="prefix">MRN/</field>
+            <field name="padding">3</field>
+             <field name="implementation">no_gap</field>
+            <field name="company_id" eval="False"/>
+        </record>
+         <record id="seq_type_rfq" model="ir.sequence.type">
+            <field name="name">RFQ Code</field>
+            <field name="code">rfq.code</field>
+        </record>
+
+        <record id="rfq_seq" model="ir.sequence">
+            <field name="name">RFQ Code</field>
+            <field name="code">rfq.code</field>
+            <field name="prefix">RFQ/</field>
+            <field name="padding">3</field>
+             <field name="implementation">no_gap</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_type_grr" model="ir.sequence.type">
+            <field name="name">GRR Code</field>
+            <field name="code">grr.code</field>
+        </record>
+
+        <record id="grr_seq" model="ir.sequence">
+            <field name="name">GRR Code</field>
+            <field name="code">grr.code</field>
+            <field name="prefix">GRN/</field>
+            <field name="padding">3</field>
+              <field name="implementation">no_gap</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+         <record id="seq_type_purchase_return" model="ir.sequence.type">
+            <field name="name">DB Code</field>
+            <field name="code">dn.code</field>
+        </record>
+
+        <record id="dbn_seq" model="ir.sequence">
+            <field name="name">DN Code</field>
+            <field name="code">dn.code</field>
+            <field name="prefix">DN/</field>
+            <field name="padding">3</field>
+             <field name="implementation">no_gap</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_type_purchase_comparison" model="ir.sequence.type">
+            <field name="name">Purchase comparison Code</field>
+            <field name="code">purchase.comparison.code</field>
+        </record>
+
+        <record id="purchase_comparison_seq" model="ir.sequence">
+            <field name="name">Purchase comparison Code</field>
+            <field name="code">purchase.comparison.code</field>
+            <field name="prefix">Comparison/</field>
+            <field name="padding">3</field>
+             <field name="implementation">no_gap</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+           <record id="seq_type_min" model="ir.sequence.type">
+            <field name="name">MIN Code</field>
+            <field name="code">min.code</field>
+        </record>
+
+        <record id="min_seq" model="ir.sequence">
+            <field name="name">MIN Code</field>
+            <field name="code">min.code</field>
+            <field name="prefix">MIN/</field>
+             <field name="implementation">no_gap</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+         <record id="seq_type_gtn" model="ir.sequence.type">
+            <field name="name">GTN Code</field>
+            <field name="code">gtn.code</field>
+        </record>
+
+        <record id="gtn_seq" model="ir.sequence">
+            <field name="name">GTN Code</field>
+            <field name="code">gtn.code</field>
+            <field name="prefix">MTN/</field>
+             <field name="implementation">no_gap</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+         <record id="seq_type_dispose" model="ir.sequence.type">
+            <field name="name">Dispose Code</field>
+            <field name="code">dispose.code</field>
+        </record>
+
+        <record id="dispose_seq" model="ir.sequence">
+            <field name="name">Dispose Code</field>
+            <field name="code">dispose.code</field>
+            <field name="prefix">ICT/</field>
+             <field name="implementation">no_gap</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_type_emd" model="ir.sequence.type">
+            <field name="name">EMD Payment Code</field>
+            <field name="code">emd.payment</field>
+        </record>
+
+        <record id="emd_payment_seq" model="ir.sequence">
+            <field name="name">EMD Payment Code</field>
+            <field name="code">emd.payment</field>
+            <field name="prefix">EMD/</field>
+             <field name="implementation">no_gap</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</openerp>

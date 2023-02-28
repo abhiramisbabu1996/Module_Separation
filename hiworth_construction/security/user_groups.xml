@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<openerp>
+    <data  noupdate="0">
+        <record model="ir.module.category" id="module_management">
+            <field name="name">HW Construction user acccess</field>
+            <field name="description">User access level for this module</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="group_accounts_user" model="res.groups">
+            <field name="name">Accounts</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <!-- <field name="users" eval="[(4, ref('base.user_root'))]"/> -->
+            <field name="category_id" ref="hiworth_construction.module_management"/>
+        </record>
+
+        <record id="group_warehouse_user" model="res.groups">
+            <field name="name">Warehouse</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <!-- <field name="users" eval="[(4, ref('base.user_root'))]"/> -->
+            <field name="category_id" ref="hiworth_construction.module_management"/>
+        </record>
+
+        <record id="group_estimation_user" model="res.groups">
+            <field name="name">Estimation</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <!-- <field name="users" eval="[(4, ref('base.user_root'))]"/> -->
+            <field name="category_id" ref="hiworth_construction.module_management"/>
+        </record>
+        
+        
+        <record id="group_project_management_user" model="res.groups">
+            <field name="name">Project Management</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <!-- <field name="users" eval="[(4, ref('base.user_root'))]"/> -->
+            <field name="category_id" ref="hiworth_construction.module_management"/>
+        </record>
+        
+        
+        <record id="group_admin_user" model="res.groups">
+            <field name="name">Admin User</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <!-- <field name="users" eval="[(4, ref('base.user_root'))]"/> -->
+            <field name="category_id" ref="hiworth_construction.module_management"/>
+        </record>
+
+        <record id="group_nextday_settl_button_approve" model="res.groups">
+            <field name="name">Button Approve-NextDay Settlement</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <!-- <field name="users" eval="[(4, ref('base.user_root'))]"/> -->
+            <field name="category_id" ref="hiworth_construction.module_management"/>
+        </record>
+        
+    </data>
+    
+    
+    <!-- <data noupdate="1"> -->
+    <data>
+
+      <!--  <record id="daily_supervisor_statement_rule" model="ir.rule">
+            <field name="name">Supervisor Daily Statement</field>
+            <field name="model_id" ref="model_partner_daily_statement"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('employee_id','=',user.employee_id.id)]</field>
+        </record> -->
+        
+    
+    </data>
+    
+</openerp>

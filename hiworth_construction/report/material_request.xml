@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<!-- Material request report wizard -->
+		<record id="form_material_request_report_wizard" model="ir.ui.view">
+			<field name="name">Filter material request form</field>
+			<field name="model">hiworth.material.request.wizard</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<group>
+							<field name="from_date" />
+						</group>
+						<group>
+							<field name="to_date" />
+						</group>
+					</group>
+					<footer>
+						<button type="object" name="view_material_request_report"
+							string="View Material Allocations" class="oe_highlight" />
+						<button type="object" name="print_material_request_report"
+							string="Print Material Allocations" class="oe_highlight" />
+						<button special="cancel" string="Cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+		<!-- Material request wizard action -->
+		<record id="action_material_request_report_wizard" model="ir.actions.act_window">
+			<field name="name">Filter material request report</field>
+			<field name="res_model">hiworth.material.request.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+
+		<!-- Material request report -->
+		<!-- <template id="report_material_request_template"> <t t-call="report.html_container"> 
+			<t t-foreach="docs" t-as="o"> <t t-call="report.extenal_template"> <div class="page"> 
+			Test text </div> </t> </t> </t> </template> -->
+
+		<report id="report_material_request_action" string="Material request report"
+			model="stock.picking" report_type="qweb-pdf"
+			name="hiworth_construction.report_material_request_template" />
+
+		<template id="hiworth_construction.report_material_request_template">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<t t-set="sl_no1" t-value="1" />
+						<t t-foreach="docs" t-as="o">
+							<div style="display: table;width: 100%">
+								<div class="row">
+									<h2>
+										<span t-esc="sl_no1" />
+                                        .
+                                        <t t-set="sl_no1" t-value="sl_no1+1" />
+                                        <span t-field="o.name" />
+									</h2>
+								</div>
+								<div class="row">
+									<div class="col-xs-6">
+										Related Task:
+										<span class="lead" t-field="o.task_id" />
+									</div>
+									<div class="col-xs-6" style="text-align: right;">
+										Creation Date:
+										<span class="lead" t-field="o.date" />
+									</div>
+								</div>
+								<div class="row">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>Sl.No</th>
+												<th>Task</th>
+												<th>Product</th>
+												<th>Unit</th>
+												<th>Quantity</th>
+												<th>Unit Price</th>
+												<th>Destination location</th>
+												<th>Inventory Value</th>
+											</tr>
+										</thead>
+										<t t-set="sl_no2" t-value="1" />
+										<tbody>
+											<tr t-foreach="o.get_move_line(o.id)" t-as="move">
+												<td>
+													<t t-esc="sl_no2" />
+                                                    <t t-set="sl_no2" t-value="sl_no2+1" />
+												</td>
+												<td>
+													<t t-esc="move.task_id.name" />
+												</td>
+												<td>
+													<t t-esc="move.product_id.name" />
+												</td>
+												<td>
+                                                    <t t-esc="move.product_uom.name" />
+                                                </td>
+												<td>
+													<t t-esc="move.product_uom_qty" />
+												</td>
+												<td>
+													<t t-esc="move.price_unit" />
+												</td>
+												<td>
+                                                    <t t-esc="move.location_dest_id.name" />
+                                                </td>
+												<td>
+													<t t-esc="move.inventory_value" />
+												</td>
+												
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="col-xs-12">
+									<div class="pull-right">
+										Total inventory value:
+										<strong>
+											<span t-field="o.inventory_value" />
+										</strong>
+									</div>
+								</div>
+							</div>
+						</t>
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+		<!-- ================================view========================= -->
+
+		<report id="report_material_request_view" string="Material request report"
+			model="hiworth.material.request.wizard" report_type="qweb-html"
+			name="hiworth_construction.report_material_request_template_view" />
+
+		<template id="hiworth_construction.report_material_request_template_view">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<!-- <t t-foreach="docs" t-as="o"> -->
+						<t t-set="sl_no1" t-value="1" />
+						<t t-foreach="docs.get_picking()" t-as="o">
+							<div style="display: table;width: 100%">
+								<div class="row">
+									<h2>
+										<span t-esc="sl_no1" />
+										.
+										<t t-set="sl_no1" t-value="sl_no1+1" />
+										<span t-field="o.name" />
+									</h2>
+								</div>
+								<div class="row">
+									<div class="col-xs-6">
+										Related Task:
+										<span class="lead" t-field="o.task_id" />
+									</div>
+									<div class="col-xs-6" style="text-align: right;">
+										Creation Date:
+										<span class="lead" t-field="o.date" />
+									</div>
+								</div>
+								<div class="row">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>Sl.No</th>
+												<th>Task</th>
+												<th>Product</th>
+												<th>Unit</th>
+												<th>Quantity</th>
+												<th>Unit Price</th>
+												<th>Destination location</th>
+												<th>Inventory Value</th>
+												
+											</tr>
+										</thead>
+										<t t-set="sl_no2" t-value="1" />
+										<tbody>
+											<tr t-foreach="o.get_move_line(o.id)" t-as="move">
+												<td>
+													<t t-esc="sl_no2" />
+													<t t-set="sl_no2" t-value="sl_no2+1" />
+												</td>
+												<td>
+													<t t-esc="move.task_id.name" />
+												</td>
+												<td>
+													<t t-esc="move.product_id.name" />
+												</td>
+												<td>
+                                                    <t t-esc="move.product_uom.name" />
+                                                </td>
+												<td>
+													<t t-esc="move.product_uom_qty" />
+												</td>
+												<td>
+													<t t-esc="move.price_unit" />
+												</td>
+												<td>
+                                                    <t t-esc="move.location_dest_id.name" />
+                                                </td>
+												<td>
+													<t t-esc="move.inventory_value" />
+												</td>
+												
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="col-xs-12">
+									<div class="pull-right">
+										Total inventory value:
+										<strong>
+											<span t-field="o.inventory_value" />
+										</strong>
+									</div>
+								</div>
+							</div>
+						</t>
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+
+
+
+	</data>
+</openerp>

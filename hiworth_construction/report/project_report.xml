@@ -1,0 +1,393 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<!-- Material request report wizard -->
+		<record id="project_complete_report_form" model="ir.ui.view">
+			<field name="name">project.complete.report.form</field>
+			<field name="model">project.report</field>
+			<field name="arch" type="xml">
+				<form>
+					<group col="4">
+						<field name="company_id" colspan="2" />
+						<field name="project_id" colspan="2" />
+					</group>
+					<group col="4">
+						<field name="from_date" colspan="2" />
+						<field name="to_date" colspan="2" />
+					</group>
+					<group col="4">
+						<field name="show_material_allocation" />
+						<newline />
+						<field name="show_expenses" />
+						<newline />
+						<field name="show_contract_bill" />
+					</group>
+
+					<footer>
+						<button type="object" name="view_project_report" string="View"
+							class="oe_highlight" />
+						<button type="object" name="print_project_report" string="Print"
+							class="oe_highlight" />
+						<button special="cancel" string="Cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<!-- Project Report Wizard action -->
+		<record id="action_project_complete_report" model="ir.actions.act_window">
+			<field name="name">Project Reports</field>
+			<field name="res_model">project.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="context">{'default_show_material_allocation': 1}</field>
+			<field name="target">new</field>
+		</record>
+		
+		<menuitem id="menu_project_report" parent="base.menu_main_pm"
+			name="Reports" sequence="3"
+			groups="project.group_project_manager,project.group_project_user,group_estimation_user" />
+
+		<menuitem action="action_project_complete_report" id="menu_project_complete_report"
+			parent="menu_project_report" sequence="10"
+			groups="project.group_project_manager,hiworth_construction.group_estimation_user" />
+
+		<report id="project_report_print" model="project.report"
+			string="Project Reports" report_type="qweb-pdf"
+			name="hiworth_construction.project_complete_report" file="hiworth_construction.project_complete_report" />
+
+
+		<!-- Material request report -->
+		<template id="project_complete_report">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<div class="row">
+							<h2 class="text-center">
+								<u>
+									<t t-esc="docs.project_id.name"></t>
+								</u>
+							</h2>
+							<h3 class="text-center">
+								From
+								<span
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.from_date,'%Y-%m-%d'))" />
+								<!-- <t t-esc="docs._context['start_date']"></t> -->
+								<span>To</span>
+								<span
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.to_date,'%Y-%m-%d'))" />
+							</h3>
+						</div>
+						<t t-set="grand_total" t-value="0" />
+						<t t-if="docs.show_material_allocation != False">
+							<h3 class="text-left">
+								<strong>
+									<u>
+										Material Allocations to
+										<t t-esc="docs.project_id.location_id.name" />
+									</u>
+								</strong>
+							</h3>
+							<div class="row">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th>No</th>
+											<th>Date</th>
+											<th>Task</th>
+											<th>Product</th>
+											<th>Description</th>
+											<th>Qty</th>
+											<th>Unit</th>
+											<th>Unit Price</th>
+											<th>Source</th>
+											<!-- <th>State</th> -->
+											<th>Inventory Value</th>
+
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<t t-set="inv_total" t-value="0" />
+									<tbody>
+										<tr t-foreach="docs.get_stock_moves()" t-as="move">
+											<td>
+												<t t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<!-- <td><t t-esc="move.date" /></td> -->
+											<td>
+												<t t-esc="move.date" />
+											</td>
+											<td>
+												<t t-esc="move.task_id.name" />
+											</td>
+											<td>
+												<t t-esc="move.product_id.name" />
+											</td>
+											<td>
+												<t t-esc="move.name" />
+											</td>
+											<td>
+												<t t-esc="move.product_uom_qty" />
+											</td>
+											<td>
+												<t t-esc="move.product_uom.name" />
+											</td>
+											<td>
+												<t t-esc="move.price_unit" />
+											</td>
+											<td>
+												<t t-esc="move.location_id.name" />
+											</td>
+
+											<!-- <td> <t t-esc="move.state" /> </td> -->
+											<td>
+												<t t-esc="move.inventory_value" />
+												<t t-set="inv_total" t-value="inv_total+move.inventory_value" />
+											</td>
+
+										</tr>
+										<tr>
+											<td>
+												<span>
+													<strong>Total</strong>
+												</span>
+											</td>
+											<td />
+											<td />
+											<td />
+											<td />
+											<td />
+											<td />
+											<td />
+											<!-- <td /> -->
+											<td />
+											<td>
+												<strong>
+													<t t-esc="inv_total" />
+												</strong>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<t t-set="grand_total" t-value="grand_total+inv_total" />
+							<p style="page-break-after:always"></p>
+						</t>
+
+
+						<t t-if="docs.show_expenses != False">
+							<h3 class="text-left">
+								<strong>
+									<u>
+										Expenses
+										<!-- <t t-esc="docs.project_id.location_id.name" /> -->
+									</u>
+								</strong>
+							</h3>
+							<t t-set="sl_no" t-value="1" />
+							<t t-set="debit_total" t-value="0" />
+							<t t-set="credit_total" t-value="0" />
+							<div class="row">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th>No</th>
+											<th>Date</th>
+											<th>Account</th>
+											<th>Description</th>
+											<th>Journal</th>
+											<th>Amount</th>
+											<!-- <th>Credit</th> -->
+										</tr>
+									</thead>
+									<tbody>
+										<tr t-foreach="docs.get_account_move_lines()" t-as="o">
+											<td>
+												<t t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<!-- <t t-esc="o.date" /> -->
+												<span
+													t-esc="time.strftime('%d-%m-%Y',time.strptime(o.date,'%Y-%m-%d'))" />
+											</td>
+											<td>
+												<t t-esc="o.account_id.name" />
+											</td>
+											<td>
+												<t t-esc="o.name" />
+											</td>
+											<td>
+												<t t-esc="o.journal_id.name" />
+											</td>
+											<td>
+												<t t-esc="o.debit" />
+												<t t-set="debit_total" t-value="debit_total+o.debit" />
+											</td>
+											<!-- <td> <t t-esc="o.credit" /> <t t-set="credit_total" t-value="credit_total+o.credit" 
+												/> </td> -->
+										</tr>
+										<tr>
+											<th class="text-left">Total</th>
+											<th class="text-right">
+											</th>
+											<th class="text-right">
+
+											</th>
+											<th class="text-right">
+											</th>
+											<th class="text-right">
+											</th>
+											<th class="text-right">
+												<t t-esc="debit_total" />
+											</th>
+											<!-- <th class="text-right"> <t t-esc="credit_total" /> </th> -->
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<t t-set="grand_total" t-value="grand_total+debit_total" />
+							<p style="page-break-after:always"></p>
+						</t>
+
+
+						<t t-if="docs.show_contract_bill != False">
+							<h3 class="text-left">
+								<strong>
+									<u>
+										Contract Bills
+										<!-- <t t-esc="docs.project_id.location_id.name" /> -->
+									</u>
+								</strong>
+							</h3>
+
+							<t t-set="sl_no" t-value="1" />
+							<t t-set="total_bill" t-value="0" />
+							<div class="row">
+								<table class="table">
+									<thead>
+										<tr t-foreach="docs.get_task()" t-as="o">
+											<th style="width: 5%">
+												<t t-esc="sl_no" />
+												.
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</th>
+											<th style="width: 10%">Task :</th>
+											<th style="width: 55%">
+												<t t-esc="o.name" />
+											</th>
+											<th style="width: 20%">Agreement Amount :</th>
+											<th style="width: 10%">
+												<t t-esc="o.estimated_cost" />
+											</th>
+											<t t-set="sl_no2" t-value="1" />
+											<t t-set="total" t-value="0" />
+											<table class="table table-bordered">
+												<thead>
+													<tr>
+														<th>No</th>
+														<th>Date</th>
+														<th>Description</th>
+														<th>Assigned Qty</th>
+														<th>Qty</th>
+														<th>Unit</th>
+														<th>Unit Price</th>
+														<th>Total</th>
+														<!-- <th>Credit</th> -->
+													</tr>
+												</thead>
+												<tbody>
+													<tr t-foreach="docs.get_account_invoice_lines(o.id)"
+														t-as="move">
+														<td>
+															<t t-esc="sl_no2" />
+															<t t-set="sl_no2" t-value="sl_no2+1" />
+														</td>
+														<td>
+															<span
+																t-esc="time.strftime('%d-%m-%Y',time.strptime(move.invoice_id.date_invoice,'%Y-%m-%d'))" />
+														</td>
+														<td>
+															<t t-esc="move.name" />
+														</td>
+														<td>
+															<t t-esc="move.total_assigned_qty" />
+														</td>
+														<td>
+															<t t-esc="move.quantity" />
+														</td>
+														<td>
+															<t t-esc="move.uos_id.name" />
+														</td>
+														<td>
+															<t t-esc="move.price_unit" />
+														</td>
+														<td>
+															<t t-esc="move.price_subtotal" />
+															<t t-set="total" t-value="total+move.price_subtotal" />
+														</td>
+													</tr>
+													<tr>
+														<th class="text-left">Total</th>
+														<th class="text-right">
+														</th>
+														<th class="text-right"></th>
+														<th class="text-right">
+														</th>
+														<th class="text-right">
+														</th>
+														<th />
+														<th />
+														<th class="text-right">
+															<t t-esc="total" />
+														</th>
+														<!-- <th class="text-right"> <t t-esc="credit_total" /> </th> -->
+													</tr>
+												</tbody>
+												<t t-set="total_bill" t-value="total_bill+total" />
+											</table>
+										</tr>
+
+										<thead>
+											<tr>
+												<div style="font-size: 15px;text-align: right;font-weight: bold;">
+													<span style="text-align: right;">
+														Total Contract Bill :
+														<t t-esc="total_bill" />
+													</span>
+												</div>
+											</tr>
+										</thead>
+
+									</thead>
+								</table>
+								<t t-set="grand_total" t-value="grand_total+total_bill" />
+							</div>
+
+						</t>
+
+						<div style="font-size: 20px;text-align: right;font-weight: bold;margin-top: 50px;">
+							<span style="text-align: right;">
+								Grand Total :
+								<t t-esc="grand_total" />
+							</span>
+						</div>
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+
+
+
+
+
+
+
+
+
+	</data>
+</openerp>

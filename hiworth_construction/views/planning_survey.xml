@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<menuitem id="main_menu_hiworth_planning_survey" parent="base.menu_main_pm"
+				  name="Survey" sequence="8" />
+
+
+
+		<!--		<record id="form_master_plan" model="ir.ui.view">-->
+		<!--			<field name="name">form.master.plan</field>-->
+		<!--			<field name="model">master.plan</field>-->
+		<!--			<field name="arch" type="xml">-->
+		<!--				<form string="Master Plan">-->
+		<!--					&lt;!&ndash; <sheet> &ndash;&gt;-->
+		<!--					<h1><center>MASTER PLAN</center></h1>-->
+		<!--					<group>-->
+		<!--						<field name="site_id" required="True" options="{'no_create':1}" />-->
+		<!--					</group>-->
+		<!--					<group col="4">-->
+
+		<!--						<field name="length_km" required="True" />-->
+		<!--						<field name="package_no" required="True" />-->
+		<!--						<field name="completion_date" required="True" />-->
+		<!--						<field name="target_date" required="True" />-->
+		<!--						<field name="agreement_date" required="True" />-->
+		<!--						<field name="work_start_date" required="True" />-->
+		<!--					</group>-->
+		<!--					<group>-->
+		<!--						<notebook>-->
+		<!--							<page string="Master Plan">-->
+		<!--								<field name="master_plan_line" nolabel="1">-->
+		<!--									<tree editable="bottom">-->
+		<!--										<field name="work_id"/>-->
+		<!--										<field name="employee_id"/>-->
+		<!--										<field name="veh_categ_id" options="{'no_create':1}" widget="many2many_tags"/>-->
+		<!--										<field name="chainage_from" />-->
+		<!--										<field name="chainage_to" />-->
+		<!--										<field name="side" />-->
+		<!--										<field name="length" />-->
+		<!--										<field name="qty_estimate" />-->
+		<!--										<field name="unit" />-->
+		<!--										<field name="start_date" />-->
+		<!--										<field name="duration" />-->
+		<!--										<field name="finish_date" />-->
+		<!--									</tree>-->
+		<!--								</field>-->
+		<!--							</page>-->
+		<!--						</notebook>-->
+		<!--					</group>-->
+		<!--					&lt;!&ndash; </sheet> &ndash;&gt;-->
+		<!--				</form>-->
+		<!--			</field>-->
+		<!--		</record>-->
+
+
+		<!--		<record id="master_plan_search_view" model="ir.ui.view">-->
+		<!--			<field name="name">master.plan.search.view</field>-->
+		<!--			<field name="model">master.plan</field>-->
+		<!--			<field name="arch" type="xml">-->
+		<!--				<search string="Master Plan">-->
+		<!--					<field name="site_id" />-->
+		<!--					<field name="package_no" />-->
+		<!--					<field name="completion_date" />-->
+		<!--					<field name="target_date" />-->
+		<!--					<group expand="0" string="group by">-->
+		<!--						<filter name="groupby_name5" string="Site"-->
+		<!--								context="{'group_by':'site_id'}"/>-->
+		<!--						<filter name="groupby_package" context="{'group_by': 'package_no'}" string="Package no"  />-->
+		<!--						<filter name="groupby_compltion" context="{'group_by':'completion_date'}"-->
+		<!--								string="Complition date"/>-->
+		<!--						<filter name="groupby_target" context="{'group_by':'target_date'}"-->
+		<!--								string="Target date"/>-->
+		<!--					</group>-->
+
+		<!--				</search>-->
+
+		<!--			</field>-->
+		<!--		</record>-->
+
+		<!--		<record id="tree_master_plan" model="ir.ui.view">-->
+		<!--			<field name="name">tree.master.plan</field>-->
+		<!--			<field name="model">master.plan</field>-->
+		<!--			<field name="arch" type="xml">-->
+		<!--				<tree string="Master Plan">-->
+		<!--					<field name="site_id" />-->
+		<!--					<field name="length_km" />-->
+		<!--					<field name="package_no" />-->
+		<!--					<field name="completion_date" />-->
+		<!--					<field name="target_date" />-->
+		<!--				</tree>-->
+		<!--			</field>-->
+		<!--		</record>-->
+
+		<!--		<record id="action_master_plan" model="ir.actions.act_window">-->
+		<!--			<field name="name">Master Plan</field>-->
+		<!--			<field name="res_model">master.plan</field>-->
+		<!--			<field name="type">ir.actions.act_window</field>-->
+		<!--			<field name="view_type">form</field>-->
+		<!--			<field name="view_mode">tree,form</field>-->
+		<!--			<field name="view_id" ref="tree_master_plan"></field>-->
+
+		<!--		</record>-->
+
+
+		<!--		<menuitem id="sub_menu_hiworth_master_plan" parent="main_menu_hiworth_planning"-->
+		<!--				  name="Master Plan" sequence="10" action="action_master_plan" />-->
+
+
+		<record id="form_survey_planning_chart" model="ir.ui.view">
+			<field name="name">form.survey.planning.chart</field>
+			<field name="model">survey.planning.chart</field>
+			<field name="arch" type="xml">
+				<form string="Planning Chart">
+					<sheet>
+						<h1><center>SURVEY PLANNING CHART</center></h1>
+
+						<group col="4">
+
+							<field name="supervisor_id" required="True" />
+							<field name="date" required="True" />
+							<field name="site_id" required="True" />
+						</group>
+						<group>
+							<notebook>
+								<page string="Planning Chart">
+									<field name="planning_chart_line" nolabel="1">
+										<tree editable="bottom">
+											<field name="date" />
+											<field name="work_id" />
+											<field name="labour" />
+											<field name="veh_categ_id" options="{'no_create':1}" widget="many2many_tags"/>
+											<field name="qty"/>
+											<field name="chainage"/>
+											<field name="target_qty"/>
+											<field name="material"/>
+											<field name="uom_id"/>
+											<field name="material_qty" />
+											<field name="remarks" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="survey_tree_planning_chart" model="ir.ui.view">
+			<field name="name">tree.survey.planning.chart</field>
+			<field name="model">survey.planning.chart</field>
+			<field name="arch" type="xml">
+				<tree string="Planning Chart">
+					<field name="date" />
+					<field name="supervisor_id" />
+					<field name="site_id" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="survey_planning_chart_search_view" model="ir.ui.view">
+			<field name="name">survey.planning.search.view</field>
+			<field name="model">survey.planning.chart</field>
+			<field name="arch" type="xml">
+				<search string="Planning Chart">
+					<field name="date" />
+					<field name="supervisor_id" />
+					<field name="site_id" />
+					<group expand="0" string="group by">
+						<filter name="groupby_date" string="Date"
+								context="{'group_by':'date'}"/>
+						<filter name="groupby_supervisor" context="{'group_by': 'supervisor_id'}" string="Supervisor"  />
+						<filter name="groupby_site" context="{'group_by':'site_id'}"
+								string="Site"/>
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_survey_planning_chart" model="ir.actions.act_window">
+			<field name="name">Survey Planning Chart</field>
+			<field name="res_model">survey.planning.chart</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="tree_planning_chart"></field>
+		</record>
+
+		<menuitem id="sub_menu_hiworth_survey_planning_chart" parent="main_menu_hiworth_planning_survey" name="Planning Chart" sequence="20" action="action_survey_planning_chart" />
+
+		<record id="form_survey_dpr_status" model="ir.ui.view">
+			<field name="name">survey.form.dpr.status</field>
+			<field name="model">survey.dpr.status</field>
+			<field name="arch" type="xml">
+				<form string="DPR Status">
+					<sheet>
+						<h1><center>DPR Status</center></h1>
+						<group>
+							<field name="date"/>
+						</group>
+						<group>
+							<notebook>
+								<page string="DPR Status">
+									<field name="dpr_status_line" nolabel="1">
+										<tree editable="bottom">
+											<field name="site_id" />
+											<field name="supervisor_id" />
+											<field name="planned_work" />
+											<field name="todays_work" />
+											<field name="next_day_plan" />
+											<field name="target_status" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="survey_dpr_status_search_view" model="ir.ui.view">
+			<field name="name">survey.dpr.status.search.view</field>
+			<field name="model">survey.dpr.status</field>
+			<field name="arch" type="xml">
+				<search string="DPR Status">
+					<field name="date" />
+					<group expand="0" string="Group By">
+						<filter name="groupby_date" string="Date"
+								context="{'group_by':'date'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="tree_survey_dpr_status" model="ir.ui.view">
+			<field name="name">survey.tree.dpr.status</field>
+			<field name="model">survey.dpr.status</field>
+			<field name="arch" type="xml">
+				<tree string="DPR Status">
+					<field name="date" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_survey_dpr_status" model="ir.actions.act_window">
+			<field name="name">DPR Status</field>
+			<field name="res_model">survey.dpr.status</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="tree_dpr_status"></field>
+		</record>
+
+		<menuitem id="sub_menu_hiworth_survey_dpr_status" parent="main_menu_hiworth_planning_survey" name="DPR Status" sequence="30" action="action_dpr_status" />
+
+
+		<!--		<record id="form_grading_abstract" model="ir.ui.view">-->
+		<!--			<field name="name">form.grading.abstract</field>-->
+		<!--			<field name="model">grading.abstract</field>-->
+		<!--			<field name="arch" type="xml">-->
+		<!--				<form string="Daywise Grading Abstract Of Site Employees">-->
+		<!--					<group col="4">-->
+		<!--						<group>-->
+		<!--							<field name="date" />-->
+		<!--						</group>-->
+		<!--						<group>-->
+		<!--							<field name="employee_id" />-->
+		<!--						</group>-->
+		<!--					</group>-->
+		<!--					<group>-->
+		<!--						<notebook>-->
+		<!--							<page string="Employee Details">-->
+		<!--								<field name="grading_line">-->
+		<!--									<tree  editable="bottom">-->
+		<!--										<field name="line_id" invisible="1"/>-->
+		<!--										<field name="employee_id"/>-->
+		<!--										<field name="designation" widget="many2many_tags"/>-->
+		<!--										<field name="site_id"/>-->
+		<!--										<field name="morning_meeting"/>-->
+		<!--										<field name="work_start_photo"/>-->
+		<!--										<field name="attendance_updation"/>-->
+		<!--										<field name="wip_photos"/>-->
+		<!--										<field name="after_lunch_photos"/>-->
+		<!--										<field name="dpr_next_day"/>-->
+		<!--										<field name="site_measurement"/>-->
+		<!--										<field name="target_achievement"/>-->
+		<!--										<field name="daily_statement"/>-->
+		<!--										<field name="total_score"/>-->
+		<!--										<field name="remarks"/>-->
+		<!--									</tree>-->
+		<!--								</field>-->
+		<!--							</page>-->
+		<!--						</notebook>-->
+		<!--					</group>-->
+		<!--				</form>-->
+		<!--			</field>-->
+		<!--		</record>-->
+
+		<!--		<record id="grading_abstract_search_view" model="ir.ui.view">-->
+		<!--			<field name="name">grading.abstract.search.view</field>-->
+		<!--			<field name="model">grading.abstract</field>-->
+		<!--			<field name="arch" type="xml">-->
+		<!--				<search string="Grading Abstract">-->
+		<!--					<field name="date" />-->
+		<!--					<field name="employee_id" />-->
+		<!--					<group expand="0" string="group by">-->
+		<!--						<filter name="groupby_date3" string="Date"-->
+		<!--								context="{'group_by':'date'}"/>-->
+		<!--						<filter name="groupby_employee" context="{'group_by':'employee_id'}"-->
+		<!--								string="employee"/>-->
+		<!--					</group>-->
+		<!--				</search>-->
+		<!--			</field>-->
+		<!--		</record>-->
+
+		<!--		<record id="tree_grading_abstract" model="ir.ui.view">-->
+		<!--			<field name="name">tree.grading.abstract</field>-->
+		<!--			<field name="model">grading.abstract</field>-->
+		<!--			<field name="arch" type="xml">-->
+		<!--				<tree string="Grading Abstract">-->
+		<!--					<field name="date"/>-->
+		<!--					<field name="employee_id"/>-->
+		<!--				</tree>-->
+		<!--			</field>-->
+		<!--		</record>-->
+
+		<!--		<record id="action_grading_abstract" model="ir.actions.act_window">-->
+		<!--			<field name="name">Grading Abstract</field>-->
+		<!--			<field name="res_model">grading.abstract</field>-->
+		<!--			<field name="type">ir.actions.act_window</field>-->
+		<!--			<field name="view_type">form</field>-->
+		<!--			<field name="view_mode">tree,form</field>-->
+		<!--			<field name="view_id" ref="tree_grading_abstract"></field>-->
+
+		<!--		</record>-->
+
+
+		<!--		<menuitem id="sub_menu_hiworth_grading_abstract" parent="main_menu_hiworth_planning" name="Grading Abstract" sequence="40" action="action_grading_abstract" />-->
+
+		<!-- <record id="form_hiworth_image_gallery" model="ir.ui.view">
+			<field name="name">form.hiworth.image.gallery</field>
+			<field name="model">hiworth.image.gallery</field>
+			<field name="arch" type="xml">
+				<form string="Image Gallery">
+					<group>
+						<field name="name" />
+					</group>
+					<field name="image_ids" nolabel="1" context="{'default_owner_model': 'my.model.name','default_owner_id': id,}" mode="kanban"/>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="tree_hiworth_image_gallery" model="ir.ui.view">
+			<field name="name">tree.hiworth.image.gallery</field>
+			<field name="model">hiworth.image.gallery</field>
+			<field name="arch" type="xml">
+				<tree string="Image Gallery">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_hiworth_image_gallery" model="ir.actions.act_window">
+			<field name="name">Image Gallery</field>
+			<field name="res_model">hiworth.image.gallery</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="tree_hiworth_image_gallery"></field>
+			
+		</record> -->
+
+
+		<!-- 	<menuitem id="sub_menu_hiworth_image_gallery" parent="main_menu_hiworth_planning" name="Image Gallery" sequence="40" action="action_hiworth_image_gallery" /> -->
+
+		<!--		<record id="form_hiworth_grading_measure" model="ir.ui.view">-->
+		<!--			<field name="name">form.grading.measure</field>-->
+		<!--			<field name="model">grading.measure</field>-->
+		<!--			<field name="arch" type="xml">-->
+		<!--				<form string="Grading Measure">-->
+		<!--					<sheet>-->
+		<!--						<group>-->
+		<!--							<group>-->
+		<!--								<field name="name" required="1"/>-->
+		<!--								<field name="no_photos" required="1"/>-->
+		<!--								<field name="maximum_mark" required="1" widget="char"/>-->
+		<!--							</group>-->
+		<!--							<group>-->
+		<!--								<field name="grading_type" />-->
+		<!--								<field name="fixed_time" widget="float_time"/>-->
+		<!--							</group>-->
+		<!--						</group>-->
+		<!--						<group string="conditions" attrs="{'invisible': [('grading_type','!=','photo')],}" >-->
+		<!--							<field name="line_ids" nolabel="1">-->
+		<!--								<tree editable="bottom">-->
+		<!--									<field name="no_photos" widget="char" required="1"/>-->
+		<!--									<field name="time_lag" widget="float_time"/>-->
+		<!--									<field name="mark" sum="Total"/>-->
+		<!--								</tree>-->
+		<!--							</field>-->
+		<!--						</group>-->
+		<!--					</sheet>-->
+		<!--				</form>-->
+		<!--			</field>-->
+		<!--		</record>-->
+
+
+		<!--		<record id="tree_hiworth_grading_measure" model="ir.ui.view">-->
+		<!--			<field name="name">tree.grading.measure</field>-->
+		<!--			<field name="model">grading.measure</field>-->
+		<!--			<field name="arch" type="xml">-->
+		<!--				<tree string="Grading Measure">-->
+		<!--					<field name="name" />-->
+		<!--					<field name="maximum_mark" />-->
+		<!--				</tree>-->
+		<!--			</field>-->
+		<!--		</record>-->
+
+		<!--		<record id="action_hiworth_grading_measure" model="ir.actions.act_window">-->
+		<!--			<field name="name">Grading Measure</field>-->
+		<!--			<field name="res_model">grading.measure</field>-->
+		<!--			<field name="type">ir.actions.act_window</field>-->
+		<!--			<field name="view_type">form</field>-->
+		<!--			<field name="view_mode">tree,form</field>-->
+		<!--			<field name="view_id" ref="tree_hiworth_grading_measure"></field>-->
+
+		<!--		</record>-->
+
+
+		<!--		<menuitem id="sub_menu_hiworth_grading_config" parent="main_menu_hiworth_planning" name="Grading Measure" sequence="40" action="action_hiworth_grading_measure" />-->
+
+
+
+		<!--		<record id="form_image_gallery" model="ir.ui.view">-->
+		<!--			<field name="name">form.image.gallery</field>-->
+		<!--			<field name="model">image.gallery</field>-->
+		<!--			<field name="arch" type="xml">-->
+		<!--				<form string="Grading Image Gallery">-->
+		<!--					<header>-->
+		<!--						<button name="button_confirm" states="draft" string="Confirm" type="object" class="oe_highlight"/>-->
+
+		<!--						<field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>-->
+		<!--					</header>-->
+		<!--					<group>-->
+		<!--						<group>-->
+		<!--							<field name="employee_id" required="1"/>-->
+		<!--							<field name="measure_id" required="1"/>-->
+		<!--						</group>-->
+		<!--						<group>-->
+		<!--							<field name="confirmed_date"/>-->
+		<!--						</group>-->
+		<!--					</group>-->
+		<!--					<button string="Add Image" type="object" name="add_image"/>-->
+		<!--					&lt;!&ndash; <field name="image_ids" string="Select From Gallery"/> &ndash;&gt;-->
+		<!--					<field name="image_ids" widget="many2many_kanban" string="Select From Gallery">-->
+		<!--						<kanban quick_create="false" create="true" delete="true">-->
+		<!--							<field name="name"/>-->
+		<!--							<templates>-->
+		<!--								<t t-name="kanban-box">-->
+		<!--									<div style="position: relative">-->
+		<!--										<a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; display: inline-block">X</a>-->
+		<!--										<div class="oe_module_vignette">-->
+		<!--											<img t-att-src="kanban_image('ir.attachment', 'datas', record.id.value)" style="max-height: 200px;min-height: 200px;"/>-->
+		<!--											<div >-->
+
+		<!--												<button name="view_image" type="object" string="View Image" icon="fa-expand"/>-->
+		<!--												<field name="name"/>-->
+		<!--											</div>-->
+		<!--										</div>-->
+		<!--									</div>-->
+		<!--								</t>-->
+		<!--							</templates>-->
+		<!--						</kanban>-->
+		<!--					</field>-->
+		<!--				</form>-->
+		<!--			</field>-->
+		<!--		</record>-->
+
+
+		<!--		<record id="tree_image_gallery" model="ir.ui.view">-->
+		<!--			<field name="name">tree.image.gallery</field>-->
+		<!--			<field name="model">image.gallery</field>-->
+		<!--			<field name="arch" type="xml">-->
+		<!--				<tree string="Image Gallery">-->
+		<!--					<field name="date" />-->
+		<!--					<field name="measure_id" />-->
+		<!--				</tree>-->
+		<!--			</field>-->
+		<!--		</record>-->
+
+		<!--		<record id="action_image_gallery" model="ir.actions.act_window">-->
+		<!--			<field name="name">Image Gallery</field>-->
+		<!--			<field name="res_model">image.gallery</field>-->
+		<!--			<field name="type">ir.actions.act_window</field>-->
+		<!--			<field name="view_type">form</field>-->
+		<!--			<field name="view_mode">tree,form</field>-->
+		<!--			&lt;!&ndash; <field name="view_id" ref="tree_image_gallery"></field> &ndash;&gt;-->
+		<!--		</record>-->
+
+
+		<!--		<menuitem id="menu_image_gallery" parent="main_menu_hiworth_planning" name="Image Gallery" sequence="50" action="action_image_gallery" />-->
+
+
+
+		<!--		<record id="view_ir_attachment_form_view_image_new" model="ir.ui.view">-->
+		<!--			<field name="name">ir.attachment.form</field>-->
+		<!--			<field name="model">ir.attachment</field>-->
+		<!--			<field name="arch" type="xml">-->
+		<!--				<form width="25%">-->
+		<!--					<group>-->
+		<!--						<field name="name" />-->
+		<!--					</group>-->
+		<!--					<group>-->
+		<!--						<field name="datas_fname" />-->
+		<!--						<field name="datas" widget="image" options="{&quot;preview_image&quot;: &quot;image_medium&quot;, &quot;size&quot;: [150, 150]}" nolabel="1"-->
+		<!--							   filename="datas_fname" />-->
+		<!--					</group>-->
+
+		<!--					<footer>-->
+		<!--						<center>-->
+		<!--							<button name="action_create" string="Submit" type="object" class="oe_highlight" />-->
+		<!--							<button string="Cancel" class="btn-default" special="cancel"/>-->
+		<!--						</center>-->
+		<!--					</footer>-->
+		<!--				</form>-->
+		<!--			</field>-->
+		<!--		</record>-->
+
+
+
+	</data>
+</openerp>

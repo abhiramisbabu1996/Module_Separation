@@ -1,0 +1,262 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<!-- Material request report wizard -->
+		<record id="form_report_location_stock" model="ir.ui.view">
+			<field name="name">Stock Report</field>
+			<field name="model">report.location.stock</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<group>
+							<field name="company_id" />
+							<field name="location_id" string="Location" />
+							<field name="category" />
+						</group>
+						<group>
+							<field name="from_date" />
+							<field name="to_date" />
+						</group>
+					</group>
+					<footer>
+						<button type="object" name="view_report_location_stock"
+							string="View" class="oe_highlight" />
+						<button type="object" name="print_report_location_stock"
+							string="Print" class="oe_highlight" />
+						<button special="cancel" string="Cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+		<!-- Material request wizard action -->
+		<record id="action_report_location_stock" model="ir.actions.act_window">
+			<field name="name">Material/s Stock report</field>
+			<field name="res_model">report.location.stock</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<report id="report_report_location_stock" model="stock.location"
+			string="Stock Report" report_type="qweb-pdf"
+			name="hiworth_construction.report_location_stock" file="hiworth_construction.report_location_stock"
+			menu="False" />
+
+
+		<!-- Material request report -->
+		<template id="report_location_stock">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<t t-foreach="docs" t-as="o">
+							<div class="row">
+								<h2 align="center">
+									<span t-field="o.name" />
+									<!-- <span t-field="o.date_today" /> -->
+								</h2>
+								<p align="center">
+									From
+									<t
+										t-esc="time.strftime('%d-%m-%Y',time.strptime(docs._context['start_date'],'%Y-%m-%d'))"></t>
+									To
+									<t
+										t-esc="time.strftime('%d-%m-%Y',time.strptime(docs._context['end_date'],'%Y-%m-%d'))"></t>
+									<!-- <span t-field="o.date_today" /> -->
+								</p>
+							</div>
+
+							<div class="row">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th style="width: 5%">Sl.No</th>
+											<th>Product</th>
+											<th>Category</th>
+											<th>Allocation No</th>
+											<th>Uom</th>
+											<th class="text-right">Qty</th>
+											<th class="text-right">Unit Price</th>
+											<th class="text-right">Inventory Value</th>
+										</tr>
+									</thead>
+									<t t-set="sl_no" t-value="1" />
+									<t t-set="inventory_value" t-value="0" />
+									<t t-set="total_inventory_value" t-value="0" />
+									<tbody>
+										<!-- <t t-if="product.temp_remain != 0"> -->
+										<tr t-foreach="o.get_products(o.id,)" t-as="product">
+											<td>
+												<t t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td>
+												<t t-esc="product.name" />
+											</td>
+											<td>
+												<t t-esc="product.categ_id.name" />
+												<!-- <t t-set="debit_total" t-value="debit_total+child.temp_debit" 
+													/> -->
+											</td>
+											<td>
+												<t t-esc="product.allocation_no" />
+											</td>
+											<td>
+												<t t-esc="product.uom_id.name" />
+											</td>
+											<td class="text-right">
+												<t t-esc="product.temp_remain" />
+											</td>
+
+											<td class="text-right">
+												<t t-esc="product.standard_price" />
+											</td>
+											<td class="text-right">
+												<t t-set="inventory_value" t-value="product.temp_remain*product.standard_price" />
+												<t t-esc="inventory_value" />
+												<t t-set="total_inventory_value" t-value="total_inventory_value+inventory_value" />
+											</td>
+										</tr>
+										<tr>
+											<th class="text-left">Grand Total</th>
+											<th class="text-right">
+											</th>
+											<th class="text-right">
+											</th>
+											<th class="text-right">
+											</th>
+											<th class="text-right">
+											</th>
+											<th class="text-right">
+											</th>
+											<th class="text-right">
+											</th>
+											<th class="text-right">
+												<t t-esc="total_inventory_value" />
+											</th>
+										</tr>
+										<!-- </t> -->
+									</tbody>
+									<!-- <tr> <th class="text-left">Grand Total</th> <th class="text-right"> 
+										<t t-esc="debit_total" /> </th> <th class="text-right"> <t t-esc="credit_total" 
+										/> </th> <th class="text-right"> <t t-esc="balance_total" /> </th> </tr> -->
+								</table>
+							</div>
+
+						</t>
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+
+
+		<report id="view_report_location_stock" model="report.location.stock"
+			string="Stock Report" report_type="qweb-html"
+			name="hiworth_construction.report_location_stock_view" />
+
+
+		<!-- Material request report -->
+		<template id="report_location_stock_view">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<!-- <t t-foreach="docs" t-as="o"> -->
+						<div class="row">
+							<h2 align="center">
+								<span t-field="docs.location_id" />
+
+							</h2>
+							<p align="center">
+								From
+								<t
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.from_date,'%Y-%m-%d'))"></t>
+								To
+								<t
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.to_date,'%Y-%m-%d'))"></t>
+							</p>
+						</div>
+						<div class="row">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th style="width: 5%">Sl.No</th>
+										<th>Product</th>
+										<th>Category</th>
+										<th>Allocation No</th>
+										<th>Uom</th>
+										<th class="text-right">Qty</th>
+										<th class="text-right">Unit Price</th>
+										<th class="text-right">Inventory Value</th>
+									</tr>
+								</thead>
+								<t t-set="sl_no" t-value="1" />
+								<t t-set="total_inventory_value" t-value="0" />
+								<t t-set="inventory_value" t-value="0" />
+								<tbody>
+									<tr t-foreach="docs.get_products()" t-as="product">
+										<t t-if="product.temp_remain">
+										<td>
+											<t t-esc="sl_no" />
+											<t t-set="sl_no" t-value="sl_no+1" />
+										</td>
+										<td>
+											<t t-esc="product.name" />
+										</td>
+										<td>
+											<t t-esc="product.categ_id.name" />
+										</td>
+										<td>
+											<t t-esc="product.allocation_no" />
+										</td>
+										<td>
+											<t t-esc="product.uom_id.name" />
+										</td>
+										<td class="text-right">
+											<t t-esc="product.temp_remain" />
+										</td>
+
+										<td class="text-right">
+											<t t-esc="product.standard_price" />
+										</td>
+										<td class="text-right">
+											<t t-set="inventory_value" t-value="product.temp_remain*product.standard_price" />
+											<t t-esc="inventory_value" />
+											<t t-set="total_inventory_value" t-value="total_inventory_value+inventory_value" />
+										</td>
+										</t>
+									</tr>
+									<tr>
+										<th class="text-left">Grand Total</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+											<t t-esc="total_inventory_value" />
+										</th>
+									</tr>
+
+								</tbody>
+
+							</table>
+						</div>
+
+						<!-- </t> -->
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+	</data>
+</openerp>

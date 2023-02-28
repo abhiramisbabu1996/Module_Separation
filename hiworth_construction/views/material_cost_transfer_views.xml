@@ -1,0 +1,150 @@
+<?xml version="1.0" ?>
+<openerp>
+     <data>
+          <record id="view_material_cost_transfer_form" model="ir.ui.view">
+			<field name="name">material.cost.transfer.form</field>
+			<field name="model">material.cost.transfer</field>
+			<field name="arch" type="xml">
+				<form>
+				 <header>
+
+					<button name="button_request" string="Request" type="object"  states="draft"/>
+                    <button name="button_approve" string="Approve" type="object" states="request" groups="base.group_erp_manager"/>
+                     <button name="action_receive" states="approved" type="object" string="Receive"/>
+					<field name="state" widget="statusbar"/>
+				 </header>
+					<group col='4' >
+						<field name="name" string='MCT NO' readonly="1"/>
+						<field name="date" attrs="{'readonly':[('state','=','done')]}"/>
+						<!--field name="grr_no_id" options="{'no_create':True}" /-->
+						<field name="source_location_id" string='Store Location' domain="[('usage','=','internal'),('is_warehouse', '=', True)]" options="{'no_create':True, 'no_create_edit':True}"  />
+						<field name="vehicle_id" options="{'no_create':True}" attrs="{'readonly':[('state','=','done')],'readonly':[('project_id','!=',False)]}"/>
+
+						<field name="project_id"  attrs="{'readonly':[('state','=','done')],'required':[('vehicle_id','=',False)],'readonly':[('vehicle_id','!=',False)]}" string='Project Name' options="{'no_create':True, 'no_create_edit':True}"/>
+						<field name="location_id"  attrs="{'readonly':[('state','=','done')],'required':[('vehicle_id','=',False)],'readonly':[('vehicle_id','!=',False)]}" string='Location' domain="[('usage','=','internal')]" options="{'no_create':True, 'no_create_edit':True}"/>
+						<field name="employee_id" required="1" attrs="{'readonly':[('state','=','done')]}" string='Receiver' options="{'no_create':True, 'no_create_edit':True}"/>
+
+-->						<!--<field name="vehicle_id" options="{'no_create':True, 'no_create_edit':True}"/>-->
+						<!--<field name="is_debit_note" />-->
+						<field name="category_ids"  required="1" attrs="{'readonly':[('state','=','done')]}"/>
+						<field name="account_move_id" readonly="1" attrs="{'invisible':[('account_move_id','=',False)]}"/>
+
+					</group>
+					<notebook attrs="{'readonly':[('state','=','done')]}">
+					<page string="Item List">
+					<field name="material_cost_transfer_lines_ids" required="1" context="{'source_location':source_location_id,'category_id':category_ids}" attrs="{'readonly':[('state','=','done')]}">
+					<tree editable="bottom">
+
+					    <field name="item_id" options="{'no_create':True, 'no_create_edit':True}"/>
+					    <field name="desc"/>
+					    <field name="unit_id" options="{'no_create':True, 'no_create_edit':True}"/>
+						<field name="available_quantity"/>
+					    <field name="quantity"/>
+
+					    <field name="rem_qty"/>
+					    <field name ="rate"/>
+
+						<field name="remarks"/>
+						<button name="process_view_price" string="View Rate" type="object"/>
+
+
+					</tree>
+					</field>
+					</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+
+
+
+
+
+		 <record id="view_material_cost_transfer_tree" model="ir.ui.view">
+			<field name="name">material.cost.transfer.tree</field>
+			<field name="model">material.cost.transfer</field>
+			<field name="arch" type="xml">
+				<tree>
+
+						<field name="name"  string="MCT No" />
+						<field name="date"/>
+
+						<field name="project_id" string='Project Name'/>
+						<field name="employee_id" string='Receiver'/>
+						<field name="location_id" />
+					<field name="account_move_id"/>
+							<field name="state"/>
+
+
+
+				</tree>
+			</field>
+		</record>
+		<record id="material_cost_transfer_search" model="ir.ui.view">
+			<field name="name">tree.material.cost.transfer.search</field>
+			<field name="model">material.cost.transfer</field>
+			<field name="arch" type="xml">
+				<search>
+					<field name="name"  string="MCT No"/>
+						<field name="date"/>
+						<field name="project_id" string='Project Name'/>
+						<field name="employee_id" string='Receiver'/>
+						<field name="project_id"/>
+
+					<group>
+						<filter string="MCT No" name="name" domain="[]" context="{'group_by':'name'}"/>
+						<filter string="Receiver" name="employee_id" domain="[]" context="{'group_by':'employee_id'}"/>
+						<filter string="Date" name="date" domain="[]" context="{'group_by':'date'}"/>
+						<filter string="Project" name="project_id" domain="[]" context="{'group_by':'project_id'}"/>
+
+
+					</group>
+				</search>
+			</field>
+		</record>
+
+		 <record model="ir.ui.view" id="material_cost_transfer_form_view">
+			 <field name="name">form.material.cost.transfer.form.view</field>
+			 <field name="model">material.cost.transfer.line</field>
+			 <field name="arch" type="xml">
+				 <form>
+					 <sheet>
+						 <field name="rate_disposable_line_ids">
+							 <tree editable="bottom" create="true" delete="false">
+								 <field name="item_id"/>
+								 <field name="origin"/>
+								 <field name="quantity"/>
+								 <field name="select_qty"/>
+								 <field name="unit_price"/>
+								 <field name="amount"/>
+							 </tree>
+						 </field>
+						 <group>
+							  <field name="quantity"/>
+						 </group>
+					<footer>
+							 <button string="Submit" name="action_submit" type="object"/>
+						</footer>
+					 </sheet>
+				 </form>
+			 </field>
+		 </record>
+
+		<record id="action_material_cost_transfer" model="ir.actions.act_window">
+			<field name="name">Material Cost Transfer</field>
+			<field name="res_model">material.cost.transfer</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="material_cost_transfer_search"/>
+			<field name="view_id" ref="view_material_cost_transfer_tree" />
+
+			<field name="context">{}</field>
+		</record>
+
+		<menuitem id="menu_material_cost_control" parent="stock.menu_traceability"
+				  name="Material Cost Transfer" sequence="1"
+				  action="action_material_cost_transfer"
+				   />
+
+     </data>
+    </openerp>

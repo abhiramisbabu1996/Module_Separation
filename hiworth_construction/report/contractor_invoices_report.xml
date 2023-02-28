@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<report id="action_print_contractor_invoices" model="hiworth.invoice"
+			report_type="qweb-pdf" string="Print Invoices"
+			name="hiworth_construction.report_contractor_invoices" file="hiworth_construction.report_contractor_invoices" />
+
+		<report id="action_view_contractor_invoices" model="hiworth.invoice"
+			report_type="qweb-html" string="View Invoice"
+			name="hiworth_construction.report_contractor_invoices" file="hiworth_construction.report_contractor_invoices" />
+
+		<template id="report_contractor_invoices">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="report.external_layout">
+						<div class="page">
+							<div class="row">
+								<h3 class="text-center">
+									<span>Invoice No:<t t-esc="o.name"></t></span>
+								</h3>
+							</div>
+							&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+
+
+						    <table style="width: 100%; font-size:16px;">
+								<thead>
+									<tr style="height: 30px;">
+										<th><h5><b>Work Order No</b></h5></th>
+										<td>
+											<span t-field="o.work_order_id"/>
+										</td>
+										<th><h5><b>Date Invoice</b></h5></th>
+										<td>
+											<span t-field="o.date_invoice"/>
+										</td>
+									</tr>
+
+									<tr style="height: 30px;">
+										<th><h5><b>Partner</b></h5></th>
+										<td>
+											<span t-field="o.partner_id"/>
+										</td>
+										<th><h5><b>Company</b></h5></th>
+										<td>
+											<span t-field="o.company_id"/>
+										</td>
+									</tr>
+
+									<tr style="height: 30px;">
+										<th><h5><b>Account</b></h5></th>
+										<td>
+											<span t-field="o.account_id"/>
+										</td>
+										<th><h5><b>Created On</b></h5></th>
+										<td>
+											<span t-field="o.create_date"/>
+										</td>
+									</tr>
+
+									<tr style="height: 30px;">
+										<th><h5><b>Project</b></h5></th>
+										<td>
+											<span t-field="o.project_id"/>
+										</td>
+										
+										<th><h5><b>Invoice Reference</b></h5></th>
+										<td>
+											<span t-field="o.reference"/>
+										</td>
+									</tr>
+
+									<tr style="height: 30px;">
+										<th><h5><b>Client</b></h5></th>
+										<td>
+											<span t-field="o.customer_id"/>
+										</td>
+									</tr>
+
+								</thead>
+							</table>
+
+
+
+							&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+
+
+							<t t-set="sl_no" t-value="1" />
+							<t t-set="qty_tot" t-value="0" />
+							<t t-set="amt_tot" t-value="0" />
+							<t t-set="prv_qty_tot" t-value="0" />
+							<t t-set="last_qty_tot" t-value="0" />
+							<t t-set="utd_qty_tot" t-value="0" />
+							<t t-set="prv_amt_tot" t-value="0" />
+							<t t-set="last_amt_tot" t-value="0" />
+							<t t-set="utd_amt_tot" t-value="0" />
+
+							<table style="font-size:13px;width: 100%;border-bottom: outset;border-top: outset;">
+							<!-- <table class="table table-bordered" style="font-size:14px;width:100%;"> -->
+							
+							
+								<tr style="border-bottom: outset;border-right: outset;border-left: outset;">
+									<td style="width: 3%; border-right: outset;%" align="center"><h5><b>Sl No</b></h5></td>
+									<td style="width: 3%; border-right: outset;" align="center"><h5><b>SHD No</b></h5></td>
+									<td style="width: 15%; border-right: outset;" align="center"><h5><b>Items</b></h5></td>
+									<td style="width: 15%; border-right: outset;" align="center"><h5><b>Description</b></h5></td>
+									<td style="width: 5%; border-right: outset;" align="center"><h5><b>Quantity</b></h5></td>
+
+									<td style="width: 7%; border-right: outset;" align="center"><h5><b>UOM</b></h5></td>
+									<td style="width: 7%; border-right: outset;" align="center"><h5><b>Rate</b></h5></td>
+									<td style="width: 7%; border-right: outset;" align="center"><h5><b>Total Amount</b></h5></td>
+									<td style="width: 5%; border-right: outset;" align="center"><h5><b>Previous Qty</b></h5></td>
+									<td style="width: 5%; border-right: outset;" align="center"><h5><b>Since Last Qty</b></h5></td>
+									<td style="width: 5%; border-right: outset;" align="center"><h5><b>Up To Date Qty</b></h5></td>
+
+									<td style="width: 5%; border-right: outset;" align="center"><h5><b>Previous Amount</b></h5></td>
+									<td style="width: 5%; border-right: outset;" align="center"><h5><b>Since Last Amount</b></h5></td>
+									<td style="width: 5%; border-right: outset;" align="center"><h5><b>Up To Date Amount</b></h5></td>
+									<td style="width: 8%; border-right: outset;" align="center"><h5><b>Remarks</b></h5></td>
+
+								</tr>
+								<t t-set="nos" t-value="0" />
+								<!-- <t t-set="nos2" t-value="0" /> -->
+								<t t-foreach="o.invoice_line" t-as="l" style="border-left: outset;">
+									<tr style="border-right: outset;border-left: outset;" height="25">
+										
+											<td style="width: 3%; border-right: outset;" align="center">
+												<t t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td style="width: 3%; border-right: outset;" align="center" ><span t-field="l.shd_no" /></td>
+											<td style="width: 15%; border-right: outset;"  ><span t-field="l.product_id"/></td>
+											<td style="width: 15%; border-right: outset;"  ><span t-field="l.name"/></td>
+											<td style="width: 5%; border-right: outset;" align="center" >
+												<span t-field="l.total_assigned_qty"/>
+												<t t-set="qty_tot" t-value="qty_tot + l.total_assigned_qty" />
+											</td>
+
+											<td style="width: 7%; border-right: outset;" align="center" ><span t-field="l.uos_id"/></td>
+											<td style="width: 7%; border-right: outset;" align="center" ><span t-field="l.price_unit" /></td>
+											<td style="width: 7%; border-right: outset;" align="center" >
+												<span t-esc="'{0:,.2f}'.format(l.total_amount)" />
+												<t t-set="amt_tot" t-value="amt_tot + l.total_amount" />
+											</td>
+											<td style="width: 5%; border-right: outset;" align="center" >
+												<span t-esc="'{0:,.2f}'.format(l.pre_qty)" />
+												<t t-set="prv_qty_tot" t-value="prv_qty_tot + l.pre_qty" />
+											</td>
+
+											<td style="width: 5%; border-right: outset;" align="center" >
+												<span t-esc="'{0:,.2f}'.format(l.quantity)" />
+												<t t-set="last_qty_tot" t-value="last_qty_tot + l.quantity" />
+											</td>
+
+											<td style="width: 5%; border-right: outset;" align="center" >
+												<span t-esc="'{0:,.2f}'.format(l.upto_date_qty)" />
+												<t t-set="utd_qty_tot" t-value="utd_qty_tot + l.upto_date_qty" />
+											</td>
+
+											<td style="width: 5%; border-right: outset;" align="center" >
+												<span t-esc="'{0:,.2f}'.format(l.pre_amount)" />
+												<t t-set="prv_amt_tot" t-value="prv_amt_tot + l.pre_amount" />
+											</td>
+											<td style="width: 5%; border-right: outset;" align="center" >
+												<span t-esc="'{0:,.2f}'.format(l.price_subtotal)" />
+												<t t-set="last_amt_tot" t-value="last_amt_tot + l.price_subtotal" />
+											</td>
+											<td style="width: 5%; border-right: outset;" align="center" >
+												<span t-esc="'{0:,.2f}'.format(l.upto_date_amount)" />
+												<t t-set="utd_amt_tot" t-value="utd_amt_tot + l.upto_date_amount" />
+											</td>
+											<td style="width: 8%; border-right: outset;" align="center" ><span t-field="l.remark" /></td>
+											<t t-set="nos" t-value="nos+1" />
+									</tr>
+								</t>
+								
+
+								<tr style="border-right: outset;border-left: outset;border-top: outset;" height="25">
+									<td style="border-right: outset;"></td>
+									<td style="border-right: outset;"></td>
+									<td style="border-right: outset;" align="center" >
+										<h5><b>Total</b></h5>
+									</td>
+									<td style="border-right: outset;"></td>
+									<td style="border-right: outset;" align="center" >
+										<t t-esc="'{0:,.2f}'.format(qty_tot)" />
+									</td>
+									<td style="border-right: outset;"></td>
+									<td style="border-right: outset;"></td>
+									<td style="border-right: outset;" align="center" >
+										<t t-esc="'{0:,.2f}'.format(amt_tot)" />
+									</td>
+									<td style="border-right: outset;" align="center" >
+										<t t-esc="'{0:,.2f}'.format(prv_qty_tot)" />
+									</td>
+									<td style="border-right: outset;" align="center" >
+										<t t-esc="'{0:,.2f}'.format(last_qty_tot)" />
+									</td>
+									<td style="border-right: outset;" align="center" >
+										<t t-esc="'{0:,.2f}'.format(utd_qty_tot)" />
+									</td>
+									<td style="border-right: outset;" align="center" >
+										<t t-esc="'{0:,.2f}'.format(prv_amt_tot)" />
+									</td>
+									<td style="border-right: outset;" align="center" >
+										<t t-esc="'{0:,.2f}'.format(last_amt_tot)" />
+									</td>
+									<td style="border-right: outset;" align="center" >
+										<t t-esc="'{0:,.2f}'.format(utd_amt_tot)" />
+									</td>
+									<td style="border-right: outset;"></td>
+								</tr> 
+							</table>
+							&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+
+							<table style="font-size:15px;width: 100%;">
+
+								<tr style="width: 30%;">
+									<td colspan="5" rowspan="4"><span></span></td>
+									<td style="width: 15%;" align="right" colspan="4">
+										<span></span><br/>
+										<span><b>Discount%</b></span><br/>
+										<span></span><br/>
+										<span><b>Retention%</b></span><br/>
+										<span></span><br/>
+										<span><b>Addition%</b></span><br/>
+										<span></span><br/>
+										<span><b>Grand Total</b></span><br/>
+									</td>
+									<td style="width: 15%;" align="right" colspan="2">
+										<span><b>Amount</b></span><br/>
+										<!-- <span t-esc="'{0:,.2f}'.format(o.discount)" /> -->
+										<span t-field="o.discount"/><br/>
+										<span><b>Total Amount</b></span><br/>
+										<!-- <span t-esc="'{0:,.2f}'.format(o.retention)" /> -->
+										<span t-field="o.retention"/><br/>
+										<span><b>Net Total</b></span><br/>
+										<!-- <span t-esc="'{0:,.2f}'.format(o.addition)" /> -->
+										<span t-field="o.addition"/><br/>
+										<span></span><br/>
+										<span></span><br/>
+									</td>
+									<td style="width: 10%;" align="right" colspan="2">
+										<span t-esc="'{0:,.2f}'.format(o.invoiced_amount)" />
+
+										<span t-esc="'{0:,.2f}'.format(o.diccount_amount)" />
+
+										<span t-esc="'{0:,.2f}'.format(o.total_amount)" />
+
+										<span t-esc="'{0:,.2f}'.format(o.retention_amount)" />
+
+										<span t-esc="'{0:,.2f}'.format(o.net_total)" />
+
+										<span t-esc="'{0:,.2f}'.format(o.addition_amount)" />
+
+										<span></span><br/>
+										<span t-esc="'{0:,.2f}'.format(o.grand_total)" />
+									</td>
+								</tr>
+								<!-- <tr style="width: 60%;">
+									<td colspan="5" rowspan="4"><span></span></td>
+									<td style="width: 10%;" colspan="4">
+										<span><b>Grand Total</b></span><br/>
+									</td>
+									
+									<td style="width: 20%;" align="right" colspan="2">
+										<span t-field="o.grand_total"/><br/>
+									</td>
+								</tr> -->
+							</table>
+							&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+
+
+							<t t-set="sl_no1" t-value="1" />
+							<t t-set="credit_tot" t-value="0" />
+							<t t-set="debit_tot" t-value="0" />
+
+							<table style="font-size:16px;width: 100%;border-bottom: outset;border-top: outset;">
+							<!-- <table class="table table-bordered" style="font-size:14px;width:100%;"> -->
+							
+							
+								<tr style="border-bottom: outset;border-right: outset;border-left: outset;">
+									<td style="width: 5%; border-right: outset;%" align="center"><h5><b>Sl No</b></h5></td>
+									<td style="width: 5%; border-right: outset;" align="center"><h5><b>Date</b></h5></td>
+									<td style="width: 30%; border-right: outset;" align="center"><h5><b>Name</b></h5></td>
+									<td style="width: 10%; border-right: outset;" align="center"><h5><b>Cheque No</b></h5></td>
+									<td style="width: 30%; border-right: outset;" align="center"><h5><b>Account</b></h5></td>
+									<!-- <td style="width: 7%; border-right: outset;" align="center"><h5><b>Plot</b></h5></td> -->
+									<td style="width: 10%; border-right: outset;" align="center"><h5><b>Reductions</b></h5></td>
+									<td style="width: 10%; border-right: outset;" align="center"><h5><b>Payments</b></h5></td>
+
+								</tr>
+								<t t-set="nos" t-value="0" />
+								<t t-set="nos2" t-value="0" />
+								<t t-foreach="o.account_move_lines" t-as="l" style="border-left: outset;">
+									<tr style="border-right: outset;border-left: outset;" height="25">
+										
+											<td style="border-right: outset;" align="center">
+												<t t-esc="sl_no1" />
+												<t t-set="sl_no1" t-value="sl_no1+1" />
+											</td>
+											<td style="border-right: outset;" align="center" ><span t-field="l.date" /></td>
+											<td style="border-right: outset;"  ><span t-field="l.name"/></td>
+											<td style="border-right: outset;" align="center" ><span t-field="l.cheque_no"/></td>
+											<td style="border-right: outset;"  ><span t-field="l.account_id"/></td>
+											<!-- <td style="border-right: outset;" align="center" ><span t-field="l.location_id"/></td> -->
+											<!-- <td style="width: 7%; border-right: outset;" align="center" ><span t-field="l.location_id" /></td> -->
+											<td style="border-right: outset;" align="center" >
+												<span t-field="l.credit" />
+												<t t-set="credit_tot" t-value="credit_tot + l.credit" />
+											</td>
+											<td style="border-right: outset;" align="center" >
+												<span t-field="l.debit" />
+												<t t-set="debit_tot" t-value="debit_tot + l.debit" />
+											</td>
+											<t t-set="nos" t-value="nos+1" />
+									</tr>
+								</t>
+
+								<tr style="border-right: outset;border-left: outset;border-top: outset;" height="25">
+									<td style="border-right: outset;"></td>
+									<td style="border-right: outset;"></td>
+									<td style="border-right: outset;" align="center" >
+										<h5><b>Total</b></h5>
+									</td>
+									<td style="border-right: outset;"></td>
+									<td style="border-right: outset;"></td>
+									<!-- <td style="border-right: outset;"></td> -->
+									<td style="border-right: outset;" align="center" >
+										<t t-esc="credit_tot" />
+									</td>
+									<td style="border-right: outset;" align="center" >
+										<t t-esc="debit_tot" />
+									</td>
+								</tr> 
+							</table>
+								
+							&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+
+							<table style="font-size:16px;width: 100%;">
+
+								<tr style="width: 60%;">
+									<td colspan="5" rowspan="4"><span></span></td>
+									<td style="width: 20%;" align="right" colspan="4">
+										<span><b>Total Reduction</b></span><br/>
+										<span><b>Amount To Pay</b></span><br/>
+										<span><b>Amount Paid</b></span><br/>
+										<span><b>Balance</b></span><br/>
+									</td>
+								   
+									<td style="width: 10%;" align="right" colspan="2">
+										<span t-esc="'{0:,.2f}'.format(o.reduction_amount)" />
+
+										<span t-esc="'{0:,.2f}'.format(o.amount_to_be_paid)" />
+
+										<span t-esc="'{0:,.2f}'.format(o.paid_amount)" />
+
+										<span t-esc="'{0:,.2f}'.format(o.balance)" />
+									</td>
+								</tr>
+							</table>
+
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+
+
+		
+	</data>
+</openerp>

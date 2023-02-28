@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+		<!-- Material request report -->
+		<template id="report_purchase_request_view">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<!-- <t t-foreach="docs" t-as="o"> -->
+						<div class="row">
+							<h2 align="center">
+                                <span>Pending Purchase Request Report </span>
+							</h2>
+							<p align="center">
+								From
+								<t
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.date_from,'%Y-%m-%d'))"></t>
+								To
+								<t
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.date_to,'%Y-%m-%d'))"></t>
+							</p>
+						</div>
+						<div class="row">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th style="width: 5%">Sl.No</th>
+										<th>Date</th>
+										<th>Department</th>
+										<th>Order By</th>
+										<th>mode of Order</th>
+										<th>PR No</th>
+										<th>RFQ No</th>
+										<th>Comparison No</th>
+
+                                        <th>Supplier</th>
+                                        <th>Location</th>
+                                        <th>Product</th>
+
+                                        <th>P.O Quantity</th>
+
+
+                                        <th>Product Unit of Measure</th>
+                                        <th>Ordered Rate</th>
+										  <th>Status</th>
+
+									</tr>
+								</thead>
+								<t t-set="sl_no" t-value="1" />
+								<t t-set="total" t-value="0" />
+								<tbody>
+									<t t-foreach="docs.get_products()" t-as="product">
+
+										<tr >
+
+
+										<td>
+											<t t-esc="sl_no" />
+
+										</td>
+										<td>
+											<t t-esc="product[sl_no]['date']" />
+										</td>
+											<td>
+											<t t-esc="product[sl_no]['department']" />
+										</td>
+											<td>
+											<t t-esc="product[sl_no]['order_by']" />
+										</td>
+											<td>
+											<t t-esc="product[sl_no]['mode_order']" />
+										</td>
+										<td>
+											<t t-esc="product[sl_no]['pr']" />
+										</td>
+										<td>
+											<t t-esc="product[sl_no]['rfq']" />
+										</td>
+
+										<td>
+											<t t-esc="product[sl_no]['comp']" />
+										</td>
+
+										<td>
+											<t t-esc="product[sl_no]['supplier']" />
+										</td>
+										<td>
+											<t t-esc="product[sl_no]['location']" />
+										</td>
+										<td>
+											<t t-esc="product[sl_no]['product']" />
+										</td>
+
+
+										<td class="text-right">
+											<t t-esc="product[sl_no]['ordered_qty']" />
+										</td>
+
+
+										<td class="text-right">
+
+											<t t-esc="product[sl_no]['uom']" />
+
+										</td>
+                                        <td>
+											<t t-esc="product[sl_no]['ordered_rate']" />
+										</td>
+
+											  <td>
+											<t t-esc="product[sl_no]['status']" />
+
+										</td>
+										<t t-set="sl_no" t-value="sl_no+1" />
+									</tr>
+
+									</t>
+									<tr>
+										<th class="text-left">Grand Total</th>
+
+
+
+
+
+
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+											<t t-esc="total" />
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+
+										</th>
+										<th class="text-right">
+
+										</th>
+									</tr>
+
+								</tbody>
+
+							</table>
+						</div>
+
+						<!-- </t> -->
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+
+		<template id="report_purchase_request_view_stock">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<!-- <t t-foreach="docs" t-as="o"> -->
+						<div class="row">
+							<h2 align="center">
+                                <span>Pending Purchase Request Report </span>
+							</h2>
+							<p align="center">
+								From
+								<t
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.date_from,'%Y-%m-%d'))"></t>
+								To
+								<t
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.date_to,'%Y-%m-%d'))"></t>
+							</p>
+						</div>
+						<div class="row">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th style="width: 5%">Sl.No</th>
+										<th>Date</th>
+
+										<th>Order By</th>
+										<th>mode of Order</th>
+										<th>PR No</th>
+										<th>RFQ No</th>
+										<th>Comparison No</th>
+
+                                        <th>Supplier</th>
+                                        <th>Location</th>
+                                        <th>Product</th>
+
+                                        <th>P.O Quantity</th>
+
+
+                                        <th>Product Unit of Measure</th>
+                                        <th>Ordered Rate</th>
+										  <th>Status</th>
+
+									</tr>
+								</thead>
+								<t t-set="sl_no" t-value="1" />
+								<t t-set="total" t-value="0" />
+								<tbody>
+									<t t-foreach="docs.get_products()" t-as="product">
+
+										<tr >
+
+
+										<td>
+											<t t-esc="sl_no" />
+
+										</td>
+										<td>
+											<t t-esc="product[sl_no]['date']" />
+										</td>
+
+											<td>
+											<t t-esc="product[sl_no]['order_by']" />
+										</td>
+											<td>
+											<t t-esc="product[sl_no]['mode_order']" />
+										</td>
+										<td>
+											<t t-esc="product[sl_no]['pr']" />
+										</td>
+										<td>
+											<t t-esc="product[sl_no]['rfq']" />
+										</td>
+
+										<td>
+											<t t-esc="product[sl_no]['comp']" />
+										</td>
+
+										<td>
+											<t t-esc="product[sl_no]['supplier']" />
+										</td>
+										<td>
+											<t t-esc="product[sl_no]['location']" />
+										</td>
+										<td>
+											<t t-esc="product[sl_no]['product']" />
+										</td>
+
+
+										<td class="text-right">
+											<t t-esc="product[sl_no]['ordered_qty']" />
+										</td>
+
+
+										<td class="text-right">
+
+											<t t-esc="product[sl_no]['uom']" />
+
+										</td>
+                                        <td>
+											<t t-esc="product[sl_no]['ordered_rate']" />
+										</td>
+
+											  <td>
+											<t t-esc="product[sl_no]['status']" />
+
+										</td>
+										<t t-set="sl_no" t-value="sl_no+1" />
+									</tr>
+
+									</t>
+									<tr>
+										<th class="text-left">Grand Total</th>
+
+
+
+
+
+
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+											<t t-esc="total" />
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+
+										</th>
+										<th class="text-right">
+
+										</th>
+									</tr>
+
+								</tbody>
+
+							</table>
+						</div>
+
+						<!-- </t> -->
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+        <record id="view_purchase_request_report_form" model="ir.ui.view">
+            <field name="name">view.purchase.request.report.form</field>
+            <field name="model">purchase.request.report</field>
+            <field name="arch" type="xml">
+                  <form>
+
+                          <group>
+
+                                <field name="date_from" />
+                                <field name="date_to" />
+							  <field name="department"/>
+							  <field name="location_id"/>
+
+
+                          </group>
+
+                        <footer>
+
+                            <button name="action_view_purchase_request" string="View" type="object"/>
+                           <button name="action_print_purchase_request" string="Print" type="object"/>
+                            <button name="cancel" string="Cancel" special="cancel"/>
+                        </footer>
+
+                  </form>
+
+            </field>
+        </record>
+
+		  <record id="view_purchase_request_report_form_stock" model="ir.ui.view">
+            <field name="name">view.purchase.request.report.form.stock</field>
+            <field name="model">purchase.request.report</field>
+            <field name="arch" type="xml">
+                  <form>
+
+                          <group>
+
+                                <field name="date_from" />
+                                <field name="date_to" />
+
+							  <field name="location_id"/>
+
+
+                          </group>
+
+                        <footer>
+
+                            <button name="action_view_purchase_request" string="View" type="object"/>
+                           <button name="action_print_purchase_request" string="Print" type="object"/>
+                            <button name="cancel" string="Cancel" special="cancel"/>
+                        </footer>
+
+                  </form>
+
+            </field>
+        </record>
+
+         <record id="action_purchase_request_report" model="ir.actions.act_window">
+            <field name="name">Pending purchase request report</field>
+            <field name="res_model">purchase.request.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="context">{}</field>
+			 <field name="view_id" ref="hiworth_construction.view_purchase_request_report_form"/>
+             <field name="target">new</field>
+            <field name="view_mode">form</field>
+        </record>
+
+
+		  <record id="action_purchase_request_report_stock" model="ir.actions.act_window">
+            <field name="name">Pending purchase request report</field>
+            <field name="res_model">purchase.request.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="context">{'from_stock':True}</field>
+			  <field name="view_id" ref="hiworth_construction.view_purchase_request_report_form_stock"/>
+             <field name="target">new</field>
+            <field name="view_mode">form</field>
+        </record>
+
+
+
+
+<!--         <menuitem name="Pending purchase request report"-->
+<!--            id="purchase_request_report"-->
+<!--            parent="hiworth_construction.purchase_request_report_main"-->
+<!--				   groups="base.group_erp_manager,base.group_user"-->
+<!--                   action="action_purchase_request_report"-->
+<!--            sequence="0"/>-->
+
+
+		 <menuitem name="Pending purchase request report"
+            id="pending_po_report"
+            parent="hiworth_construction.menu_stock_warehouse_reports"
+				   groups="base.group_erp_manager,base.group_user"
+                   action="action_purchase_request_report_stock"
+            sequence="1"/>
+
+
+
+        <report id="view_purchase_request_report" model="purchase.request.report"
+			string="Pending purchase request report" report_type="qweb-html"
+			name="hiworth_construction.report_purchase_request_view" />
+
+		 <report id="view_purchase_request_report_stock" model="purchase.request.report"
+			string="Pending purchase request report" report_type="qweb-html"
+			name="hiworth_construction.report_purchase_request_view_stock" />
+
+		  <report id="print_purchase_request_report" model="purchase.request.report"
+			string="Pending purchase request report" report_type="qweb-pdf"
+			name="hiworth_construction.report_purchase_request_view" />
+
+
+		  <report id="print_purchase_request_report_stock" model="purchase.request.report"
+			string="Pending purchase request report" report_type="qweb-pdf"
+			name="hiworth_construction.report_purchase_request_view_stock" />
+
+<!-- <menuitem id="menu_current_inventory_department"        parent="hiworth_construction.purchase_request_report_main" action="action_current_inventory_department" -->
+<!--          name="Inventory Valuation" sequence="30" -->
+<!--          />-->
+
+
+    </data>
+
+
+</openerp>

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<report id="print_postal_report" string="Print Postal Report"
+			model="postal.form" report_type="qweb-pdf"
+			name="hiworth_construction.report_postal_form" />
+
+		<template id="report_postal_form">
+			<t t-call="report.html_container">
+
+				<t t-call="report.external_layout">
+
+					<div class="page">
+						<div>
+							<h2>
+								<center>
+									<span>
+										<u>
+											Postal Report
+										</u>
+									</span>
+								</center>
+							</h2>
+						</div>
+						<t t-foreach="docs" t-as="o">
+							<div class="row">
+								<h3>
+									<span>
+										Workname :
+										<t t-esc="o.work_name" />
+									</span>
+									<span style="float: right;">
+										Purpose :
+										<t t-esc="o.purpose" />
+									</span>
+								</h3>
+							</div>
+							<div class="row">
+								<h3>
+									<span>
+										Date From :
+										<t t-esc="o.date_from" />
+									</span>
+									<span style="float: right;">
+										Date To :
+										<t t-esc="o.date_to" />
+									</span>
+								</h3>
+							</div>
+							<div>
+							<h3>
+								<center>
+									<span>
+										<u><t t-if="o.type_of_bond == 'kisan'">
+											<span>Kisan Pathra</span>
+											</t>
+											<t t-if="o.type_of_bond == 'national'">
+											<span>National Service</span>
+											</t>
+										</u>
+									</span>
+								</center>
+							</h3>
+							</div>
+							<div class="row">
+								<h3>
+									<span>
+										Maturity Date :
+										<t t-esc="o.maturity_date" />
+									</span>
+									<span style="float: right;">
+										Closing Date :
+										<t t-esc="o.closing_date" />
+									</span>
+								</h3>
+							</div>
+							<div class="row">
+								<table class="table table-bordered" style="width: 100%">
+									<thead>
+										<tr>
+											<!-- <th>Date</th> -->
+											<th>FD Percent</th>
+											<th>Round Off</th>
+											<th>FD Amount</th>
+											<th>FD Account</th>
+											<th>FD Payment Mode</th>
+											<th>FD Number</th>
+											<th>Date of Issue</th>
+											<th>FD Holder</th>
+											<th>FD Interest</th>
+											<th>BG Duration</th>
+										</tr>
+									</thead>
+								<tbody>
+									<tr>
+										<td><span t-field = "o.fd_percent"/></td>
+										<td><span t-field = "o.fd_round_off"/></td>
+										<td><span t-field = "o.fd_amount"/></td>
+										<td><span t-field = "o.fd_account"/></td>
+										<td><span t-field = "o.fd_payment_mode"/></td>
+										<td><span t-field = "o.fd_number"/></td>
+										<td><span t-field = "o.fd_issue_date"/></td>
+										<td><span t-field = "o.fd_holder"/></td>
+										<td><span t-field = "o.fd_interest"/></td>
+										<td><span t-field = "o.fd_period"/></td>
+										
+
+									</tr>
+								</tbody>
+
+								</table>
+							</div>
+						</t>
+					</div>
+				</t>
+			</t>
+		</template>
+										
+
+	</data>
+</openerp>

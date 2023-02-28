@@ -1,0 +1,493 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<record id="report_paperformat" model="report.paperformat">
+			<field name="name">Landscape</field>
+			<field name="default" eval="True" />
+			<field name="format">A4</field>
+			<field name="orientation">Landscape</field>
+			<field name="margin_top">5</field>
+			<field name="margin_bottom">0</field>
+			<field name="margin_left">15</field>
+			<field name="margin_right">15</field>
+			<field name="header_line" eval="False" />
+			<field name="header_spacing">12</field>
+			<field name="dpi">0</field>
+		</record>
+
+
+		<report id="print_driver_daily_report" string="Driver Daily - Print Report"
+			model="driver.daily.statement" report_type="qweb-pdf"
+			name="hiworth_construction.report_driver_daily_statements" />
+
+		<report id="view_driver_daily_report" string="Driver Daily - View Report"
+			model="driver.daily.statement" report_type="qweb-html"
+			name="hiworth_construction.report_driver_daily_statements" />
+
+		<record id="hiworth_construction.print_driver_daily_report" model="ir.actions.report.xml">
+			<field name="paperformat_id" ref="hiworth_construction.report_paperformat" />
+		</record>
+
+		<template id="report_driver_daily_statements">
+			<t t-call="report.html_container">
+
+				<t t-call="report.external_layout">
+
+					<div class="page" >
+						
+						<div class="header">
+							<h1>
+								<center>TTK CONSTRUCTION</center>
+							</h1>
+						</div>
+						<t t-foreach="docs" t-as="o">
+						<table class="table table-bordered" style="border-top: outset;border-left: outset; border-right: outset;border-bottom: outset;width: 100%">
+							<tr>
+								<td colspan="14">
+									<h3>
+								<center>
+									<span>
+										<u>
+											Driver Daily Statement Report
+										</u>
+									</span>
+								</center>
+							</h3>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="7" class="text-left">Daily Statement Of Vehicle No :
+										<strong><t t-esc="o.vehicle_no.license_plate" /></strong></td>
+								<td colspan="7" class="text-right">Date :
+										<strong><t t-esc="o.get_date(o.date)" /></strong></td>
+							</tr>
+
+							<tr style="border-top: outset;border-left: outset; border-right: outset;border-bottom: outset;">
+								<th style="width: 5%;border-right:outset;">Sl.No</th>
+								<th class="text-center" style="border-right:outset;">From</th>
+								<th class="text-center" style="border-right:outset;">To</th>
+								<th class="text-center" style="border-right:outset;">Item</th>
+								<th style="border-right:outset;">Qty</th>
+								<th style="border-right:outset;">Rate</th>
+								<th style="border-right:outset;">Total</th>
+								<th style="border-right:outset;">Voucher No</th>
+								<th style="border-right:outset;">Start Km</th>
+								<th style="border-right:outset;">End Km</th>
+								<th style="border-right:outset;">Total Km</th>
+								<th style="border-right:outset;">Rent</th>
+								<th style="border-right:outset;">Driver Amount</th>
+								<th>Remarks</th>
+							</tr>
+
+							<t t-set="sl_no" t-value="1" />
+							<t t-set="daily_rate" t-value="0" />
+							<t t-set="daily_total" t-value="0" />
+							<t t-set="daily_qty" t-value="0" />
+							<t t-set="start_km" t-value="0" />
+							<t t-set="end_km" t-value="0" />
+							<t t-set="total_km" t-value="0" />
+							<t t-set="daily_rent" t-value="0" />
+							<t t-set="driver_amt" t-value="0" />
+
+
+
+							<tr t-foreach="o.driver_stmt_line" t-as="line" style="border-left: outset; border-right: outset;border-bottom: outset;">
+											<td style="border-right: outset;">
+												<span t-esc="sl_no" />
+												<t t-set="sl_no" t-value="sl_no+1" />
+											</td>
+											<td class="text-center" style="border-right: outset;">
+												<span t-field="line.from_id2.name" />
+											</td>
+											<td class="text-center" style="border-right: outset;">
+												<span t-esc="line.to_id2.name" />
+											</td>
+											<td class="text-center" style="border-right: outset;">
+												<span t-esc="line.item_expense2.name" />
+											</td>
+
+											<td align="right" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(line.qty)" />
+												<t t-set="daily_qty" t-value="daily_qty+line.qty" />
+											</td>
+											<!-- <td style="border-right: outset;">
+												<span t-esc="int(float(line.qty))" />
+
+											</td> -->
+											<td align="right" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(round((line.rate),2))" />
+												<t t-set="daily_rate" t-value="daily_rate+round((line.rate),2)" />
+											</td>
+
+
+
+											<td align="right" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(line.total)" />
+												<t t-set="daily_total" t-value="daily_total+line.total" />
+											</td>
+											<td style="border-right: outset;">
+												<span t-esc="line.voucher_no" />
+											</td>
+											<td style="border-right: outset;">
+												<span t-esc="int(float(line.start_km))" />
+												<t t-set="start_km" t-value="start_km+int(float(line.start_km))" />
+											</td>
+											<td style="border-right: outset;">
+												<span t-esc="int(float(line.end_km))" />
+												<t t-set="end_km" t-value="end_km+int(float(line.end_km))" />
+											</td>
+											<td style="border-right: outset;">
+												<span t-esc="int(float(line.total_km))" />
+												<t t-set="total_km" t-value="total_km+int(float(line.total_km))" />
+											</td>
+											<td align="right" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(float(line.rent))" />
+												<t t-set="daily_rent" t-value="daily_rent+int(float(line.rent))" />
+											</td>
+											<td align="right" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(float(line.driver_betha))" />
+												<t t-set="driver_amt" t-value="driver_amt+int(float(line.driver_betha))" />
+											</td>
+											<td>
+												<span t-esc="line.remarks" />
+											</td>
+										</tr>
+
+										<tr style="border-left: outset; border-right: outset;border-bottom: outset;">
+											<td style="border-right: outset;">
+												
+											</td>
+											<td class="text-center" style="border-right: outset;">
+												
+											</td>
+											<td class="text-center" style="border-right: outset;">
+												
+											</td>
+											<td class="text-center" style="border-right: outset;">
+											</td>	
+											<!-- 
+											<td style="border-right: outset;">
+												
+											</td> -->
+
+
+											<td align="right" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(daily_qty)" />
+											</td>
+
+											
+											<td style="border-right: outset;">
+												
+											</td> -->
+
+
+											<!-- <td align="right" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(daily_rate)" />
+											</td> -->
+											<td align="right" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(daily_total)" />
+											</td>
+											<td style="border-right: outset;">
+												
+											</td>
+
+											<td style="border-right: outset;">
+												<span t-esc="start_km" />
+											</td>
+											<td style="border-right: outset;">
+												<span t-esc="end_km" />
+											</td>
+											<td style="border-right: outset;">
+												<span t-esc="total_km" />
+											</td>
+											<td align="right" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(daily_rent)" />
+											</td>
+											<td align="right" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(driver_amt)" />
+											</td>
+											<td>
+												
+											</td>
+										</tr>
+
+
+											<t t-if="o.shuttle_service">
+
+
+								<tr><td colspan="14"><h4>Shuttle Services</h4></td></tr>
+
+
+								
+										<tr style="border-top: outset;border-left: outset; border-right: outset;border-bottom: outset;">
+											<th colspan="2" style="width: 5%;border-right:outset;">Sl.No</th>
+											<th colspan="3" class="text-center" style="border-right:outset;">To</th>
+											<th colspan="2" style="border-right:outset;">Qty</th>
+											<th colspan="2" style="border-right:outset;">Rent</th>
+											<th colspan="5">Remarks</th>
+										</tr>
+									
+										<t t-set="sl_no1" t-value="1" />
+									
+										<tr t-foreach="o.shuttle_service" t-as="line">
+											<td colspan="2" style="border-right: outset;border-left: outset;border-bottom: outset;">
+												<span t-esc="sl_no1" />
+												<t t-set="sl_no1" t-value="sl_no1+1" />
+											</td>
+											
+											<td class="text-center" colspan="3" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="line.to_location.name" />
+											</td>
+											<td colspan="2" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="int(float(line.qty))" />
+											</td>
+											<td align="right" colspan="2" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="'{0:,.2f}'.format(line.rent)" />
+											</td>
+											
+											<td colspan="5" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="line.remarks" />
+											</td>
+										</tr>
+									
+							</t>
+
+							<t t-if="o.stmt_line">
+
+
+								<tr><td colspan="14"><h4>Expenses</h4></td></tr>
+
+
+								
+										<tr style="border-top: outset;border-left: outset; border-right: outset;border-bottom: outset;">
+											<th colspan="1" style="width: 5%;border-right:outset;">Sl.No</th>
+											<th class="text-center" colspan="2" style="border-right:outset;">Item</th>
+											<th colspan="1" style="border-right:outset;">Qty</th>
+											<th colspan="2" style="border-right:outset;">Rate</th>
+											<th colspan="2" style="border-right:outset;">Total</th>
+											<th colspan="2" style="border-right:outset;">Payment</th>
+											<th colspan="2" style="border-right:outset;">Voucher No</th>
+											<th colspan="2">Remarks</th>
+										</tr>
+									
+										<t t-set="sl_no1" t-value="1" />
+										<t t-set="qty" t-value="0" />
+										<t t-set="total" t-value="0" />
+										<t t-set="payment" t-value="0" />
+									
+										<tr t-foreach="o.stmt_line" t-as="line">
+											<td colspan="1" style="border-right: outset;border-left: outset;border-bottom: outset;">
+												<span t-esc="sl_no1" />
+												<t t-set="sl_no1" t-value="sl_no1+1" />
+											</td>
+											
+											<td class="text-center" colspan="2" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="line.item_expense2.name" />
+											</td>
+											<td colspan="1" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="int(float(line.qty))" />
+												<t t-set="qty" t-value="qty+line.qty" />
+											</td>
+											<td align="right" colspan="2" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="'{0:,.2f}'.format(line.rate)" />
+											</td>
+											<td align="right" colspan="2" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="'{0:,.2f}'.format(line.total)" />
+												<t t-set="total" t-value="total+line.total" />
+											</td>
+											<td align="right" colspan="2" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="'{0:,.2f}'.format(line.payment)" />
+												<t t-set="payment" t-value="payment+line.payment" />
+											</td>
+											<td colspan="2" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="line.voucher_no" />
+											</td>
+											<td colspan="2" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="line.remarks" />
+											</td>
+										</tr>
+
+										<tr>
+											<td colspan="1" style="border-right: outset;border-left: outset;border-bottom: outset;">
+											</td>
+											
+											<td class="text-center" colspan="2" style="border-right: outset;border-bottom: outset;">
+											</td>
+											<td colspan="1" align="center" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="int(float(qty))" />
+											</td>
+											<td colspan="2" style="border-right: outset;border-bottom: outset;">
+											</td>
+											<td align="right" colspan="2" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="'{0:,.2f}'.format(total)" />
+											</td>
+											<td align="right" colspan="2" style="border-right: outset;border-bottom: outset;">
+												<span t-esc="'{0:,.2f}'.format(payment)" />
+											</td>
+											<td colspan="2" style="border-right: outset;border-bottom: outset;">
+											</td>
+											<td colspan="2" style="border-right: outset;border-bottom: outset;">
+											</td>
+										</tr>
+									
+							</t>
+
+
+							<t t-if="o.diesel_pump_line">
+
+
+								<tr><td colspan="14"><h4>Diesel Info</h4></td></tr>
+
+
+								
+										<tr style="border-right: outset;border-bottom: outset;border-left:outset;border-top:outset;">
+											<th colspan="2" style="width: 5%;border-right:outset;">Sl.No</th>
+											<th class="text-center" colspan="3" style="border-right: outset;">Diesel Pump</th>
+											<th colspan="2" style="border-right: outset;">Litre</th>
+											<th colspan="2" style="border-right: outset;">Per Litre</th>
+											<th colspan="2" style="border-right: outset;">Total</th>
+											<th colspan="3">Odometer Reading</th>
+											
+										</tr>
+									
+									<t t-set="sl_no2" t-value="1" />
+									<t t-set="litre" t-value="0" />
+									<t t-set="total_litre_amount" t-value="0" />
+									
+										<tr t-foreach="o.diesel_pump_line" t-as="line" style="border-right: outset;border-left:outset;border-bottom:outset;">
+											<td colspan="2" style="border-right: outset;">
+												<span t-esc="sl_no2" />
+												<t t-set="sl_no2" t-value="sl_no2+1" />
+											</td>
+											
+											<td class="text-center" colspan="3" style="border-right: outset;">
+												<span t-esc="line.diesel_pump.name" />
+											</td>
+											<td align="right" colspan="2" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(line.litre)" />
+												<t t-set="litre" t-value="litre+line.litre" />
+											</td>
+											<td align="right" colspan="2" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(line.per_litre)" />
+											</td>
+											<td align="right" colspan="2" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(line.total_litre_amount)" />
+												<t t-set="total_litre_amount" t-value="total_litre_amount+line.total_litre_amount" />
+											</td>
+											<td colspan="3" style="border-right: outset;">
+												<span t-esc="line.odometer" />
+											</td>
+											
+										</tr>
+										<tr style="border-right: outset;border-left:outset;border-bottom:outset;">
+											<td colspan="2" style="border-right: outset;">
+											</td>
+											
+											<td class="text-center" colspan="3" style="border-right: outset;">
+											</td>
+											<td align="right" colspan="2" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(litre)" />
+											</td>
+											<td align="right" colspan="2" style="border-right: outset;">
+											</td>
+											<td align="right" colspan="2" style="border-right: outset;">
+												<span t-esc="'{0:,.2f}'.format(total_litre_amount)" />
+											</td>
+											<td align="right" colspan="3" style="border-right: outset;">
+											</td>
+											
+										</tr>
+									
+							</t>
+
+							<tr>
+								<td colspan="7">
+									Driver's Name : <strong><span t-field="o.driver_name.name" /></strong>
+								</td>
+								<td colspan="4" style="border-left:outset;border-right:outset;border-bottom:outset;">
+									PRE-BALANCE
+								</td>
+								<td align="right" colspan="3" style="border-bottom:outset;">
+									<span t-esc="'{0:,.2f}'.format(o.pre_balance)" />
+								</td>
+
+							</tr>
+							<tr>
+								<td colspan="7">
+									<t t-if="o.cleaners_name">
+												Cleaner's Name : <span t-field="o.cleaners_name.name" /></t>
+								    <t t-if="o.cleaner_bata != False">
+												Cleaner's Bata : <span t-esc="'{0:,.2f}'.format(o.cleaner_bata)" /></t>
+								</td>
+								<td colspan="4" style="border-left:outset;border-right:outset;border-bottom:outset;">
+									RECEIVED Rs
+									
+								</td>
+								<td align="right" colspan="3" style="border-bottom:outset;">
+									<span t-esc="'{0:,.2f}'.format(o.received)"/>
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="7">
+									<strong>Starting Km</strong>:<span t-esc="'{0:,.2f}'.format(o.start_km)"/>
+								</td>
+								<td colspan="4" style="border-bottom:outset;border-left:outset;border-right:outset;">
+									TOTAL
+									
+								</td>
+								<td align="right" colspan="3" style="border-bottom:outset;">
+									<span t-esc="'{0:,.2f}'.format(o.total)"/>
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="7">
+									<strong>Closing Km</strong>:<span t-esc="'{0:,.2f}'.format(o.actual_close_km)"/>
+									
+								</td>
+								<td colspan="4" style="border-bottom:outset;border-left:outset;border-right:outset;">
+									EXPENSE
+									
+								</td>
+								<td align="right" colspan="3" style="border-bottom:outset;">
+									<span t-esc="'{0:,.2f}'.format(o.expense)"/>
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="7">
+									<strong>Running Km</strong>:<span t-esc="'{0:,.2f}'.format(o.running_km)"/>
+									
+								</td>
+								<td colspan="4" style="border-bottom:outset;border-left:outset;border-right:outset;">
+									ACTUAL BALANCE
+									
+								</td>
+								<td align="right" colspan="3">
+									<span t-esc="'{0:,.2f}'.format(o.actual_balance)"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="text-center" colspan="7" style="height:70px;padding-top:3em;">
+									Verified By:
+								</td>
+								<td class="text-center" colspan="7" style="height:70px;padding-top:3em;">
+									Name And Signature:
+								</td>
+							</tr>
+
+							</table>
+						</t>
+						</div>
+
+							
+				
+				</t>
+			</t>
+		</template>
+
+
+		</data>
+	</openerp>

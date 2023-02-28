@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+     <record model="project.stages.line" id="ps1">
+            <field name="name">Details Entered</field>
+            <field name="seq">1</field>
+        </record>
+        <record model="project.stages.line" id="ps2">
+            <field name="name">Advance Received</field>
+            <field name="seq">5</field>
+        </record>
+        <record model="project.stages.line" id="ps3">
+            <field name="name">Sale and construction agreement</field>
+            <field name="seq">10</field>
+        </record>
+        <record model="project.stages.line" id="ps4">
+            <field name="name">Land registration</field>
+            <field name="seq">15</field>
+        </record>
+        <record model="project.stages.line" id="ps5">
+            <field name="name">Final Signed Plan</field>
+            <field name="seq">20</field>
+        </record>
+        <record model="project.stages.line" id="ps6">
+            <field name="name">Set of all plans</field>
+            <field name="seq">25</field>
+        </record>
+        <record model="project.stages.line" id="ps7">
+            <field name="name">Work schedule</field>
+            <field name="seq">30</field>
+        </record>
+        <record model="project.stages.line" id="ps8">
+            <field name="name">Estimate</field>
+            <field name="seq">35</field>
+        </record>
+        <record model="project.stages.line" id="ps9">
+            <field name="name">construction agreement</field>
+            <field name="seq">40</field>
+        </record>
+        <record model="project.stages.line" id="ps10">
+            <field name="name">Statutory agreement</field>
+            <field name="seq">45</field>
+        </record>
+        <record model="project.stages.line" id="ps11">
+            <field name="name">Land mutation</field>
+            <field name="seq">50</field>
+        </record>
+        <record model="project.stages.line" id="ps12">
+            <field name="name">Permit name change</field>
+            <field name="seq">55</field>
+        </record>
+        <record model="project.stages.line" id="ps13">
+            <field name="name">Construction labour agreement</field>
+            <field name="seq">60</field>
+        </record>
+        <record model="project.stages.line" id="ps14">
+            <field name="name">Bank loan details</field>
+            <field name="seq">65</field>
+        </record>
+        <record model="project.stages.line" id="ps15">
+            <field name="name">Final payment schedule</field>
+            <field name="seq">70</field>
+        </record>
+        <record model="project.stages.line" id="ps16">
+            <field name="name">Wood purchase</field>
+            <field name="seq">75</field>
+        </record>
+        <record model="project.stages.line" id="ps17">
+            <field name="name">Tile and sanitary purchase bill copy</field>
+            <field name="seq">85</field>
+        </record>
+        <record model="project.stages.line" id="ps18">
+            <field name="name">Extra material purchased</field>
+            <field name="seq">90</field>
+        </record>
+        <record model="project.stages.line" id="ps19">
+            <field name="name">Account Statement</field>
+            <field name="seq">100</field>
+        </record>
+        <record model="project.stages.line" id="ps20">
+            <field name="name">Extra work copy</field>
+            <field name="seq">105</field>
+        </record>
+
+
+    </data>
+</openerp>
+        

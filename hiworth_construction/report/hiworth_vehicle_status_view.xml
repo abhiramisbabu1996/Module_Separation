@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		###########   hiworth.vehicle.status.report form  ###############
+
+		<record id="form_vehicle_status_report_wizard" model="ir.ui.view">
+			<field name="name">Filter vehicle status form</field>
+			<field name="model">hiworth.vehicle.status.report</field>
+			<field name="arch" type="xml">
+				<form >
+					<group>
+						<group>
+							<field name="from_date" required="1"/>
+							<field name="vehicle_categ_id" options="{'no_create':1}"  required="1"/>
+						</group>
+						<group>
+							<field name="to_date"  required="1"/>
+							<field name="vehicle_id" domain="[('vehicle_categ_id','=',vehicle_categ_id)]"/>
+							<field name="is_machinery"  invisible="1"/>
+						</group>
+					</group>
+					<footer>
+						<button type="object" name="view_vehicle_status_report"
+							string="View Vehicle status" class="oe_highlight" />
+						<button type="object" name="print_vehicle_status_report"
+							string="Print Vehicle status" class="oe_highlight" />
+						<button special="cancel" string="Cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+
+
+
+		########   Vehivle status report action   ##############
+
+
+
+
+		<record id="action_vehicle_status_report_wizard" model="ir.actions.act_window">
+			<field name="name">Vehicle/Machinery Status report</field>
+			<field name="res_model">hiworth.vehicle.status.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		 <menuitem name="Report" parent="fleet.menu_root" id="fleet_report" sequence="9" />
+
+		<menuitem action="action_vehicle_status_report_wizard"
+				  parent="fleet_report"
+				  id="menu_vehicle_status"
+				  sequence="10"
+				  name="Vehicle/Machinery Status Report"  />
+
+
+
+
+
+
+
+
+		
+		================================view=========================
+
+		<report id="report_vehicle_status_view" string="Vehicle Status report"
+			model="hiworth.vehicle.status.report" report_type="qweb-html"
+			name="hiworth_construction.report_vehicle_status_template" />
+
+		<template id="report_vehicle_status_template">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<t t-foreach="docs" t-as="o">
+					<div class="page">
+						<!-- <t t-foreach="docs" t-as="o"> -->
+						<t t-set="sl_no1" t-value="1" />
+						<div style="display: table;width: 100%">
+							<div class="header">
+								<center>
+									<h1>
+										Vehicle Status - <t t-esc="o.vehicle_categ_id.name" />
+									</h1>
+								</center>
+							</div>
+							<div class="row">
+								<div class="col-xs-4">
+									Date From:<span t-field="o.from_date" t-field-options='{"format": "dd-MM-yyyy"}' />
+									<!-- <span class="lead" t-field="o.from_date" /> -->
+								</div>
+								<div class="col-xs-4" style="text-align: right;">
+									Date TO:<span t-field="o.to_date" t-field-options='{"format": "dd-MM-yyyy"}'/>
+									<!-- <span class="lead" t-field="o.to_date" /> -->
+								</div>
+							</div>
+							<t t-set="vehicle_list" t-value="o.get_vehicles()" />
+							<t t-foreach="o.get_dates()" t-as="date">
+								<div>
+									<strong><u><t t-esc="date" /></u></strong>
+								</div>
+								<div class="row">
+									
+										<table class="table table-bordered" style="width: 100%;">
+											<thead>
+												<tr>
+													<th>Sl.No</th>
+													<th>
+
+															<span>Vehicle/Machinery</span>
+
+													</th>
+
+													<th>
+
+															<span>Operator/Driver</span>
+
+
+
+													</th>
+													<th>
+
+															<span>Working Hours/Total Km</span>
+
+
+
+													</th>
+													<th>Rent</th>
+													<th>Expense</th>
+
+													
+												</tr>
+											</thead>
+											<t t-set="sl_no2" t-value="1" />
+											<t t-set="rent_total" t-value="0" />
+											<t t-set="expense_total" t-value="0" />
+											<t t-set="km_total" t-value="0" />
+											<t t-foreach="o.get_driver_statement(date,vehicle_list)" t-as="move">
+												<tr >
+													<td style="width: 5%;">
+														<t t-esc="sl_no2" />
+														<t t-set="sl_no2" t-value="sl_no2+1" />
+													</td>
+													<td style="width: 35%;">
+														<t t-esc="move['vehicle'].license_plate" />
+													</td> 
+													
+													<td style="width: 30%;">  
+														<t t-esc="move['driver']" />
+													</td>
+													<t t-if="move['km_total'] == 0">
+														<td colspan="2" style="width: 60%; color: red;">
+															<span>Idle</span>
+														</td>
+													</t>
+													<t t-if="move['km_total'] != 0">
+														<td style="width: 10%;text-center: right;">  
+															<t t-esc="move['km_total']" />
+															<t t-set="km_total" t-value="km_total+move['km_total']" />
+														</td>
+														<td style="width: 10%;text-align: right;">
+															<t t-esc="move['rent']" />
+															<t t-set="rent_total" t-value="rent_total+move['rent']" />
+														</td>
+													</t>
+													<td style="width: 10%;text-align: right;">
+														<t t-esc="move['expense']" />
+														<t t-set="expense_total" t-value="expense_total+move['expense']" />
+													</td>
+													<!-- </t> -->
+												</tr>
+											</t>
+											<tr>
+												<td colspan="3">
+												</td>
+												<td style="width: 10%;">
+													<t t-esc="km_total" />
+												</td>
+												<td style="width: 10%;text-align: right;">
+													<t t-esc="rent_total" />
+												</td>
+												<td style="width: 10%;text-align: right;">
+													<t t-esc="expense_total" />
+												</td>
+											</tr>
+										</table>
+									<!-- </tr> -->
+								</div>
+							</t>
+							
+						</div>
+					</div>
+					</t>
+				</t>
+			</t>
+		</template>
+
+
+
+
+
+	</data>
+</openerp>

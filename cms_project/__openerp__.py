@@ -7,7 +7,7 @@
     ''',
     'category': 'Themes/Backend',
     'depends': [
-        'base','project',
+        'base','project','account','hr','fleet','stock',
 
     ],
     'data': [

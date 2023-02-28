@@ -1,0 +1,133 @@
+<openerp>
+    <data>
+
+        <report
+                id="action_report_master_plan"
+                string="Master Plan Report"
+                model="master.plan"
+                report_type="qweb-pdf"
+                name="hiworth_construction.masterplan_report"
+                file="hiworth_construction.masterplan_report"
+        />
+
+
+        <record id="paper_format_report_master_plan" model="report.paperformat">
+            <field name="name">European A4 Master Plan</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="hiworth_construction.action_report_master_plan" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="hiworth_construction.paper_format_report_master_plan" />
+        </record>
+
+        <template id="masterplan_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <!-- <t t-call="report.external_layout"> -->
+                        <div class="page">
+                            <center>
+                                <b>
+                                    <br/>
+                                    <h1>MASTER PLAN</h1>                                 
+                                </b>
+                            </center>
+
+                            <div class="row">
+                                <table style="text-align: left; width: 720px;" border="0" cellpadding="0" cellspacing="0" padding="0" margin="0">
+                                    <tbody>
+                                    <tr>
+                                        <td style="vertical-align: top; width: 168px;"><b>Planning/Programme</b></td>
+                                        <td style="vertical-align: top; width: 546px;">:<t t-if="o.site_id.location_id"><span t-field="o.site_id.location_id.name"/>/</t><span t-field="o.site_id.name"/></td>
+                                    </tr>
+                                    <tr >
+                                        <td style="vertical-align: top; width: 168px;"><b>Length in KM</b></td>
+                                        <td style="vertical-align: top; width: 546px;">:<span t-field="o.length_km"/></td>
+                                    </tr>
+                                    <tr >
+                                        <td style="vertical-align: top; width: 168px;"><b>Completion Date</b></td>
+                                        <td style="vertical-align: top; width: 546px;">:<span t-field="o.completion_date"/></td>
+                                    </tr>
+                                    <tr >
+                                        <td style="vertical-align: top; width: 168px;"><b>Agreement Date</b></td>
+                                        <td style="vertical-align: top; width: 546px;">:<span t-field="o.agreement_date"/></td>
+                                    </tr>
+                                     <tr >
+                                        <td style="vertical-align: top; width: 168px;"><b>Package No.</b></td>
+                                        <td style="vertical-align: top; width: 546px;">:<span t-field="o.package_no"/></td>
+                                    </tr>
+                                    <tr >
+                                        <td style="vertical-align: top; width: 168px;"><b>Target Date</b></td>
+                                        <td style="vertical-align: top; width: 546px;">:<span t-field="o.target_date"/></td>
+                                    </tr>
+                                    <tr >
+                                        <td style="vertical-align: top; width: 168px;"><b>Work Start Date</b></td>
+                                        <td style="vertical-align: top; width: 546px;">:<span t-field="o.work_start_date"/></td>
+                                    </tr>
+                                    </tbody>
+                                </table>                                
+                            </div>
+                            <br/>
+
+                            <t t-set="sl_no" t-value="1" />
+                            <table border="1" class="table table-condensed" style="border-style:solid">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Description of Work</th>
+                                        <th>Employee</th>
+                                        <th>Machinery</th>
+                                        <th>Chainage From</th>
+                                        <th>Chainage To</th>
+                                        <th>Side</th>
+                                        <th>Length(M)</th>
+                                        <th>Qty as per Estimate</th>
+                                        <th>Unit</th>
+                                        <th>Start Date</th>
+                                        <th>Duration(Days)</th>
+                                        <th>Finish Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.master_plan_line" t-as="line">
+                                        <td>
+                                            <t t-esc="sl_no" />
+                                            <t t-set="sl_no" t-value="sl_no+1" />
+                                        </td>
+                                        <td><span t-field="line.work_id.name"/></td>
+                                        <td><span t-field="line.employee_id.name"/></td>
+                                        <td>
+                                            <t t-foreach="line.veh_categ_id" t-as="l">
+                                               <span t-field="l.name"/>,
+                                           </t>
+                                        </td>
+                                        <td><span t-field="line.chainage_from"/></td>
+                                        <td><span t-field="line.chainage_to"/></td>
+                                        <td><span t-field="line.side"/></td>
+                                        <td><span t-field="line.length"/></td>
+                                        <td><span t-field="line.qty_estimate"/></td>
+                                        <td><span t-field="line.unit.name"/></td>
+                                        <td><span t-field="line.start_date"/></td>
+                                        <td><span t-field="line.duration"/></td>
+                                        <td><span t-field="line.finish_date"/></td>                     
+                                    </tr>
+                                </tbody>
+                            </table>
+                    
+                        </div>
+                    </t>
+                <!-- </t> -->
+            </t>
+        </template>
+    </data>
+</openerp>

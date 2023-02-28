@@ -1,0 +1,637 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<!-- Material request report wizard -->
+		<record id="form_stock_move_report_wizard" model="ir.ui.view">
+			<field name="name">stock move report wizard</field>
+			<field name="model">stock.move.report.wizard</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<group>
+							<field name="from_date" />
+							<field name="source" />
+
+						</group>
+						<group>
+							<field name="to_date" />
+							<field name="destination"  />
+							<field name="is_task_wise" />
+						</group>
+
+					</group>
+
+					<group col="4" string="Filters">
+						<field name="select_tasks" />
+						<notebook colspan="4"
+							attrs="{'invisible':[('select_tasks','!=', True)]}">
+							<page string="Tasks">
+								<field name="task_ids" context="{'location_id':destination}">
+									<tree editable="bottom">
+										<field name="task_id" />
+
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<!-- <notebook colspan="2"> <page string="Tasks"> <field name="task_ids"> 
+							<tree editable="bottom"> <field name="task_id" /> <field name="location_id" 
+							/> </tree> </field> </page> </notebook> -->
+					</group>
+					<footer>
+						<button type="object" name="view_stock_move_report" string="View Stock Moves"
+							class="oe_highlight" />
+						<button type="object" name="print_stock_move_report"
+							string="Print Stock Moves" class="oe_highlight" />
+						<button special="cancel" string="Cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+		<!-- Material request wizard action -->
+		<record id="action_stock_move_report_wizard" model="ir.actions.act_window">
+			<field name="name">Material/s stock move report</field>
+			<field name="res_model">stock.move.report.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<menuitem id="menu_stock_move_report_wizard" name="Material/s stock move report"
+			parent="stock.menu_traceability" sequence="4"
+			action="action_stock_move_report_wizard" />
+
+		<!-- <report id="report_stock_move_action" string="Stock Move report" model="stock.move" 
+			report_type="qweb-pdf" name="hiworth_construction.report_stock_move_template" 
+			/> <template id="hiworth_construction.report_stock_move_template"> <t t-call="report.html_container"> 
+			<t t-call="report.external_layout"> <div class="page"> <t t-foreach="docs" 
+			t-as="o"> <div style="display: table;width: 100%"> <div class="row"> <center> 
+			<h2> <u> <span> Stock Moves </span> <span t-esc="time.strftime('%d-%m-%Y',time.strptime(docs._context['start_date'],'%Y-%m-%d'))" 
+			/> <span>To</span> <span t-esc="time.strftime('%d-%m-%Y',time.strptime(docs._context['end_date'],'%Y-%m-%d'))" 
+			/> </u> </h2> </center> <h3> <t t-if="docs._context['source'] != False"> 
+			<div style="float:left"> Source : <span align="left" t-esc="docs._context['source']" 
+			/> </div> </t> <t t-if="docs._context['destination'] != False"> <div style="float:right"> 
+			Destination : <span t-esc="docs._context['destination']" /> </div> </t> </h3> 
+			</div> <div class="row"> <div class="col-xs-6"> Related Task: <span class="lead" 
+			t-field="o.task_id"/> </div> <div class="col-xs-6"> Creation Date: <span 
+			class="lead" t-field="o.date"/> </div> </div> <div class="row"> <table class="table 
+			table-bordered"> <thead> <tr> <th>No</th> <th>Date</th> <th>Task</th> <th>Product</th> 
+			<th>Description</th> <th>Qty</th> <th>Unit</th> <th>Unit Price</th> <t t-if="docs._context['source'] 
+			== False"> <th>Source</th> </t> <t t-if="docs._context['destination'] == 
+			False"> <th>Destination</th> </t> <th>State</th> <th>Inventory Value</th> 
+			</tr> </thead> <t t-set="sl_no" t-value="1" /> <t t-set="inv_total" t-value="0" 
+			/> <tbody> <tr t-foreach="docs" t-as="move"> <td> <t t-esc="sl_no" /> <t 
+			t-set="sl_no" t-value="sl_no+1" /> </td> <td><t t-esc="move.date" /></td> 
+			<td> <t t-esc="move.date" /> </td> <td> <t t-esc="move.task_id.name" /> </td> 
+			<td> <t t-esc="move.product_id.name" /> </td> <td> <t t-esc="move.name" /> 
+			</td> <td> <t t-esc="move.product_uom_qty" /> </td> <td> <t t-esc="move.product_uom.name" 
+			/> </td> <td> <t t-esc="move.price_unit" /> </td> <t t-if="docs._context['source'] 
+			== False"> <td> <t t-esc="move.location_id.name" /> </td> </t> <t t-if="docs._context['destination'] 
+			== False"> <td> <t t-esc="move.location_dest_id.name" /> </td> </t> <td> 
+			<t t-esc="move.state" /> </td> <td> <t t-esc="move.inventory_value" /> <t 
+			t-set="inv_total" t-value="inv_total+move.inventory_value" /> </td> </tr> 
+			<tr> <td> <span>Total</span> </td> <td /> <td /> <td /> <td /> <td /> <td 
+			/> <td /> <td /> <t t-if="docs._context['destination'] == False"> <td /> 
+			</t> <t t-if="docs._context['source'] == False"> <td /> </t> <td> <t t-esc="inv_total" 
+			/> </td> </tr> </tbody> </table> </div> <div class="col-xs-12"> <div class="pull-right">Total 
+			inventory value: <strong><span t-field="o.inventory_value" /></strong></div> 
+			</div> </div> </t> </div> </t> </t> </template> -->
+
+		<!-- =======================view========================= -->
+
+		<report id="report_stock_move_view" string="Stock Move report"
+			model="stock.move.report.wizard" report_type="qweb-html"
+			name="hiworth_construction.report_stock_move_template_view" />
+
+		<template id="report_stock_move_template_view">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<!-- <t t-foreach="docs" t-as="o"> -->
+						<div style="display: table;width: 100%">
+
+
+							<t t-if="docs.is_task_wise!=True">
+								<div class="row">
+									<center>
+										<h2>
+											<u>
+												<span> Stock Moves </span>
+												<span
+													t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.from_date,'%Y-%m-%d'))" />
+												<span>To</span>
+												<span
+													t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.to_date,'%Y-%m-%d'))" />
+											</u>
+										</h2>
+									</center>
+									<h3>
+										<t t-if="docs.source.name != False">
+											<div style="float:left">
+												Source :
+												<span align="left" t-esc="docs.source.name" />
+											</div>
+										</t>
+										<t t-if="docs.destination.name != False">
+											<div style="float:right">
+												Destination :
+												<span t-esc="docs.destination.name" />
+											</div>
+										</t>
+									</h3>
+								</div>
+								<div class="row">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>No</th>
+												<th>Date</th>
+												<th>Task</th>
+												<th>Product</th>
+												<th>Description</th>
+												<th>Qty</th>
+												<th>Unit</th>
+												<th>Unit Price</th>
+												<t t-if="docs.source.name == False">
+													<th>Source</th>
+												</t>
+												<t t-if="docs.destination.name == False">
+													<th>Destination</th>
+												</t>
+												<th>State</th>
+												<th>Inventory Value</th>
+
+
+											</tr>
+										</thead>
+										<t t-set="sl_no" t-value="1" />
+										<t t-set="inv_total" t-value="0" />
+										<tbody>
+											<tr t-foreach="docs.get_moves()" t-as="move">
+												<td>
+													<t t-esc="sl_no" />
+													<t t-set="sl_no" t-value="sl_no+1" />
+												</td>
+												<!-- <td><t t-esc="move.date" /></td> -->
+												<td style="width: 8%">
+													<t t-esc="move.date" />
+												</td>
+												<td>
+													<t t-esc="move.task_id.name" />
+												</td>
+												<td>
+													<t t-esc="move.product_id.name" />
+												</td>
+												<td>
+													<t t-esc="move.name" />
+												</td>
+												<td>
+													<t t-esc="move.product_uom_qty" />
+												</td>
+												<td>
+													<t t-esc="move.product_uom.name" />
+												</td>
+												<td>
+													<t t-esc="move.price_unit" />
+												</td>
+												<t t-if="docs.source.name == False">
+													<td>
+														<t t-esc="move.location_id.name" />
+													</td>
+												</t>
+												<t t-if="docs.destination.name == False">
+													<td>
+														<t t-esc="move.location_dest_id.name" />
+													</td>
+												</t>
+												<td>
+													<t t-esc="move.state" />
+												</td>
+												<td>
+													<t t-esc="move.inventory_value" />
+													<t t-set="inv_total" t-value="inv_total+move.inventory_value" />
+												</td>
+
+											</tr>
+											<tr>
+												<td>
+													<b>
+														<span>Total</span>
+													</b>
+												</td>
+												<td />
+												<td />
+												<td />
+												<td />
+												<td />
+												<td />
+												<td />
+												<td />
+												<t t-if="docs.destination.name == False">
+													<td />
+												</t>
+												<t t-if="docs.source.name == False">
+													<td />
+												</t>
+												<td>
+													<b>
+														<t t-esc="inv_total" />
+													</b>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+
+									<h2>
+										<u>
+											<span> Products </span>
+										</u>
+									</h2>
+									<table class="table table-bordered">
+
+										<thead>
+											<tr>
+												<th>No</th>
+												<th>Product</th>
+												<th>Qty</th>
+												<th>Unit</th>
+												<th>Unit Price Avg</th>
+												<!-- <t t-if="docs.source.name == False"> <th>Source</th> </t> 
+													<t t-if="docs.destination.name == False"> <th>Destination</th> </t> -->
+												<!-- <th>State</th> -->
+												<th style="text-align: right;">Inventory Value</th>
+
+
+											</tr>
+										</thead>
+										<t t-set="sl_no2" t-value="1" />
+										<t t-set="inv_total2" t-value="0" />
+										<tbody>
+											<tr t-foreach="docs.get_producs()" t-as="product">
+												<td>
+													<t t-esc="sl_no2" />
+													<t t-set="sl_no2" t-value="sl_no2+1" />
+												</td>
+
+												<td>
+													<t t-esc="product.name" />
+												</td>
+												<td>
+													<t t-esc="product.tmp_stock_qty" />
+												</td>
+												<td>
+													<t t-esc="product.uom_id.name" />
+												</td>
+												<td>
+													<t t-esc="product.temp_avg_price" />
+												</td>
+												<!-- <t t-if="docs.source.name == False"> <td> <t t-esc="move.location_id.name" 
+													/> </td> </t> <t t-if="docs.destination.name == False"> <td> <t t-esc="move.location_dest_id.name" 
+													/> </td> </t> -->
+
+												<td style="text-align: right;">
+													<t t-esc="product.temp_stock_value" />
+													<t t-set="inv_total2" t-value="inv_total2+product.temp_stock_value" />
+												</td>
+
+											</tr>
+											<tr>
+												<td>
+													<b>
+														<span>Total</span>
+													</b>
+												</td>
+												<td />
+												<td />
+												<td />
+												<td />
+												<!-- <t t-if="docs.destination.name == False"> <td /> </t> <t 
+													t-if="docs.source.name == False"> <td /> </t> -->
+												<td style="text-align: right;">
+													<b>
+														<t t-esc="inv_total2" />
+													</b>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+
+								</div>
+							</t>
+
+
+
+							<t t-if="docs.is_task_wise==True">
+								<div class="row" style="margin-right: 0px;margin-left: 0px;">
+									<center>
+										<h2>
+											<u>
+												<span> Stock Moves - Task Wise : </span>
+												<span
+													t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.from_date,'%Y-%m-%d'))" />
+												<span>To</span>
+												<span
+													t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.to_date,'%Y-%m-%d'))" />
+											</u>
+										</h2>
+									</center>
+									<h3>
+										<t t-if="docs.source.name != False">
+											<div style="float:left">
+												Source :
+												<span align="left" t-esc="docs.source.name" />
+											</div>
+										</t>
+										<t t-if="docs.destination.name != False">
+											<div style="float:right">
+												Destination :
+												<span t-esc="docs.destination.name" />
+											</div>
+										</t>
+									</h3>
+									<div class="row" >
+										<t t-set="task_no" t-value="1" />
+										<t t-set="total_inv_value" t-value="0" />
+										<t t-foreach="docs.get_tasks()" t-as="task">
+											<div style="padding-top: 15px;">
+												<h3>
+													<t t-esc="task_no" />
+													.
+													<t t-set="task_no" t-value="task_no+1" />
+													<t t-esc="task.name" />
+
+												</h3>
+											</div>
+											<table class="table table-bordered">
+												<thead>
+													<tr>
+														<th>No</th>
+														<th>Date</th>
+														<th>Task</th>
+														<th>Product</th>
+														<th>Description</th>
+														<th>Qty</th>
+														<th>Unit</th>
+														<th>Unit Price</th>
+														<t t-if="docs.source.name == False">
+															<th>Source</th>
+														</t>
+														<t t-if="docs.destination.name == False">
+															<th>Destination</th>
+														</t>
+														<th>State</th>
+														<th>Inventory Value</th>
+
+
+													</tr>
+												</thead>
+												<t t-set="sl_no" t-value="1" />
+												<t t-set="inv_total3" t-value="0" />
+												<tbody>
+													<tr t-foreach="docs.get_moves_task_wise(task)" t-as="move">
+														<td>
+															<t t-esc="sl_no" />
+															<t t-set="sl_no" t-value="sl_no+1" />
+														</td>
+														<!-- <td><t t-esc="move.date" /></td> -->
+														<td style="width: 8%">
+															<t t-esc="move.date" />
+														</td>
+														<td>
+															<t t-esc="move.task_id.name" />
+														</td>
+														<td>
+															<t t-esc="move.product_id.name" />
+														</td>
+														<td>
+															<t t-esc="move.name" />
+														</td>
+														<td>
+															<t t-esc="move.product_uom_qty" />
+														</td>
+														<td>
+															<t t-esc="move.product_uom.name" />
+														</td>
+														<td>
+															<t t-esc="move.price_unit" />
+														</td>
+														<t t-if="docs.source.name == False">
+															<td>
+																<t t-esc="move.location_id.name" />
+															</td>
+														</t>
+														<t t-if="docs.destination.name == False">
+															<td>
+																<t t-esc="move.location_dest_id.name" />
+															</td>
+														</t>
+														<td>
+															<t t-esc="move.state" />
+														</td>
+														<td>
+															<t t-esc="move.inventory_value" />
+															<t t-set="inv_total3" t-value="inv_total3+move.inventory_value" />
+														</td>
+
+													</tr>
+													<tr>
+														<td>
+															<b>
+																<span>Total</span>
+															</b>
+														</td>
+														<td />
+														<td />
+														<td />
+														<td />
+														<td />
+														<td />
+														<td />
+														<td />
+														<t t-if="docs.destination.name == False">
+															<td />
+														</t>
+														<t t-if="docs.source.name == False">
+															<td />
+														</t>
+														<td>
+															<b>
+																<t t-esc="inv_total3" />
+																<t t-set="total_inv_value" t-value="total_inv_value+inv_total3" />
+															</b>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+
+											<h3>
+												<u>
+													<span> Products </span>
+												</u>
+											</h3>
+											<table class="table table-bordered">
+
+												<thead>
+													<tr>
+														<th>No</th>
+														<th>Product</th>
+														<th>Qty</th>
+														<th>Unit</th>
+														<th>Unit Price Avg</th>
+														<!-- <t t-if="docs.source.name == False"> <th>Source</th> </t> 
+															<t t-if="docs.destination.name == False"> <th>Destination</th> </t> -->
+														<!-- <th>State</th> -->
+														<th style="text-align: right;">Inventory Value</th>
+
+
+													</tr>
+												</thead>
+												<t t-set="sl_no2" t-value="1" />
+												<t t-set="inv_total4" t-value="0" />
+												<tbody>
+													<tr t-foreach="docs.get_producs_task_wise(task)" t-as="product">
+														<td>
+															<t t-esc="sl_no2" />
+															<t t-set="sl_no2" t-value="sl_no2+1" />
+														</td>
+
+														<td>
+															<t t-esc="product.name" />
+														</td>
+														<td>
+															<t t-esc="product.tmp_stock_qty" />
+														</td>
+														<td>
+															<t t-esc="product.uom_id.name" />
+														</td>
+														<td>
+															<t t-esc="product.temp_avg_price" />
+														</td>
+														<!-- <t t-if="docs.source.name == False"> <td> <t t-esc="move.location_id.name" 
+															/> </td> </t> <t t-if="docs.destination.name == False"> <td> <t t-esc="move.location_dest_id.name" 
+															/> </td> </t> -->
+
+														<td style="text-align: right;">
+															<t t-esc="product.temp_stock_value" />
+															<t t-set="inv_total4" t-value="inv_total4+product.temp_stock_value" />
+														</td>
+
+													</tr>
+													<tr>
+														<td>
+															<b>
+																<span>Total</span>
+															</b>
+														</td>
+														<td />
+														<td />
+														<td />
+														<td />
+														<!-- <t t-if="docs.destination.name == False"> <td /> </t> 
+															<t t-if="docs.source.name == False"> <td /> </t> -->
+														<td style="text-align: right;">
+															<b>
+																<t t-esc="inv_total4" />
+															</b>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</t>
+										<div style="text-align: right;">
+											<h3>
+												Total Inventory Value :
+												<t t-esc="total_inv_value" />
+											</h3>
+										</div>
+										<h2>
+											<u>
+												<span>Total  Products </span>
+											</u>
+										</h2>
+										<table class="table table-bordered">
+
+											<thead>
+												<tr>
+													<th>No</th>
+													<th>Product</th>
+													<th>Qty</th>
+													<th>Unit</th>
+													<th>Unit Price Avg</th>
+													<!-- <t t-if="docs.source.name == False"> <th>Source</th> </t> 
+														<t t-if="docs.destination.name == False"> <th>Destination</th> </t> -->
+													<!-- <th>State</th> -->
+													<th style="text-align: right;">Inventory Value</th>
+
+
+												</tr>
+											</thead>
+											<t t-set="sl_no2" t-value="1" />
+											<t t-set="inv_total2" t-value="0" />
+											<tbody>
+												<tr t-foreach="docs.get_producs()" t-as="product">
+													<td>
+														<t t-esc="sl_no2" />
+														<t t-set="sl_no2" t-value="sl_no2+1" />
+													</td>
+
+													<td>
+														<t t-esc="product.name" />
+													</td>
+													<td>
+														<t t-esc="product.tmp_stock_qty" />
+													</td>
+													<td>
+														<t t-esc="product.uom_id.name" />
+													</td>
+													<td>
+														<t t-esc="product.temp_avg_price" />
+													</td>
+													<!-- <t t-if="docs.source.name == False"> <td> <t t-esc="move.location_id.name" 
+														/> </td> </t> <t t-if="docs.destination.name == False"> <td> <t t-esc="move.location_dest_id.name" 
+														/> </td> </t> -->
+
+													<td style="text-align: right;">
+														<t t-esc="product.temp_stock_value" />
+														<t t-set="inv_total2" t-value="inv_total2+product.temp_stock_value" />
+													</td>
+
+												</tr>
+												<tr>
+													<td>
+														<b>
+															<span>Total</span>
+														</b>
+													</td>
+													<td />
+													<td />
+													<td />
+													<td />
+													<!-- <t t-if="docs.destination.name == False"> <td /> </t> <t 
+														t-if="docs.source.name == False"> <td /> </t> -->
+													<td style="text-align: right;">
+														<b>
+															<t t-esc="inv_total2" />
+														</b>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</t>
+
+
+
+						</div>
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+
+
+	</data>
+</openerp>

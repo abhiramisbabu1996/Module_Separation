@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+    <report id="report_purchase_comparison" string="Purchase Comparison"
+        model="purchase.comparison" report_type="qweb-pdf"
+        name="hiworth_construction.report_purchase_comparsion_template" />
+
+    <template id="external_layout_inherit_purchase_comparison">
+    <!-- Multicompany -->
+    <t t-if="o and 'company_id' in o">
+        <t t-set="company" t-value="o.company_id"></t>
+    </t>
+    <t t-if="not o or not 'company_id' in o">
+        <t t-set="company" t-value="res_company"></t>
+    </t>
+
+    <t t-call="hiworth_construction.external_layout_header_inherit_purchase_comparison" />
+    <t t-raw="0" />
+    
+</template>
+
+<template id="external_layout_header_inherit_purchase_comparison">
+    <div class="header">
+        <div class="row">
+            <!-- <div class="col-xs-3">
+                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 80px;"/>
+            </div>
+            <div class="col-xs-9 text-left" style="font-size: 20px;margin-top:30px;" t-field="company.rml_header1"/> -->
+        </div>
+            <div class="col-xs-12 text-center" style="font-size: 20px;margin-top:10px;"> 
+                <div style="border-style:solid;"><b>Purchase Comparison Report</b></div>
+        </div>
+        <div class="row zero_min_height">
+            <div class="col-xs-12">
+                <div style="border-bottom: 1px solid black;"></div>
+            </div>
+        </div>
+        
+    </div>
+</template>
+	<template id="report_purchase_comparsion_template">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <!-- <t t-call="report.external_layout"> -->
+                    <t t-call="hiworth_construction.external_layout_inherit_purchase_comparison">
+                    <div class="page">
+                        <!-- <div class='col-xs-12' align="center" style="font-size:20px;">
+                            <center><b>Purchase Comparison Report</b></center>
+                        </div> -->
+                        <table class="table table-bordered" style="width:40%;margin-top:100px;">
+                            <tr ><td style="font-size:16px;">Project No.</td><td style="font-size:16px;"><span t-field="o.number"/></td></tr>
+                            <tr ><td style="font-size:16px;">Material Requisition</td><td style="font-size:16px;"><span t-field="o.mpr_id"/></td></tr>
+                            <tr ><td style="font-size:16px;">Project Name</td><td style="font-size:16px;"><span t-field="o.project_id"/></td></tr>
+                            <tr ><td style="font-size:16px;">Intent Date</td><td style="font-size:16px;"><span t-field="o.date"/></td></tr>
+                        </table>
+                        <t t-set="sl_no" t-value="1"/>
+                            <table class="table table-bordered" >
+                                <tr><td colspan="5">Name of Suppliers</td>
+                                    <td colspan="2"><span t-field="o.partner_id1"/></td>
+                                    <td colspan="2"><span t-field="o.partner_id2"/></td>
+                                    <td colspan="2"><span t-field="o.partner_id3"/></td>
+                                </tr>
+                                <tr><td colspan="5">Remarks</td>
+                                    <td colspan="2"><span t-field="o.remark1"/></td>
+                                    <td colspan="2"><span t-field="o.remark2"/></td>
+                                    <td colspan="2"><span t-field="o.remark3"/></td>
+                                </tr>
+                            
+                                    <tr >
+                                        <td><b>Sl.No</b></td>
+                                        <td><b>Description</b></td>
+                                        <td><b>Quantity</b></td>
+                                        <td><b>Unit</b></td>
+                                        <td><b>tax</b></td>
+                                        <td><b>Unit Rate</b></td>
+                                        <td><b>Value</b></td>
+                                        <td><b>Unit Rate</b></td>
+                                        <td><b>Value</b></td>
+                                        <td><b>Unit Rate</b></td>
+                                        <td><b>Value</b></td>
+                                    </tr>
+                                
+                                <tr>
+                                    <t t-foreach="o.comparison_line" t-as="line">    
+                                    <tr>
+                                        <td><span t-esc="sl_no"/></td>
+                                        <td><span t-esc="line.product_id.name"/></td>
+                                        <td><span t-esc="line.qty"/></td>
+                                        <td><span t-esc="line.uom.name"/></td>
+                                        <td><span t-esc="line.tax_id.name"/></td>
+                                        <td><span t-esc="line.rate1"/></td>
+                                        <td><span t-esc="line.sub_total1"/></td>
+                                        <td><span t-esc="line.rate2"/></td>
+                                        <td><span t-esc="line.sub_total2"/></td>
+                                        <td><span t-esc="line.rate3"/></td>
+                                        <td><span t-esc="line.sub_total3"/></td>
+                                        
+                                    </tr>
+                                    <t t-set="sl_no" t-value="sl_no+1"/>
+                                </t>
+                            </tr>
+                            <tr>
+                                <td colspan="11">GST :<span t-field ="o.tax_id1"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">P&amp;F</td>
+                            <td colspan="2"><span t-field="o.p_n_f1"/></td>
+                            <td colspan="2"><span t-field="o.p_n_f2"/></td>
+                            <td colspan="2"><span t-field="o.p_n_f3"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">Loading Charge</td>
+                            <td colspan="2"><span t-field="o.loading_charge1"/></td>
+                            <td colspan="2"><span t-field="o.loading_charge2"/></td>
+                            <td colspan="2"><span t-field="o.loading_charge3"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">Transport Cost</td>
+                            <td colspan="2"><span t-field="o.transport_cost1"/></td>
+                            <td colspan="2"><span t-field="o.transport_cost2"/></td>
+                            <td colspan="2"><span t-field="o.transport_cost3"/></td>
+                        </tr>
+                         <tr>
+                            <td colspan="5">Ready To Stock</td>
+                            <td colspan="2"><span t-field="o.delivery_period1"/></td>
+                            <td colspan="2"><span t-field="o.delivery_period2"/></td>
+                            <td colspan="2"><span t-field="o.delivery_period3"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">Term of Payment</td>
+                            <td colspan="2"><span t-field="o.payment_term1"/></td>
+                            <td colspan="2"><span t-field="o.payment_term2"/></td>
+                            <td colspan="2"><span t-field="o.payment_term3"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">Total Amount</td>
+                            <td colspan="2"><span t-field="o.total_amt1"/></td>
+                            <td colspan="2"><span t-field="o.total_amt2"/></td>
+                            <td colspan="2"><span t-field="o.total_amt3"/></td>
+                        </tr>
+
+
+
+
+                        </table>
+                         <table class="table table-bordered" style="width:30%;" align="right">
+                            <tr>
+                                <td>Vendor Selected</td>
+                                <td><span t-field="o.partner_selected"></span></td> 
+                            </tr>
+                            <tr>
+                                <td>Approved By</td>
+                                <td><span></span></td> 
+                            </tr>
+                            <tr>
+                                <td>Approved Date</td>
+                                <td><span ></span></td> 
+                            </tr>
+
+                        </table>
+
+                    </div>
+               
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+	</data>
+</openerp>

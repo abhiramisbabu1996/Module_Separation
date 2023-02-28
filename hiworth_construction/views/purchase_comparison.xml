@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+        <record id="tree_purchase_comparison" model="ir.ui.view">
+            <field name="name">Purchase Comparison</field>
+            <field name="model">purchase.comparison</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Comparison" create="false" colors="red:state=='cancel'">
+                    <field name="mpr_id"/>
+                    <field name="quotation_id"/>
+                    <field name="number"  attrs="{'readonly':[('state','in',['po','draft'])]}"/>
+                    <field name="project_id"/>
+                    <field name="date" required="True" />
+                    <field name="state"/>
+                     <field name="vehicle_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="form_purchase_comparison" model="ir.ui.view">
+            <field name="name">Purchase Comparison</field>
+            <field name="model">purchase.comparison</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Comparison" class="my_form_palathra"  delete="false" create="false">
+                    <header>
+                        <button name="button_request" states="draft"
+                            string="Request" type="object"  class="oe_highlight" groups="hiworth_construction.group_warehouse_user"/>
+
+                        <button name="%(action_view_stock_history)d" states="draft,requested,validated2,button_approve1,po"
+                            string="View Stock history" type="action" />
+
+                      <button name="button_approve1"  states="requested"
+                            string="PM Approve" type="object" class="oe_highlight" groups="base.group_erp_manager" />
+                        <button name="button_approve2" states="first_approve"
+                            string=" Com.Dept.Approve" type="object" class="oe_highlight" groups="base.group_erp_manager"/>
+                        <button name="button_approve3" states="validated2"
+                            string="CEO Approve" type="object" class="oe_highlight" groups="base.group_erp_manager"/>
+
+
+                        <button name="button_po_create" states="ceo_approval"
+                            string="Create Purchase" type="object"  groups="hiworth_construction.group_warehouse_user" class="oe_highlight"/>
+                        <button name="button_view_purchase" states="po" groups="hiworth_construction.group_warehouse_user"
+                            string="View P.O" type="object" class="oe_highlight"/>
+                         <button name="button_cancel"
+                            string="Cancel" type="object" states="draft,requested,first_approve" class="oe_highlight"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+
+
+                    
+                    <div class="oe_title">
+                        <h1><field name="number" nolabel="1"  readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group col="2">
+                            <field name="mpr_id" readonly="1" />
+                            <field name="quotation_id" readonly="1"/>
+                            <field name="project_id" readonly="1"/>
+                            <field name="location_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="date" required="True" attrs="{'readonly':[('state','in',['first_approve','po','validated2','ceo_approval'])]}"/>
+                                <field name="vehicle_id"/>
+                            <field name="supplier_ids" invisible="1"/>
+                        </group>
+                    </group>
+
+
+                    <notebook style="margin-top: -35px; float:left;width:150%">
+                        <page string="Lines" class="my_tree_palathra">
+
+
+
+                            <field name="comparison_line" nolabel="1" attrs="{'readonly':[('state','in',['first_approve','po','validated2','ceo_approval'])]}"  widget="table">
+                                <tree editable="bottom" create="false" delete="false">
+                                    <field name="product_id" readonly="1" required="1" class="my_field_palathra"/>
+                                    <field name="brand_name" string="Brand"/>
+                                    <field name="qty" readonly="1" required="1"/>
+                                    <field name="uom" readonly="1" required="1"/>
+                                    <field name="tax_id"/>
+                                    <field name="rate1" />
+                                    <field name="sub_total1"/>
+                                    <field name="rate2" />
+                                    <field name="sub_total2"/>
+                                    <field name="rate3"/>
+                                    <field name="sub_total3"/>
+                                    <field name="rate4" />
+                                    <field name="sub_total4"/>
+                                    <field name="rate5"/>
+                                    <field name="sub_total5" />
+                                    <field name="res_id" invisible="1"/>
+                                    <field name="vendor_select_id"/>
+                                </tree>
+                            </field>
+
+
+                            <table style="margin-left: 165px;" border="1" width="90%">
+   <tr>
+<td></td>
+                                    <td><label for="partner_id1" string="Supplier 1" style="margin-left:50px;"/></td>
+                                    <td><label for="partner_id2" string="Supplier 2" style="margin-left:50px;"/></td>
+                                    <td><label for="partner_id3" string="Supplier 3" style="margin-left:50px;"/></td>
+                                    <td><label for="partner_id4" string="Supplier 4" style="margin-left:50px;"/></td>
+                                    <td><label for="partner_id5" string="Supplier 5" style="margin-left:50px;"/></td>
+                                </tr>
+                                <tr>
+<td></td>
+                                    <td style="min-width: 130px;"><t t-if="partner_id1==False">  </t><field name="partner_id1" placeholder="Supplier1" domain="[('supplier','=',True)]" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>
+                                    </td>
+                                    <td style="min-width: 130px;"><t t-if="partner_id2==False">  </t><field name="partner_id2" placeholder="Supplier2" domain="[('supplier','=',True)]" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>
+                                    </td>
+                                    <td style="min-width: 130px;"><t t-if="partner_id3==False">  </t><field name="partner_id3" placeholder="Supplier3" domain="[('supplier','=',True)]" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>
+                                    </td>
+                                    <td style="min-width: 130px;"><t t-if="partner_id4==False">  </t><field name="partner_id4" placeholder="Supplier4" domain="[('supplier','=',True)]" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>
+                                    </td>
+                                    <td style="min-width: 130px;"><t t-if="partner_id5==False">  </t><field name="partner_id5" placeholder="Supplier5" domain="[('supplier','=',True)]" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+<td></td>
+                                    <td><field name="remark1" placeholder="Remark" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="remark2" placeholder="Remark" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="remark3" placeholder="Remark" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="remark4" placeholder="Remark" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="remark5" placeholder="Remark" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                </tr>
+<!--                                <tr>-->
+<!--                                    <td style="min-width: 450px;">Supplier Quatation</td>-->
+<!--&lt;!&ndash;                                   <td> <field name="filename" invisible="1"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <field name="binary_field" filename="file_name"/></td>&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;                                    <input type="file" name="attachment" multiple="true"&ndash;&gt;-->
+
+<!--&lt;!&ndash;               accept="image/*,application/pdf,video/*"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="attachment1" type="file" placeholder="Supplier1 Quatation" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="attachment2" placeholder="Supplier2 Quatation" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="attachment3" placeholder="Supplier3 Quatation" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="attachment4" placeholder="Supplier4 Quatation" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="attachment5" placeholder="Supplier5 Quatation" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--                                </tr>-->
+
+
+                                <tr align="text-right">
+                                    <td><label for="p_n_f1" string="P&amp;F"/></td>
+                                    <td align="right" style="min-width: 130px;"><field name="p_n_f1" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td align="right" style="min-width: 130px;"><field style="text-align:right;" name="p_n_f2" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td align="right" style="min-width: 130px;"><field style="text-align:right;" name="p_n_f3" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td align="right" style="min-width: 130px;"><field style="text-align:right;" name="p_n_f4" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td align="right" style="min-width: 130px;"><field style="text-align:right;" name="p_n_f5" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                </tr>
+                                <tr align="text-right">
+                                    <td><label for="loading_charge1" string="Loading Charge"/></td>
+                                    <td><field name="loading_charge1" style="text-align:right;" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="loading_charge2" style="text-align:right;" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="loading_charge3" style="text-align:right;" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="loading_charge4" style="text-align:right;" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="loading_charge5" style="text-align:right;" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+
+
+                                </tr>
+                                <tr align="text-right">
+                                    <td><label for="transport_cost1" string="Transporting Charge"/></td>
+                                    <td><field name="transport_cost1" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="transport_cost2" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="transport_cost3" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="transport_cost4" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="transport_cost5" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+
+
+                                </tr>
+                                <tr align="text-right">
+                                    <td><label for="delivery_period1" string="Delivery Period"/></td>
+                                    <td><field name="delivery_period1" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="delivery_period2" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="delivery_period3" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="delivery_period4" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="delivery_period5" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+
+                                </tr>
+
+                                <tr align="text-right">
+                                    <td><label for="payment_term1" string="Term of Payment"/></td>
+                                    <td><field name="payment_term1" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="payment_term2" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="payment_term3" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="payment_term4" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="payment_term5" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+
+
+                                </tr>
+
+<!--                                <tr align="text-right">-->
+<!--                                    <td><![CDATA[]]><label for="tax_amount1" string="CGST Amount" /></td>-->
+
+<!--                                    <td style="min-width: 150px;"><![CDATA[]]></td>-->
+<!--                                    <td><![CDATA[]]><field name="tax_amount1" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="tax_amount2" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="tax_amount3" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+
+
+<!--                                </tr>-->
+
+<!--                                <tr align="text-right">-->
+<!--                                    <td><![CDATA[]]><label for="stax_amount1" string="SGST Amount" /></td>-->
+
+<!--                                    <td style="min-width: 150px;"><![CDATA[]]></td>-->
+<!--                                    <td><![CDATA[]]><field name="stax_amount1" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="stax_amount2" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="stax_amount3" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                </tr>-->
+
+                                <tr align="text-right">
+                                    <td><label string="Taxable Amount"/></td>
+                                    <td><field name="taxable1" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="taxable2" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="taxable3" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="taxable4" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="taxable5" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                </tr>
+                                <tr align="text-right">
+                                    <td><label string="Other Charge"/></td>
+                                    <td><field name="other_charge1" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="other_charge2" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="other_charge3" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="other_charge4" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="other_charge5" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                </tr>
+                                <tr align="text-right">
+                                    <td><label string="Non- Taxable Charge"/></td>
+                                    <td><field name="non_tax_charge1" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="non_tax_charge2" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="non_tax_charge3" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="non_tax_charge4" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="non_tax_charge5" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                </tr>
+                                <tr align="text-right">
+                                    <td><label for="total_amt1" string="Total Amount" style="font-size:18px !important;" readonly="1"/></td>
+                                    <td><field name="total_amt1" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="total_amt2" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="total_amt3" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="total_amt4" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                    <td><field name="total_amt5" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>
+                                </tr>
+<!--                                <tr align="text-right">-->
+<!--                                    <td style="min-width: 150px;"><![CDATA[]]></td>-->
+<!--                                    <td><![CDATA[]]><label for="itax_amount1" string="IGST Amount" /></td>-->
+
+
+<!--                                    <td><![CDATA[]]><field name="itax_amount1" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="itax_amount2" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="itax_amount3" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                </tr>-->
+
+
+
+<!--                                <tr align="text-right">-->
+<!--                                    <td><![CDATA[]]><label for="discount_amount1" string="Discount Amount" /></td>-->
+
+<!--                                    <td style="min-width: 150px;"><![CDATA[]]></td>-->
+<!--                                    <td><![CDATA[]]><field name="discount_amount1" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="discount_amount2" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="discount_amount3" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+
+<!--                                                                  </tr>-->
+<!--                                <tr align="text-right">-->
+<!--                                    <td><![CDATA[]]><label for="credit_balance1" string="Credit Balance" /></td>-->
+
+<!--                                    <td style="min-width: 150px;"><![CDATA[]]></td>-->
+<!--                                    <td><![CDATA[]]><field name="credit_balance1" nolabel="1" style="text-align:right;"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="credit_balance2" nolabel="1" style="text-align:right;"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="credit_balance3" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+
+<!--                                                         </tr>-->
+
+<!--                                 <tr align="text-right">-->
+<!--                                                                         <td style="min-width: 150px;"><![CDATA[]]></td>-->
+<!--                                    <td style="min-width: 150px;"><![CDATA[]]></td>-->
+
+<!--                                    <td><![CDATA[]]><label for="round_off_amt1" string="Round off Amount" /></td>-->
+
+<!--                                    <td><![CDATA[]]><field name="round_off_amt1" nolabel="1" style="text-align:right;"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="round_off_amt2" nolabel="1" style="text-align:right;"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="round_off_amt3" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+
+
+
+
+                            </table>
+
+                        </page>
+                    </notebook>
+<!--                    <notebook style="margin-top: -35px; float:left;width:150%, margin-left:100px, width:150%">-->
+<!--                        <page string="Lines"  class="my_tree_palathra" >-->
+<!--                            <table border="1" width="90%" style="table-layout: fixed;margin-left: 165px;">-->
+<!--                                <tr>-->
+<!--                                    <td></td>-->
+<!--                                    <td><label for="partner_id1" string="Supplier 1" style="margin-left:50px;"/></td>-->
+<!--                                    <td><label for="partner_id2" string="Supplier 2" style="margin-left:50px;"/></td>-->
+<!--                                    <td><label for="partner_id3" string="Supplier 3" style="margin-left:50px;"/></td>-->
+<!--                                    <td><label for="partner_id4" string="Supplier 4" style="margin-left:50px;"/></td>-->
+<!--                                    <td><label for="partner_id5" string="Supplier 5" style="margin-left:50px;"/></td>-->
+<!--                                </tr>-->
+<!--                                <tr>-->
+<!--                                    <td></td>-->
+<!--                                    <td style="min-width: 130px;"><t t-if="partner_id1==False">  <![CDATA[]]></t><field name="partner_id1" placeholder="Supplier1"  domain="[('supplier','=',True)]"   nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>-->
+<!--                                    </td>-->
+<!--                                    <td style="min-width: 130px;"><t t-if="partner_id2==False">  <![CDATA[]]></t><field name="partner_id2" placeholder="Supplier2"  domain="[('supplier','=',True)]"   nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>-->
+<!--                                    </td>-->
+<!--                                    <td style="min-width: 130px;"><t t-if="partner_id3==False">  <![CDATA[]]></t><field name="partner_id3" placeholder="Supplier3"  domain="[('supplier','=',True)]"   nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>-->
+<!--                                    </td>-->
+<!--                                    <td style="min-width: 130px;"><t t-if="partner_id4==False">  <![CDATA[]]></t><field name="partner_id4" placeholder="Supplier4"  domain="[('supplier','=',True)]"   nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>-->
+<!--                                    </td>-->
+<!--                                    <td style="min-width: 130px;"><t t-if="partner_id5==False">  <![CDATA[]]></t><field name="partner_id5" placeholder="Supplier5"  domain="[('supplier','=',True)]"   nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+<!--                                <tr>-->
+<!--                                    <td style="min-width: 450px;">Remarks</td>-->
+<!--                                    <td><![CDATA[]]><field name="remark1" placeholder="Remark" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="remark2" placeholder="Remark" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="remark3" placeholder="Remark" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="remark4" placeholder="Remark" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="remark5" placeholder="Remark" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                </tr>-->
+<!--&lt;!&ndash;                                <tr>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td style="min-width: 450px;">Supplier Quatation</td>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                   <td> <field name="filename" invisible="1"/>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <field name="binary_field" filename="file_name"/></td>&ndash;&gt;&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;&lt;!&ndash;                                    <input type="file" name="attachment" multiple="true"&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;               accept="image/*,application/pdf,video/*"/>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <td><![CDATA[]]><field name="attachment1" type="file" placeholder="Supplier1 Quatation" nolabel="1" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <td><![CDATA[]]><field name="attachment2" placeholder="Supplier2 Quatation" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <td><![CDATA[]]><field name="attachment3" placeholder="Supplier3 Quatation" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <td><![CDATA[]]><field name="attachment4" placeholder="Supplier4 Quatation" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                                    <td><![CDATA[]]><field name="attachment5" placeholder="Supplier5 Quatation" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                                </tr>&ndash;&gt;-->
+<!--                            </table>-->
+
+
+<!--                            <field name="comparison_line" nolabel="1" attrs="{'readonly':[('state','in',['first_approve','po','validated2','ceo_approval'])]}" widget="table" >-->
+<!--                                <tree editable="bottom" create="false" delete="false" >-->
+<!--                                    <field name="product_id" readonly="1" required="1" />-->
+<!--                                    <field name="brand_name" string="Brand"/>-->
+<!--                                    <field name="qty" readonly="1" required="1"  />-->
+<!--                                    <field name="uom" readonly="1" required="1"  />-->
+<!--                                    <field name="tax_id"/>-->
+<!--                                    <field name="rate1" string="Supplier1 Rate"/>-->
+<!--                                    <field name="sub_total1" />-->
+<!--                                    <field name="rate2" string="Supplier2 Rate"/>-->
+<!--                                    <field name="sub_total2"/>-->
+<!--                                    <field name="rate3" string="Supplier3 Rate"/>-->
+<!--                                    <field name="sub_total3" />-->
+<!--                                    <field name="rate4" string="Supplier4 Rate"/>-->
+<!--                                    <field name="sub_total4" />-->
+<!--                                    <field name="rate5" string="Supplier5 Rate"/>-->
+<!--                                    <field name="sub_total5"/>-->
+<!--                                    <field name="res_id" invisible="1"/>-->
+<!--                                    <field name="vendor_select_id"/>-->
+<!--                                </tree>-->
+<!--                            </field>-->
+
+<!--                            <table style="margin-left: 165px;" border="1" width="90%">-->
+
+
+<!--                                <tr align="text-right">-->
+<!--                                    <td><![CDATA[]]><label for="p_n_f1" string="P&amp;F" /></td>-->
+<!--                                    <td align="right" style="min-width: 130px;"><![CDATA[]]><field name="p_n_f1" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td align="right" style="min-width: 130px;"><![CDATA[]]><field style="text-align:right;" name="p_n_f2" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td align="right" style="min-width: 130px;"><![CDATA[]]><field style="text-align:right;" name="p_n_f3" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td align="right" style="min-width: 130px;"><![CDATA[]]><field style="text-align:right;" name="p_n_f4" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td align="right" style="min-width: 130px;"><![CDATA[]]><field style="text-align:right;" name="p_n_f5" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                </tr>-->
+<!--                                <tr align="text-right">-->
+<!--                                    <td><![CDATA[]]><label for="loading_charge1" string="Loading Charge"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="loading_charge1" style="text-align:right;" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="loading_charge2" style="text-align:right;" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="loading_charge3" style="text-align:right;" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="loading_charge4" style="text-align:right;" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="loading_charge5" style="text-align:right;" nolabel="1"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+
+
+<!--                                </tr>-->
+<!--                                <tr align="text-right">-->
+<!--                                    <td><![CDATA[]]><label for="transport_cost1" string="Transporting Charge" /></td>-->
+<!--                                    <td><![CDATA[]]><field name="transport_cost1" nolabel="1" style="text-align:right;"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="transport_cost2" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="transport_cost3" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="transport_cost4" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="transport_cost5" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+
+
+<!--                                </tr>-->
+<!--                                <tr align="text-right">-->
+<!--                                    <td><![CDATA[]]><label for="delivery_period1" string="Delivery Period" /></td>-->
+<!--                                    <td><![CDATA[]]><field name="delivery_period1" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="delivery_period2" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="delivery_period3" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="delivery_period4" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="delivery_period5" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+
+<!--                                </tr>-->
+
+<!--                                <tr align="text-right">-->
+<!--                                    <td><![CDATA[]]><label for="payment_term1" string="Term of Payment" /></td>-->
+<!--                                    <td><![CDATA[]]><field name="payment_term1" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="payment_term2" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="payment_term3" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="payment_term4" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="payment_term5" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+
+
+<!--                                </tr>-->
+
+<!--&lt;!&ndash;                                <tr align="text-right">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><label for="tax_amount1" string="CGST Amount" /></td>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                    <td style="min-width: 150px;"><![CDATA[]]></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="tax_amount1" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="tax_amount2" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="tax_amount3" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;                                </tr>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                <tr align="text-right">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><label for="stax_amount1" string="SGST Amount" /></td>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                    <td style="min-width: 150px;"><![CDATA[]]></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="stax_amount1" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="stax_amount2" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="stax_amount3" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </tr>&ndash;&gt;-->
+
+<!--                                <tr align="text-right">-->
+<!--                                    <td><label string="Taxable Amount"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="taxable1" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="taxable2" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="taxable3" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="taxable4" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="taxable5" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                </tr>-->
+<!--                                <tr align="text-right">-->
+<!--                                    <td><label string="Other Charge"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="other_charge1" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="other_charge2" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="other_charge3" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="other_charge4" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="other_charge5" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                </tr>-->
+<!--                                <tr align="text-right">-->
+<!--                                    <td><label string="Non- Taxable Charge"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="non_tax_charge1" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="non_tax_charge2" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="non_tax_charge3" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="non_tax_charge4" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="non_tax_charge5" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                </tr>-->
+<!--                                <tr align="text-right">-->
+<!--                                    <td><label for="total_amt1" string="Total Amount" style="font-size:18px !important;" readonly="1" /></td>-->
+<!--                                    <td><![CDATA[]]><field name="total_amt1" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="total_amt2" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="total_amt3" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="total_amt4" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                    <td><![CDATA[]]><field name="total_amt5" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>-->
+<!--                                </tr>-->
+<!--&lt;!&ndash;                                <tr align="text-right">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td style="min-width: 150px;"><![CDATA[]]></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><label for="itax_amount1" string="IGST Amount" /></td>&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="itax_amount1" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="itax_amount2" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="itax_amount3" nolabel="1"  style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </tr>&ndash;&gt;-->
+
+
+
+<!--&lt;!&ndash;                                <tr align="text-right">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><label for="discount_amount1" string="Discount Amount" /></td>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                    <td style="min-width: 150px;"><![CDATA[]]></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="discount_amount1" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="discount_amount2" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="discount_amount3" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                                                  </tr>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <tr align="text-right">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><label for="credit_balance1" string="Credit Balance" /></td>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                    <td style="min-width: 150px;"><![CDATA[]]></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="credit_balance1" nolabel="1" style="text-align:right;"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="credit_balance2" nolabel="1" style="text-align:right;"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="credit_balance3" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                                         </tr>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                 <tr align="text-right">&ndash;&gt;-->
+<!--&lt;!&ndash;                                                                         <td style="min-width: 150px;"><![CDATA[]]></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td style="min-width: 150px;"><![CDATA[]]></td>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><label for="round_off_amt1" string="Round off Amount" /></td>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="round_off_amt1" nolabel="1" style="text-align:right;"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="round_off_amt2" nolabel="1" style="text-align:right;"  attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td><![CDATA[]]><field name="round_off_amt3" nolabel="1" style="text-align:right;" attrs="{'readonly':[('state','in',['po','validated2'])]}"/></td>&ndash;&gt;-->
+
+
+
+
+<!--                            </table>-->
+
+<!--                        </page>-->
+<!--                    </notebook>-->
+
+
+
+<!--                     <div style="margin-left:500px;">-->
+<!--                                   <newline/>-->
+<!--                                <label for="p_n_f1_tax_id" string="TAX"/>-->
+<!--                                <field name="p_n_f1_tax_id"  class="my_class_palathra"  nolabel="1" attrs="{'readonly':['|',('state','in',['first_approve','po','validated2','ceo_approval'])],'invisible':[('partner_id1','=',False)]}"/>-->
+
+<!--                               <field name="p_n_f2_tax_id"  class="my_class_palathra"  nolabel="1"  attrs="{'readonly':['|',('state','in',['first_approve','po','validated2','ceo_approval'])],'invisible':[('partner_id2','=',False)]}"/>-->
+
+<!--                              <field name="p_n_f3_tax_id"  class="my_class_palathra" nolabel="1"  attrs="{'readonly':['|',('state','in',['first_approve','po','validated2','ceo_approval'])],'invisible':[('partner_id3','=',False)]}"/>-->
+
+
+<!--                                    </div>-->
+
+<!--                      <div style="margin-left:500px;">-->
+<!--                                    <newline/>-->
+<!--                                <label for="loading1_tax_id" string="TAX"/>-->
+<!--                                 <field name="loading1_tax_id" class="my_class_palathra" nolabel="1"  attrs="{'readonly':['|',('state','in',['first_approve','po','validated2','ceo_approval'])],'invisible':[('partner_id1','=',False)]}"/>-->
+
+<!--                                <field name="loading2_tax_id" class="my_class_palathra"  nolabel="1"   attrs="{'readonly':['|',('state','in',['first_approve','po','validated2','ceo_approval'])],'invisible':[('partner_id2','=',False)]}"/>-->
+
+<!--                                 <field name="loading3_tax_id" class="my_class_palathra" nolabel="1"   attrs="{'readonly':['|',('state','in',['first_approve','po','validated2','ceo_approval'])],'invisible':[('partner_id3','=',False)]}"/>-->
+
+
+<!--                            </div>-->
+
+
+<!--                               <div style="margin-left:500px;">-->
+<!--                                 <newline/>-->
+<!--                                <label for="transport1_tax_id" string="TAX"/>-->
+<!--                                <field name="transport1_tax_id" class="my_class_palathra"  nolabel="1"   attrs="{'readonly':['|',('state','in',['first_approve','po','validated2','ceo_approval'])],'invisible':[('partner_id1','=',False)]}"/>-->
+
+<!--                                <field name="transport2_tax_id" class="my_class_palathra"  nolabel="1"   attrs="{'readonly':['|',('state','in',['first_approve','po','validated2','ceo_approval'])],'invisible':[('partner_id2','=',False)]}"/>-->
+
+<!--                                <field name="transport3_tax_id" class="my_class_palathra"  nolabel="1"  attrs="{'readonly':['|',('state','in',['first_approve','po','validated2','ceo_approval'])],'invisible':[('partner_id3','=',False)]}"/>-->
+
+
+<!--                                 </div>-->
+
+
+
+                    <group>
+                        <group>
+                            <field name="remark" string="Terms &amp; Conditions" placeholder="Terms and conditions..." attrs="{'readonly':[('state','in',['po','validated2','ceo_approval'])]}"/>
+
+
+
+                        </group>
+                        <group>
+                             <field name="read_boolean" attrs="{'required':[('remark','!=',False),('state','=','ceo_approval')],'invisible':[('remark','=',False),('state','in',['draft','requested','first_approve','validated2','ceo_approval'])]}"/>
+                        </group>
+                        <group>
+<!--                            <field name="partner_selected"  domain="[('supplier','=',True),('id','in',supplier_ids and supplier_ids[0] and supplier_ids[0][2] or False)]" attrs="{'readonly':[('state', 'in', ['validated2','po','ceo_approval'])],'required':[('state', '=', 'first_approve')]}" options="{&quot;no_create&quot;: 1, &quot;no_create_edit&quot;: 1}"/>-->
+                            <field name="user_id1" attrs="{'invisible':[('state','in',('draft','requested'))],'readonly':[('state','in',['po','validated2','ceo_approval'])]}"/>
+                            <field name="user_id2" attrs="{'invisible':[('state','in',('draft','requested','first_approve'))],'readonly':[('state','in',['po','validated2','ceo_approval'])]}"/>
+                            <field name="approved_date" readonly="1" attrs="{'invisible':[('state','in',('draft','requested'))],'readonly':[('state','in',['po','validated2','ceo_approval'])]}"/>
+                        </group>
+                        <group>
+                          <field name="debit_balance_ids" nolabel="1">
+                              <tree create="false" edit="false" delete="false">
+                                  <field name="supplier_id" string="Supplier"/>
+                                  <field name="balance"/>
+                              </tree>
+                          </field>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_purchase_comparison">
+            <field name="name">Purchase Comparison</field>
+            <field name="res_model">purchase.comparison</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            
+        </record>
+
+         <record model="ir.actions.act_window" id="action_purchase_comparison_approval">
+            <field name="name">Purchase Comparison Approval</field>
+            <field name="res_model">purchase.comparison</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',['first_approve','requested'])]</field>
+            <field name="context">{}</field>
+        </record>
+
+         <record id="action_goods_receive_report" model="ir.actions.act_window">
+            <field name="name">Goods Receipt &amp; Invoice Entry</field>
+            <field name="res_model">goods.recieve.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+             <field name="context">{'readonly_by_pass': True}</field>
+        </record>
+
+
+
+
+        <menuitem id="menu_purchase_comparison"
+                  parent="purchase.menu_procurement_management"
+                  name="Quotation Comparison"
+                  sequence="1"
+                  action="action_purchase_comparison"/>
+
+         <menuitem id="menu_purchase_comparison_aproval"
+                  parent="purchase.menu_procurement_management"
+                  name="Quotation Approval"
+                  sequence="1"
+                  action="action_purchase_comparison_approval"/>
+
+        
+        <menuitem name="Goods Receipt &amp; Invoice Entry"
+            id="menu_goods_receive_report"
+            parent="purchase.menu_procurement_management"
+            action= "action_goods_receive_report"
+            sequence="16"/>
+
+
+    </data>
+</openerp>

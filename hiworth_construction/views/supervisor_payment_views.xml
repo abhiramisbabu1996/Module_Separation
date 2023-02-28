@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	  
+
+	   <menuitem id="menu_supervisors_payment_root" parent="menu_hiworth_finance_root" name="Fund Transfer" sequence="4"/>
+
+	   <record id="view_supervisors_payment_voucher_appr_tree" model="ir.ui.view">
+			<field name="name">supervisor.payment.voucher.tree</field>
+			<field name="model">supervisor.payment.voucher</field>
+			<field name="arch" type="xml">
+			   <tree string="Supervisor Fund Transfer">
+					<field name="date"/>
+					<field name="employee_id"/>
+					<field name="state"/>
+			   </tree>
+			</field>
+		</record>
+
+		<!-- ################  search view ######################### -->
+
+		<record id="supervisor_payment_voucher_search_view" model="ir.ui.view">
+			<field name="name">supervisor.payment.voucher.search.view</field>
+			<field name="model">supervisor.payment.voucher</field>
+			<field name="arch" type="xml">
+				<search string="Supervisor Fund Transfer">
+					<field name="date" />
+					<field name="employee_id" />
+					<!-- <field name="department" /> -->
+					<group expand="0" string="group by">
+						<!-- <filter name="groupby_name" string="Category" 
+							context="{'group_by':'name'}"/> -->
+						<filter name="groupby_date" context="{'group_by': 'date'}" string="Date"  />
+						<!-- <filter name="groupby_category" context="{'group_by': 'category_id'}" string="category"  /> -->
+					</group>
+				</search>
+			</field>
+		</record>
+
+
+
+	   <record id="view_supervisors_payment_voucher_appr_form" model="ir.ui.view">
+			<field name="name">supervisor.payment.voucher.form</field>
+			<field name="model">supervisor.payment.voucher</field>
+			<field name="arch" type="xml">
+		    	<form string="Supervisor Fund Transfer">
+			  		<header>
+					   <button string="Send To Approval" type="object" name="button_send_approval" states="draft" class="oe_highlight"/>
+					   <button string="Approve" name="approve_button" type="object" states="send_approval" class="oe_highlight" groups="base.group_erp_manager"/>
+					   <button string="Create Transfer Entry" name="create_payment_records" type="object" states="approved" class="oe_highlight"/>
+					   <button string="Set To Draft" name="button_set_to_draft" type="object" states="approved" class="oe_highlight" groups="base.group_erp_manager"/>
+					   <field name="state" widget="statusbar" statusbar_visible="draft,send_approval,approved,process,partially_paid,paid"/>
+		         	</header>
+		         	<div class="oe_right oe_button_box" name="buttons" >
+
+		         		<!-- <button class="oe_inline oe_stat_button" type="object" name="view_supervisor_request" icon="fa-tasks" string="Request" attrs="{'invisible':[('state','in',['draft','send_approval'])]}"/> --> 
+                  		<button class="oe_inline oe_stat_button" type="object" name="view_supervisor_cash_transfer" icon="fa-tasks" string="Cash Transfers" attrs="{'invisible':[('state','not in',['process','paid'])]}"/>
+                  		<button class="oe_inline oe_stat_button" type="object" name="view_supervisor_bank_transfer" icon="fa-tasks" string="Bank Transfers" attrs="{'invisible':[('state','not in',['process','paid'])]}"/>                        
+               		</div>
+			  		<group>
+				  		<group>
+							<field name="date" attrs="{'readonly':[('state','!=','draft')]}"/>
+							<field name="employee_id"/>
+			  			</group>
+				  		<group>
+							<!-- <field name="company_id" attrs="{'readonly':[('state','!=','draft')]}" required="1"/> -->
+							<field name="approve_person_id" readonly="1" attrs="{'invisible':[('state','in',['draft','send_approval'])]}"/>
+				  		</group>
+				  	</group>
+			  		<notebook colspan="4" attrs="{'invisible':[('state','!=','draft')]}">
+				 		<page string="Payments">
+				   			<field name="payment_ids">
+				     			<tree editable="bottom">
+					  				<field name="supervisor_id" required="1"/>
+								    <field name="requested_amount" widget="char" required="1"/>
+								    <field name="approved_amount" invisible="1"/>
+				     			</tree>
+				  			</field>
+				 		</page>
+			  		</notebook>
+			  		<notebook colspan="4" attrs="{'invisible':[('state','!=','send_approval')]}">
+			  		<!-- <notebook colspan="4"> -->
+				 		<page string="Payments">
+				   		<field name="approve_ids">
+				     			<tree editable="bottom" delete="false" create="false">
+					  				<field name="supervisor_id" readonly="1"/>
+								   <field name="requested_amount" readonly="1" widget="char" sum="Total"/>
+								   <field name="is_approve"/>
+								   <field name="approved_amount" attrs="{'required':[('is_approve','=',True)]}" widget="char" sum="Total"/>
+								   <!-- <field name="payment_mode"/> -->
+				     			</tree>
+				  			</field>
+				 		</page>
+			  		</notebook>
+			  		<!-- <notebook colspan="4"> -->
+			  		<notebook colspan="4" attrs="{'invisible':[('state','not in',['approved','process','paid'])]}" >
+				 		<page string="Payments">
+				   		<field name="approve_ids2">
+				     			<tree editable="bottom" delete="false" create="false" colors="red : is_approve == False; green : is_approve == True">
+					  				<field name="supervisor_id" readonly="1"/>
+								   	<field name="requested_amount" readonly="1" widget="char" sum="Total"/>
+								   	<field name="is_approve" readonly="1"/>
+								   	<field name="approved_amount" readonly="1" widget="char" sum="Total"/>
+								   	<field name="state" invisible="1"/>
+								   	<field name="payment_mode" attrs="{'required':[('is_approve','=',True),('state','=','approved')], 'readonly':[('state','=','process')]}"/>
+								   	<field name="payment_state" readonly="1"/>
+				     			</tree>
+				  			</field>
+				 		</page>
+			  		</notebook>
+		    	</form>
+			</field>
+	   </record>
+
+
+	   <record id="action_supervisors_payment_voucher_appr" model="ir.actions.act_window">
+			<field name="name">Supervisor Fund Transfer</field>
+			<field name="res_model">supervisor.payment.voucher</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field eval="False" name="view_id" />
+	   </record>
+
+
+	   <menuitem id="menu_supervisors_payment_vouchers1" action="action_supervisors_payment_voucher_appr" parent="menu_supervisors_payment_root" name="Fund Transfer" sequence="2"/>
+
+
+
+	   <record id="view_supervisors_payment_cash_tree" model="ir.ui.view">
+			<field name="name">supervisor.payment.cash.tree</field>
+			<field name="model">supervisor.payment.cash</field>
+			<field name="arch" type="xml">
+			   <tree string="Cash Transfer" create="false">
+					<field name="date"/>
+					<field name="employee_id"/>
+					<field name="state"/>
+			   </tree>
+			</field>
+		</record>
+
+		<record id="view_supervisors_payment_cash_form" model="ir.ui.view">
+			<field name="name">supervisor.payment.cash.form</field>
+			<field name="model">supervisor.payment.cash</field>
+			<field name="arch" type="xml">
+				
+
+			    <form string="Cash Transfer" create="false">
+			   		<header>
+					   <button string="Payment" type="object" name="button_done" states="draft,partially_done" class="oe_highlight" />
+					   <field name="state" widget="statusbar" statusbar_visible="draft,partially_done,done"/>
+					</header>
+					<sheet>
+						<div class="oe_right oe_button_box" name="buttons" >
+			         		<button class="oe_inline oe_stat_button" type="object" name="view_payment_voucher" icon="fa-tasks" string="View Origin"/> 
+	               		</div>
+					   	<group col="4">
+						   	<group>
+								<field name="date" readonly="1"/>
+								<field name="employee_id" readonly="1"/>
+								<field name="done_person_id" readonly="1" attrs="{'invisible':[('state','=','draft')]}"/>
+								<!-- <field name="line_id"/> -->
+							</group>
+							<group>
+								<!-- <field name="company_id" readonly="1"/> -->
+								<field name="journal_id" attrs="{'readonly':[('state','=','done')]}"/>
+								<field name="account_id" attrs="{'readonly':[('state','=','done')]}"/>
+								<field name="move_id"/>
+
+							</group>
+						</group>
+						<notebook>
+							<page>
+								<field name="cash_ids">
+									<tree editable="bottom">
+										<field name="supervisor_id" readonly="1"/>
+										<field name="approved_amount" readonly="1" sum="Total"/>
+										<field name="is_payment" attrs="{'readonly':['|',('state','=','done'),('state1','=','paid')]}"/>
+										<field name="state" invisible="1"/>
+										<field name="appr_id" invisible="1"/>
+										<field name="state1" readonly="1"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+			   </form>
+			</field>
+		</record>
+
+		<!-- ################  search view ######################### -->
+
+		<record id="supervisor_payment_cash_search_view" model="ir.ui.view">
+			<field name="name">supervisor.payment.cash.search.view</field>
+			<field name="model">supervisor.payment.cash</field>
+			<field name="arch" type="xml">
+				<search string="supervisor payment cash">
+					<field name="date" />
+					<field name="employee_id" />
+					<!-- <field name="department" /> -->
+					<group expand="0" string="group by">
+						<!-- <filter name="groupby_name" string="Category" 
+							context="{'group_by':'name'}"/> -->
+						<filter name="groupby_date" context="{'group_by': 'date'}" string="Date"  />
+						<!-- <filter name="groupby_category" context="{'group_by': 'category_id'}" string="category"  /> -->
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_supervisors_payment_cash" model="ir.actions.act_window">
+			<field name="name">Supervisor - Cash Transfer</field>
+			<field name="res_model">supervisor.payment.cash</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+	   </record>
+
+	   <menuitem id="menu_supervisors_payment_cash1" action="action_supervisors_payment_cash" parent="menu_supervisors_payment_root" name="Cash Transfer" sequence="5"/>
+
+		<record id="view_supervisors_payment_bank_tree" model="ir.ui.view">
+			<field name="name">supervisor.payment.bank.tree</field>
+			<field name="model">supervisor.payment.bank</field>
+			<field name="arch" type="xml">
+			   <tree string="Bank Transfer"  create="false">
+					<field name="date"/>
+					<field name="employee_id"/>
+					<field name="state"/>
+			   </tree>
+			</field>
+		</record>
+
+
+		<!-- ################  search view ######################### -->
+
+		<record id="supervisor_payment_bank_search_view" model="ir.ui.view">
+			<field name="name">supervisor.payment.bank.search.view</field>
+			<field name="model">supervisor.payment.bank</field>
+			<field name="arch" type="xml">
+				<search string="supervisor payment bank">
+					<field name="date" />
+					<field name="employee_id" />
+					<!-- <field name="department" /> -->
+					<group expand="0" string="group by">
+						<!-- <filter name="groupby_name" string="Category" 
+							context="{'group_by':'name'}"/> -->
+						<filter name="groupby_date" context="{'group_by': 'date'}" string="date"  />
+						<!-- <filter name="groupby_category" context="{'group_by': 'category_id'}" string="category"  /> -->
+					</group>
+				</search>
+			</field>
+		</record>
+
+
+		<record id="view_supervisors_payment_bank_form" model="ir.ui.view">
+			<field name="name">supervisor.payment.bank.form</field>
+			<field name="model">supervisor.payment.bank</field>
+			<field name="arch" type="xml">
+				
+			    <form string="Bank Transfer" create="false">
+			    	<header>
+					    <button string="Approve" type="object" name="button_approve" states="draft" class="oe_highlight" groups="base.group_erp_manager"/>
+					    <button string="Done" type="object" name="button_done" states="approved,partially_done" class="oe_highlight"/>
+					    <field name="state" widget="statusbar" statusbar_visible="draft,approved,partially_done,done"/>
+					</header>
+					<sheet>
+						<div class="oe_right oe_button_box" name="buttons" >
+			         		<button class="oe_inline oe_stat_button" type="object" name="view_payment_voucher" icon="fa-tasks" string="View Origin"/> 
+	               		</div>
+						<group>
+							<group>
+								<field name="date" readonly="1"/>
+								<field name="employee_id" readonly="1"/>
+								<!-- <field name="line_id"/> -->
+								<!-- <field name="company_id" readonly="1"/> -->
+							</group>
+							<group>
+
+								<field name="approve_person_id" readonly="1" attrs="{'invisible':[('state','=','draft')]}"/>
+								<field name="done_person_id" readonly="1" attrs="{'invisible':[('state','in',['draft','approved'])]}"/>
+								<field name="move_id"/>
+							</group>
+						</group>
+
+						<notebook>
+							<page>
+								<button string="Add Bank" type="object" name="button_add_bank" class="oe_highlight" groups="base.group_erp_manager"/>
+								<field name="bank_ids">
+									<tree editable="bottom" create="false" delete="false">
+										<field name="check_box" nolabel="1" attrs="{'readonly':['|',('state','=','done'),('state1','=','paid')]}"/>
+										<field name="supervisor_id" readonly="1"/>
+										<field name="approved_amount" readonly="1" sum="Total"/>
+										<field name="state" invisible="1"/>
+										<field name="bank" attrs="{'readonly':['|',('state1','=','paid'),('state','!=','draft')]}" required="0"/>
+										<field name="is_payment" attrs="{'readonly':['|',('state','=','done'),('state1','=','paid')]}"/>
+										<field name="appr_id" invisible="1"/>
+										<field name="state1" readonly="1"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+			   </form>
+			</field>
+		</record>
+
+		<record id="action_supervisors_payment_bank" model="ir.actions.act_window">
+			<field name="name">Supervisor - Bank Transfer</field>
+			<field name="res_model">supervisor.payment.bank</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+	   </record>
+
+	   <menuitem id="menu_supervisors_payment_bank1" action="action_supervisors_payment_bank" parent="menu_supervisors_payment_root" name="Bank Transfer" sequence="10"/>
+
+
+	   <record id="view_supervisors_payment_bank_wizard_form" model="ir.ui.view">
+			<field name="name">supervisor.payment.bank.wizard.form</field>
+			<field name="model">supervisor.payment.bank.wizard</field>
+			<field name="arch" type="xml">
+			    <form string="Add Bank">
+					<sheet>
+						<group string="Add Bank">
+							<group>
+								<field name="payment_id" invisible="1"/>
+								<field name="bank_id"/>
+							</group>
+							<group>
+							</group>
+						</group>
+					</sheet>
+			    	<footer>
+					    <button string="Confirm" type="object" name="button_bank_confirm" class="oe_highlight" groups="base.group_erp_manager"/>
+					</footer>
+			   </form>
+			</field>
+		</record>
+
+
+    </data>
+</openerp>

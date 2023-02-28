@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+		<record id="form_view_material_request" model="ir.ui.view">
+			<field name="name">form_view_material_request</field>
+			<field name="model">material.request</field>
+			<field name="arch" type="xml">
+				<form string="Activity">
+					<header>
+						<button name="action_start" states="draft" string="Material Allocation"
+							type="object" class="oe_highlight" />
+							
+						<button name="action_done" states="material_allo" string="Done"
+							type="object" class="oe_highlight" />
+							<field name="state" widget="statusbar"/>
+						<!-- <button name="action_cancel" states="draft,progress" string="Cancel"
+                            type="object" class="oe_highlight" /> -->
+						<!-- <field name="state" widget="statusbar" statusbar_visible="draft,progress,completed,cancel"
+							statusbar_colors='{"cancel":"red"}' readonly="1" /> -->
+					</header>
+					 <div class="oe_right oe_button_box" name="buttons" groups="base.group_user">
+                        
+                        <button class="oe_inline oe_stat_button" name="view_tree_view" type="object" icon="fa-files-o" string="View Details">
+                            <!-- <field string="View Details" name="view_details" widget="statinfo"/> -->
+                        </button>
+                    </div>
+            <div>
+              <h1>
+              <!-- <label for="name"   class="oe_inline"/> -->
+              <field name="name" readonly="1" class="oe_inline" nolabel="1"/>
+            </h1>
+            </div>
+
+						<group>
+  						<group>
+  							<field name="user_id" required="True" readonly="1" />
+  							<field name="allocation_name"/>
+  							<!-- <field name="name" required="True" /> -->
+              </group>
+                <group>
+                  <field name="date" required="True" attrs="{'readonly':[('state','in',['material_allo', 'done'])]}"/>
+                  <field name="scheduled_date" required="True" attrs="{'readonly':[('state','in',['material_allo', 'done'])]}"/>
+
+						  </group>
+						</group>
+						<group>
+									<field name="line_ids" nolabel="1" attrs="{'readonly':[('state','in',['material_allo', 'done'])]}">
+										<tree editable="bottom">
+                      <field name="project_id" options='{"no_create": 1, "no_create_edit": 1}' />
+                      <field name="task_id" options='{"no_create": 1, "no_create_edit": 1}' />
+                      <field name="product_id" required="True" options='{"no_create": 1, "no_create_edit": 1}' />
+                      <field name="name" />
+                      <field name="available_qty" />
+                      <field name="qty" required="True"/>
+                      <field name="allocated_qty"/>
+                      <field name="price_unit" />
+                      <field name="inventory_value" />
+                      <field name="product_uom_id" required="True"/>
+                      <field name="location_dest_id" required="True"/>
+										</tree>
+									</field>
+						</group>
+						<group>
+							<field name="note" placeholder="Note...." />
+						</group>
+
+				</form>
+
+			</field>
+		</record>
+
+		<record id="tree_view_material_request" model="ir.ui.view">
+			<field name="name">tree_view_material_request</field>
+			<field name="model">material.request</field>
+			<field name="arch" type="xml">
+				<tree string="Activity">
+          <field name="name" />
+					<field name="date" />
+					<field name="state" invisible="1"/>
+          <field name="scheduled_date" required="True" />
+          <field name="user_id" />
+          <!-- <field name="state" invisible="1"/> -->
+				</tree>
+
+			</field>
+		</record>
+		<record id="search_view_material_request" model="ir.ui.view">
+            <field name="name">search_view_material_request</field>
+            <field name="model">material.request</field>
+            <field name="arch" type="xml">
+                <search string="Activity">
+                    <field name="date" />
+                    <field name="name" />
+                    <!-- <filter icon="terp-check" name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft"/>
+                    <filter icon="terp-check" name="progress" string="In Progress" domain="[('state','=','progress')]" />
+                    <filter icon="terp-check" name="completed" string="Completed" domain="[('state','=','completed')]"/>
+                    <filter icon="terp-check" name="cancel" string="Cancelled" domain="[('state','=','cancel')]" /> -->
+                    <group expand="0" string="Group By">
+                        <!-- <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/> -->
+                        <filter string="Month" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
+                     </group>
+                </search>
+
+            </field>
+        </record>
+
+		<record id="action_material_request_tree" model="ir.actions.act_window">
+			<field name="name">Material Request</field>
+			<field name="res_model">material.request</field>
+			<field name="view_id" ref="tree_view_material_request" />
+		</record>
+
+    <menuitem action="action_material_request_tree"
+			name="Material Request" id="menu_engineer_material_request2" parent="stock.menu_stock_warehouse_mgmt"
+			sequence="9" groups="hiworth_construction.make_invisible"/>
+
+		<!-- <menuitem action="action_material_request_tree"
+			name="Material Request" id="menu_material_request_under_project"
+			groups="project.group_project_manager,hiworth_construction.group_estimation_user"
+			parent="menu_stock_details_under_project" sequence="10" />
+
+		<menuitem action="action_picking_tree_construction_inherited_request"
+			name="Material Request" id="menu_engineer_material_request" parent="stock.menu_stock_warehouse_mgmt"
+			sequence="9" /> -->
+
+
+
+<!-- Material allocation wizard in material Request -->
+
+
+		<record id="view_hiworth_material_allocation_wizard" model="ir.ui.view">
+			<field name="name">Material Allocation</field>
+			<field name="model">material.allocation.wizard</field>
+			<field name="arch" type="xml">
+				<form>
+					
+						<group>
+							<field name="rec" invisible="1"/>
+							<field name="picking_type_id" options='{"no_create": 1, "no_create_edit": 1}'/>
+							
+						</group>
+						<group>
+							<field name="material_o2m" nolabel="1">
+								<tree editable="bottom" create="false">
+									<field name="project_id" readonly="1"/>
+									<field name="task_id" readonly="1"/>
+									<field name="product_id" readonly="1"/>
+									<field name="available_qty"/>
+									<field name="qty"/>
+									<field name="price_unit" readonly="1"/>
+									<field name="inventory_value"/>
+									<field name="product_uom_id" readonly="1"/>
+									<field name="location_id" required="1"/>
+									<field name="location_dest_id" readonly="1"/>
+								</tree>
+							</field>
+						</group>
+						<footer>
+							<button name="confirm_material_allo" string="Confirm" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+						</footer>
+					
+					
+				</form>
+			</field>
+		</record>
+
+
+	</data>
+</openerp>

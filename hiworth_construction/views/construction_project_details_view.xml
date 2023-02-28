@@ -1,0 +1,2931 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+		<record id="mrp_bom_form_view_changed" model="ir.ui.view">
+			<field name="name">mrp.bom.form.changed</field>
+			<field name="model">mrp.bom</field>
+			<field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//group/group/field[@name='type']" position="after">
+					<field name="bom_cost" />
+				</xpath>
+				<xpath expr="//notebook/page[@string='Components']" position="replace">
+					<page string="Components">
+						<field name="bom_line_ids" widget="one2many_list">
+							<tree string="Components" editable="bottom">
+								<field name="sequence" widget="handle" />
+								<field name="product_id" on_change="onchange_product_id(product_id, product_qty)" />
+								<field name="type" />
+								<field name="product_qty" />
+								<field name="product_uom" on_change="onchange_uom(product_id, product_uom)" />
+								<field name="total_cost" />
+								<field name="product_rounding" invisible="True" />
+								<field name="product_efficiency" invisible="True" />
+								<field name="date_start" invisible="True" />
+								<field name="date_stop" invisible="True" />
+								<field name="attribute_value_ids" invisible="True"
+									widget="many2many_tags"
+									domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]" />
+								<field name="property_ids" widget="many2many_tags"
+									invisible="True" />
+							</tree>
+						</field>
+					</page>
+				</xpath>
+
+			</field>
+		</record>
+
+		<record id="mrp_production_form_view_changed" model="ir.ui.view">
+			<field name="name">mrp.production.form.changed</field>
+			<field name="model">mrp.production</field>
+			<field name="inherit_id" ref="mrp.mrp_production_form_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//group/group/field[@name='bom_id']" position="after">
+					<field name="estimated_cost" />
+				</xpath>
+
+			</field>
+		</record>
+
+<!--		<record id="view_task_form2_changed" model="ir.ui.view">-->
+<!--			<field name="name">project.task.form.changed</field>-->
+<!--			<field name="model">project.task</field>-->
+<!--			<field eval="2" name="priority" />-->
+<!--			<field name="inherit_id" ref="project.view_task_form2" />-->
+<!--			<field name="arch" type="xml">-->
+<!--				<header position="inside">-->
+<!--					<button name="task_approve" type="object" states="draft"-->
+<!--						string="Approve" class="oe_highlight" />-->
+<!--					<button name="start_task" type="object" states="approved"-->
+<!--						string="Start work" class="oe_highlight" />-->
+<!--					<button name="complete_task" type="object" states="inprogress"-->
+<!--						string="Mark as completed" class="oe_highlight" />-->
+<!--					<button name="reset_task" type="object" string="Reset Estimation"-->
+<!--						class="oe_highlight" />-->
+<!--					<field name="state" widget="statusbar" />-->
+<!--				</header>-->
+<!--				<group>-->
+
+<!--					<group col="2">-->
+<!--						<field name="date_start" />-->
+<!--					</group>-->
+<!--					<group col="2">-->
+<!--						<field name="date_end" />-->
+<!--						&lt;!&ndash;						<field name="estimated_cost" />&ndash;&gt;-->
+<!--					</group>-->
+<!--				</group>-->
+<!--				&lt;!&ndash;				BUREAUGREEN CUSTOM CODES&ndash;&gt;-->
+
+<!--&lt;!&ndash;				<xpath expr="//notebook/page[@string='Description']" position="replace">&ndash;&gt;-->
+<!--&lt;!&ndash;									&ndash;&gt;-->
+<!--&lt;!&ndash;				</xpath>&ndash;&gt;-->
+
+
+
+
+
+
+
+<!--                <xpath expr="//notebook/page[@string='Extra Info']"-->
+<!--					position="attributes">-->
+<!--					<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+<!--				&lt;!&ndash;					</group>&ndash;&gt;-->
+<!--				&lt;!&ndash;					<group col="2">&ndash;&gt;-->
+<!--&lt;!&ndash;					</group>&ndash;&gt;-->
+<!--&lt;!&ndash;				</group>&ndash;&gt;-->
+<!--				<xpath expr="//notebook/page[@string='Description']" position="before">-->
+<!--					<page string="Task Details">-->
+
+<!--						<field name="task_line_ids" nolabel="1">-->
+<!--							<tree editable="bottom">-->
+<!--								<field name="estimate_plan_line" string="Work"/>-->
+<!--								<field name="work_id" string="Description Of Work"/>-->
+<!--								&lt;!&ndash;								<field name="category_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="employee_id" string="Superisor"/>&ndash;&gt;-->
+<!--								<field name="sqft"/>-->
+<!--								<field name="no_labours"/>-->
+<!--								<field name="veh_categ_id" widget="many2many_tags" domain="[('is_a_mach','=',True)"/>-->
+<!--								<field name="material" options="{'no_create':1}" widget="many2many_tags"/>-->
+<!--&lt;!&ndash;								<field name="qty_estimate"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="unit"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="rate"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="estimate_cost"/>&ndash;&gt;-->
+<!--								<field name="start_date"/>-->
+<!--								<field name="finish_date"/>-->
+<!--								<field name="subcontractor"/>-->
+<!--								<field name="remarks_new"/>-->
+<!--							</tree>-->
+<!--						</field>-->
+<!--					</page>-->
+
+<!--				</xpath>-->
+<!--				 <xpath expr="//notebook/page[@string='Description']"-->
+<!--					position="attributes">-->
+<!--					<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+
+<!--&lt;!&ndash;				_____________________&ndash;&gt;-->
+
+<!--				<xpath expr="//header/field[@name='stage_id']" position="replace">-->
+<!--					<field name="stage_id" widget="statusbar" clickable="True"-->
+<!--						invisible="True" options="{'fold_field': 'fold'}" />-->
+<!--				</xpath>-->
+<!--&lt;!&ndash;&lt;!&ndash;				<xpath expr="//group/field[@name='date_deadline']" position="replace">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;					<field name="date_deadline" invisible="True" />&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;				</xpath>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;				<xpath expr="//field[@name='user_id']" position="attributes">&ndash;&gt;-->
+<!--&lt;!&ndash;					<attribute name="invisible">1</attribute>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;					<attribute name="string">Assigned by</attribute>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;				</xpath>&ndash;&gt;-->
+<!--&lt;!&ndash;				<xpath expr="//field[@name='reviewer_id']" position="attributes">&ndash;&gt;-->
+<!--&lt;!&ndash;					<attribute name="invisible">1</attribute>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;					<attribute name="string">Assigned To</attribute>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;				</xpath>&ndash;&gt;-->
+<!--&lt;!&ndash;				<xpath expr="//field[@name='project_id']" position="after">&ndash;&gt;-->
+<!--&lt;!&ndash;					<field name="assigned_to"/>&ndash;&gt;-->
+<!--&lt;!&ndash;					<field name="assigned_by"/>&ndash;&gt;-->
+<!--&lt;!&ndash;				</xpath>&ndash;&gt;-->
+
+
+<!--				<xpath expr="//h1//field[@name='name']" position="attributes">-->
+<!--					<attribute name="placeholder">Task Title</attribute>-->
+<!--				</xpath>-->
+<!--				<xpath expr="//field[@name='kanban_state']" position="attributes">-->
+<!--						<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+<!--&lt;!&ndash;				<xpath expr="//notebook/page/group[2]" position="replace">&ndash;&gt;-->
+<!--&lt;!&ndash;					<group invisible="True">&ndash;&gt;-->
+<!--&lt;!&ndash;					</group>&ndash;&gt;-->
+<!--&lt;!&ndash;				</xpath>&ndash;&gt;-->
+<!--&lt;!&ndash;				&lt;!&ndash; <xpath expr="//group/group/field[@name='project_id']" position="before">&ndash;&gt;-->
+<!--&lt;!&ndash;					<field name="categ_id" /> </xpath> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;				<xpath expr="//group/group/field[@name='project_id']"&ndash;&gt;-->
+<!--&lt;!&ndash;					position="replace">&ndash;&gt;-->
+<!--&lt;!&ndash;					<field name="project_id" domain="[('state','not in', ('close', 'cancelled'))]"&ndash;&gt;-->
+<!--&lt;!&ndash;						required="True" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}" />&ndash;&gt;-->
+<!--&lt;!&ndash;				</xpath>&ndash;&gt;-->
+<!--&lt;!&ndash;				<xpath expr="//group/group/field[@name='categ_ids']" position="replace">&ndash;&gt;-->
+<!--&lt;!&ndash;					<field name="planned_hours" widget="float_time" colspan="2"&ndash;&gt;-->
+<!--&lt;!&ndash;							groups="project.group_time_work_estimation_tasks" on_change="onchange_planned(planned_hours, effective_hours)" />&ndash;&gt;-->
+<!--&lt;!&ndash;				</xpath>&ndash;&gt;-->
+
+<!--				<xpath expr="//group/group/field[@name='categ_ids']" position="attributes">-->
+<!--					<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+
+<!--				<xpath expr="//group/group[1]" position="replace">-->
+<!--					<group col="2">-->
+<!--&lt;!&ndash;						<field name="categ_id" />&ndash;&gt;-->
+<!--&lt;!&ndash;						<field name="sub_categ_id" />&ndash;&gt;-->
+<!--						<field name="project_id" domain="[('state','not in', ('close', 'cancelled'))]"-->
+<!--							required="True" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}" />-->
+<!--						<field name="user_id" options='{"no_open": True}'-->
+<!--							on_change="onchange_user_id(user_id, context)"-->
+<!--							context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}" string="Assigned By" />-->
+<!--						<field name="reviewer_id" options='{"no_open": True}'-->
+<!--							context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}" string="Assigned To" />-->
+
+<!--&lt;!&ndash;						<field name="civil_contractor" string="Contractor"&ndash;&gt;-->
+<!--&lt;!&ndash;							context="{'default_contractor': True, 'default_customer': False}" />&ndash;&gt;-->
+<!--					</group>-->
+<!--				</xpath>-->
+
+
+<!--			</field>-->
+<!--		</record>-->
+<!--		<record id="view_task_tree2_changed" model="ir.ui.view">-->
+<!--			<field name="name">project.task.tree.changed</field>-->
+<!--			<field name="model">project.task</field>-->
+<!--			<field eval="2" name="priority" />-->
+<!--			<field name="inherit_id" ref="project.view_task_tree2" />-->
+<!--			<field name="arch" type="xml">-->
+
+<!--				<xpath expr="//field[@name='progress']" position="replace">-->
+<!--					<field name="state" />-->
+<!--				</xpath>-->
+<!--				<xpath expr="//field[@name='stage_id']" position="replace">-->
+<!--					<field name="stage_id" invisible="True" />-->
+<!--				</xpath>-->
+<!--			</field>-->
+<!--		</record>-->
+
+<!--		<record id="view_task_search_form_changed" model="ir.ui.view">-->
+<!--			<field name="name">project.task.search.form.changed</field>-->
+<!--			<field name="model">project.task</field>-->
+<!--			<field name="inherit_id" ref="project.view_task_search_form" />-->
+<!--			<field name="arch" type="xml">-->
+<!--&lt;!&ndash;				<xpath expr="//notebook/page[@string='Estimation']" position="before">&ndash;&gt;-->
+<!--&lt;!&ndash;				<page string="Task Details">&ndash;&gt;-->
+
+<!--&lt;!&ndash;						<field name="estimation_line_ids" nolabel="1">&ndash;&gt;-->
+<!--&lt;!&ndash;							<tree editable="bottom">&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="plan_line_id" string="Plan"/>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;								<field name="category_id"/>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="work_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;								<field name="employee_id" string="Superisor"/>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="sqft"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="no_labours"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="veh_categ_id" options="{'no_create':1}" widget="many2many_tags"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="material" options="{'no_create':1}" widget="many2many_tags"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="qty_estimate"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="unit"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="rate"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="estimate_cost"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="start_date"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="finish_date"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="subcontractor"/>&ndash;&gt;-->
+<!--&lt;!&ndash;							</tree>&ndash;&gt;-->
+<!--&lt;!&ndash;						</field>&ndash;&gt;-->
+<!--&lt;!&ndash;					</page>&ndash;&gt;-->
+<!--&lt;!&ndash;				</xpath>&ndash;&gt;-->
+<!--				<xpath expr="//filter[@string='Unassigned']" position="after">-->
+<!--					<filter string="Extra Works" name="extra_work"-->
+<!--						domain="[('is_extra_work', '=', True)]" />-->
+<!--				</xpath>-->
+<!--				<xpath expr="//group/filter[@string='Project']" position="after">-->
+<!--					<filter string="Category" name="category" context="{'group_by':'categ_id'}" />-->
+<!--					<filter string="Sub Category" name="sub_category"-->
+<!--						context="{'group_by':'sub_categ_id'}" />-->
+<!--				</xpath>-->
+<!--				<xpath expr="//field[@name='stage_id']" position="replace">-->
+<!--					<field name="civil_contractor" />-->
+<!--				</xpath>-->
+<!--				<xpath expr="//field[@name='reviewer_id']" position="replace">-->
+<!--				</xpath>-->
+<!--				<xpath expr="//field[@name='user_id']" position="replace">-->
+<!--				</xpath>-->
+<!--				<xpath expr="//field[@name='categ_ids']" position="replace">-->
+<!--				</xpath>-->
+<!--			</field>-->
+<!--		</record>-->
+
+
+<!--		<record id="estimation_form_iew" model="ir.ui.view">-->
+<!--			<field name="name">estimation.form.view</field>-->
+<!--			<field name="model">estimation.estimation</field>-->
+<!--			<field name="arch" type="xml">-->
+<!--			<form>-->
+<!--				<sheet>-->
+<!--					<group>-->
+<!--						<group>-->
+<!--							<field name="name"/>-->
+<!--							<field name="project_id"/>-->
+<!--							<field name="assigned_to"/>-->
+<!--							<field name="start_date"/>-->
+<!--							<field name="rate" string="Rate/sqft"/>-->
+<!--						</group>-->
+<!--						<group>-->
+<!--							<field name="estimated_cost"/>-->
+<!--							<field name="no_of_floors"/>-->
+<!--							<field name="sqft"/>-->
+<!--							<field name="end_date"/>-->
+<!--						</group>-->
+<!--					</group>-->
+
+<!--					<notebook>-->
+<!--							<page string="Estimation">-->
+<!--								<field name="estimation_line_ids" nolabel="1">-->
+<!--									<tree editable="bottom">-->
+<!--										<field name="category_id"/>-->
+<!--										<field name="work_id"/>-->
+<!--										<field name="employee_id" string="Superisor"/>-->
+<!--										<field name="veh_categ_id" options="{'no_create':1}" widget="many2many_tags"/>-->
+<!--&lt;!&ndash;										<field name="chainage_from"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="chainage_to"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="side"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="length"/>&ndash;&gt;-->
+<!--										<field name="no_labours"/>-->
+<!--										<field name="qty_estimate"/>-->
+<!--										<field name="unit"/>-->
+<!--										<field name="rate"/>-->
+<!--										<field name="estimate_cost"/>-->
+<!--										<field name="start_date"/>-->
+<!--&lt;!&ndash;										<field name="duration"/>&ndash;&gt;-->
+<!--										<field name="finish_date"/>-->
+<!--&lt;!&ndash;										<field name="quantity"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="pre_qty"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="upto_date_qty"/>&ndash;&gt;-->
+<!--										<field name="subcontractor"/>-->
+<!--									</tree>-->
+<!--								</field>-->
+<!--							</page>-->
+<!--						</notebook>-->
+<!--&lt;!&ndash;					<notebook>&ndash;&gt;-->
+<!--&lt;!&ndash;						<page string="Labour Details">&ndash;&gt;-->
+<!--&lt;!&ndash;							<field name="line_ids">&ndash;&gt;-->
+<!--&lt;!&ndash;								<tree editable="bottom">&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="item_id" string="Work"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="no_labours"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="rate"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="payment_total"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="remarks" />&ndash;&gt;-->
+<!--&lt;!&ndash;									</tree>&ndash;&gt;-->
+<!--&lt;!&ndash;							</field>&ndash;&gt;-->
+<!--&lt;!&ndash;						</page>&ndash;&gt;-->
+<!--&lt;!&ndash;						<page string="Machineries">&ndash;&gt;-->
+<!--&lt;!&ndash;							<field name="machine_ids">&ndash;&gt;-->
+<!--&lt;!&ndash;								<tree editable="bottom">&ndash;&gt;-->
+<!--&lt;!&ndash;									<field name="employee_id" />&ndash;&gt;-->
+<!--&lt;!&ndash;									<field name="machinery_id" />&ndash;&gt;-->
+<!--&lt;!&ndash;									<field name="working_hours"/>&ndash;&gt;-->
+<!--&lt;!&ndash;									<field name="machinery_rent"/>&ndash;&gt;-->
+<!--&lt;!&ndash;									<field name="operator_amt"/>&ndash;&gt;-->
+<!--&lt;!&ndash;									<field name="expense"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								</tree>&ndash;&gt;-->
+<!--&lt;!&ndash;								</field>&ndash;&gt;-->
+<!--&lt;!&ndash;						</page>&ndash;&gt;-->
+<!--&lt;!&ndash;						<page string="Materials">&ndash;&gt;-->
+<!--&lt;!&ndash;							<field name="item_usage_ids">&ndash;&gt;-->
+<!--&lt;!&ndash;								<tree editable="bottom">&ndash;&gt;-->
+<!--&lt;!&ndash;									<field name="product_id" required="1" options="{'no_create': True, 'no_create_edit':True}" />&ndash;&gt;-->
+<!--&lt;!&ndash;									<field name="rqrd_qty"/>&ndash;&gt;-->
+<!--&lt;!&ndash;									<field name="rate"/>&ndash;&gt;-->
+<!--&lt;!&ndash;									<field name="price"/>&ndash;&gt;-->
+<!--&lt;!&ndash;								</tree>&ndash;&gt;-->
+<!--&lt;!&ndash;							</field>&ndash;&gt;-->
+<!--&lt;!&ndash;						</page>&ndash;&gt;-->
+
+<!--&lt;!&ndash;					</notebook>&ndash;&gt;-->
+
+<!--				</sheet>-->
+<!--			</form>-->
+<!--			</field>-->
+<!--		</record>-->
+
+
+
+
+<!--		<record id="edit_project_changed" model="ir.ui.view">-->
+<!--			<field name="name">project.project.form.changed</field>-->
+<!--			<field name="model">project.project</field>-->
+<!--			<field name="inherit_id" ref="project.edit_project" />-->
+<!--			<field name="arch" type="xml">-->
+<!--				<xpath expr="//notebook/page[@string='Team']" position="before">-->
+<!--					<page string="Master Plan">-->
+<!--						<field name="project_master_line_ids" nolabel="1" readonly="1">-->
+<!--							<tree create="false">-->
+<!--								<field name="work_id"/>-->
+<!--								<field name="employee_id"/>-->
+<!--								<field name="products_id" options="{'no_create':1}" widget="many2many_tags"/>-->
+<!--								<field name="veh_categ_id" domain="[('is_a_mach','=',True)" widget="many2many_tags"/>-->
+<!--								<field name="no_labours" string="No of workers"/>-->
+<!--								<field name="sqft" />-->
+<!--								<field name="start_date" />-->
+<!--								<field name="duration" />-->
+<!--								<field name="finish_date" />-->
+<!--								<field name="subcontractor"/>-->
+<!--								<field name="remarks"/>-->
+<!--							</tree>-->
+<!--						</field>-->
+<!--					</page>-->
+
+<!--					<page string="Budget Estimation">-->
+<!--						<field name="planning_chart_line_ids" nolabel="1" readonly="1">-->
+<!--							<tree editable="bottom">-->
+<!--&lt;!&ndash;											<field name="mep"/>&ndash;&gt;-->
+<!--								<field name="date"/>-->
+<!--								<field name="master_plan_line_id" string="Work plan"/>-->
+<!--								<field name="work_id"/>-->
+<!--								<field name="labour" string="No of workers"/>-->
+<!--								<field name="labour_charge"/>-->
+<!--								<field name="veh_categ_id" domain="[('is_a_mach','=',True)" widget="many2many_tags"/>-->
+<!--								<field name="machinery_charge"/>-->
+<!--								<field name="material" options="{'no_create':1}" widget="many2many_tags"/>-->
+<!--&lt;!&ndash;											<field name="uom_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;											<field name="material_qty"/>&ndash;&gt;-->
+<!--								<field name="sqft" />-->
+<!--								<field name="estimated_cost" />-->
+<!--								<field name="working_hours"/>-->
+<!--								<field name="total_charge" sum="Total"/>-->
+<!--								<field name="work_status"/>-->
+<!--								<field name="remarks" />-->
+<!--								<button name="open_view_wizard" string="Assign a Task" type="object"-->
+<!--										class="oe_highlight"/>-->
+<!--							</tree>-->
+<!--						</field>-->
+<!--					</page>-->
+<!--					<page string="Actual Budget Estimation">-->
+<!--						<field name="actual_estimation_line_ids" nolabel="1">-->
+<!--							<tree editable="bottom">-->
+<!--								<field name="work_plan" string="Work Plan"/>-->
+<!--								<field name="work_done" string="Work Done"/>-->
+<!--								<field name="sub_contractor" string="Sub Contractor"/>-->
+<!--&lt;!&ndash;								<field name="work_description" string="Work Description"/>&ndash;&gt;-->
+<!--								<field name="estimated_hours" string="Estimated Hours"/>-->
+<!--								<field name="actual_working_hours" string="Actual Working Hours"/>-->
+<!--								<field name="estimated_cost" string="Estimated Cost"/>-->
+<!--								<field name="actual_estimated_cost" string="Actual Estimated Cost"/>-->
+<!--								<field name="reason_for_delay"/>-->
+<!--								<field name="remark"/>-->
+<!--							</tree>-->
+<!--						</field>-->
+<!--					</page>-->
+<!--					<page string="Tasks"-->
+<!--						groups="project.group_project_manager,hiworth_construction.group_estimation_user">-->
+
+<!--						<field name="task_ids" attrs="{'invisible':[('hide_tasks','=', True)]}">-->
+<!--							<tree>-->
+<!--								&lt;!&ndash; <field name="line_no" /> &ndash;&gt;-->
+<!--								<field name="name" string="Estimation Summary"/>-->
+<!--								<field name="categ_id" />-->
+
+<!--								&lt;!&ndash; <field name="description" /> &ndash;&gt;-->
+<!--								<field name="date_start" />-->
+<!--								<field name="date_end" />-->
+<!--								<field name="estimated_cost" sum="Total" />-->
+<!--								&lt;!&ndash; <field name="name"/> &ndash;&gt;-->
+<!--								&lt;!&ndash; <field name="is_extra_work" /> &ndash;&gt;-->
+<!--							</tree>-->
+<!--						</field>-->
+<!--						<separator string="Tasks"-->
+<!--							attrs="{'invisible':[('hide_tasks','!=', True)]}" />-->
+<!--						<field name="temp_tasks" attrs="{'invisible':[('hide_tasks','!=', True)]}">-->
+<!--							<tree>-->
+<!--								&lt;!&ndash; <field name="line_no" /> &ndash;&gt;-->
+<!--								<field name="name" />-->
+<!--								<field name="categ_id" />-->
+
+<!--								&lt;!&ndash; <field name="description" /> &ndash;&gt;-->
+<!--								<field name="date_start" />-->
+<!--								<field name="date_end" />-->
+<!--								<field name="estimated_cost" sum="Total" />-->
+<!--								&lt;!&ndash; <field name="name"/> &ndash;&gt;-->
+<!--								&lt;!&ndash; <field name="is_extra_work" /> &ndash;&gt;-->
+<!--							</tree>-->
+<!--						</field>-->
+<!--						<separator string="Resources"-->
+<!--							attrs="{'invisible':[('hide_tasks','!=', True)]}" />-->
+<!--						<field name="categ_estimation_ids" attrs="{'invisible':[('hide_tasks','!=', True)]}">-->
+<!--							<tree>-->
+<!--								&lt;!&ndash; <field name="line_no" /> &ndash;&gt;-->
+<!--								<field name="product_id" />-->
+<!--								<field name="qty" />-->
+<!--								<field name="uom" />-->
+<!--								<field name="unit_price" />-->
+<!--								<field name="amount" sum="Total" />-->
+
+<!--							</tree>-->
+<!--						</field>-->
+<!--						<field name="hide_tasks" invisible="1"/>-->
+<!--						&lt;!&ndash;<separator string="Project items estimation"-->
+<!--							attrs="{'invisible':[('hide_tasks','=', True)]}"-->
+<!--							groups="project.group_project_manager,hiworth_construction.group_estimation_user" />-->
+<!--						<field name="project_product_ids" attrs="{'invisible':[('hide_tasks','=', True)]}"-->
+<!--							groups="project.group_project_manager,hiworth_construction.group_estimation_user">-->
+<!--							<tree editable="bottom">-->
+<!--								&lt;!&ndash; <field name="line_no" /> &ndash;&gt;-->
+<!--								<field name="name" />-->
+<!--								<field name="quantity" />-->
+<!--								<field name="unit_price" />-->
+<!--								<field name="estimated_price" />-->
+<!--							</tree>-->
+<!--						</field>&ndash;&gt;-->
+<!--					</page>-->
+
+<!--&lt;!&ndash;					<page string="Extra Work" attrs="{'invisible':[('estimated_cost_extra','=', 0)]}">&ndash;&gt;-->
+<!--&lt;!&ndash;						<field name="extra_task_ids">&ndash;&gt;-->
+<!--&lt;!&ndash;							<tree>&ndash;&gt;-->
+<!--&lt;!&ndash;								&lt;!&ndash; <field name="line_no" /> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="name" />&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="description" />&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="date_start" />&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="date_end" />&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="estimated_cost" />&ndash;&gt;-->
+<!--&lt;!&ndash;								&lt;!&ndash; <field name="name"/> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;								&lt;!&ndash; <field name="is_extra_work" /> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;							</tree>&ndash;&gt;-->
+<!--&lt;!&ndash;						</field>&ndash;&gt;-->
+<!--&lt;!&ndash;					</page>&ndash;&gt;-->
+
+<!--					<page string="Project Status" invisible="1">-->
+<!--						<group>-->
+<!--							<button name="display_project_status" type="object" icon="gtk-refresh"-->
+<!--								string="Refresh" class="oe_inline" />-->
+<!--						</group>-->
+<!--						<group>-->
+<!--							<field name="stage_id" nolabel="1">-->
+<!--								<tree string="Stages">-->
+<!--									&lt;!&ndash; <field name="name" /> &ndash;&gt;-->
+<!--									<field name="sequence" widget="handle" />-->
+<!--									<field name="seq" />-->
+<!--									<field name="stage_line_id" />-->
+<!--									<field name="state" />-->
+<!--									&lt;!&ndash; <field name="type" /> &ndash;&gt;-->
+<!--								</tree>-->
+<!--								<form string="Stage Details">-->
+<!--									<group>-->
+<!--										<field name="stage_line_id" reqiured="True" />-->
+<!--										<field name="state" reqiured="True" />-->
+<!--									</group>-->
+<!--									<group string="Attachments">-->
+<!--										<field name="attachment_id" nolabel="1">-->
+<!--											<tree editable="bottom">-->
+<!--												<field name="name" string="Name" />-->
+<!--												<field name="filename" string="File Name" />-->
+<!--												<field name="binary_field" filename="filename" />-->
+<!--												<field name="parent_id" />-->
+<!--												&lt;!&ndash; <field name="name" string="Remarks" /> &ndash;&gt;-->
+
+<!--												&lt;!&ndash; <field name="binary_field" readonly="1" filename="filename"-->
+<!--													/> &ndash;&gt;-->
+<!--											</tree>-->
+<!--										</field>-->
+<!--									</group>-->
+<!--								</form>-->
+<!--							</field>-->
+<!--						</group>-->
+<!--					</page>-->
+<!--					<page string="Account Statement"-->
+<!--						groups="project.group_project_manager,hiworth_construction.group_project_management_user">-->
+<!--						<field name="acc_statement" readonly="True">-->
+<!--							<tree editable="bottom">-->
+<!--								<field name="date" string="Date" />-->
+<!--								<field name="name" string="Description" />-->
+<!--								<field name="opp_acc_cash_bank" string="Account"/>-->
+<!--								<field name="debit" sum="Total" />-->
+<!--								<field name="credit" sum="Total" />-->
+<!--								&lt;!&ndash; <field name="balance" /> <field name="name"/> <field name="is_extra_work"-->
+<!--									/> &ndash;&gt;-->
+<!--							</tree>-->
+<!--						</field>-->
+<!--						<group colspan="4">-->
+<!--							<group class="oe_subtotal_footer oe_right">-->
+<!--								<field name="acc_balance" class="oe_subtotal_footer_separator"-->
+<!--									widget="monetary" />-->
+<!--							</group>-->
+<!--						</group>-->
+<!--					</page>-->
+<!--					&lt;!&ndash; <page string="Payment Schedule">-->
+<!--						<field name="schedule_id">-->
+<!--							<tree editable="bottom">-->
+
+<!--								<field name="sequence" widget="handle" />-->
+<!--								<field name="seq" required="True" />-->
+<!--								<field name="name" required="True" />-->
+<!--								<field name="amount" sum="Total" />-->
+<!--								<field name="due_on" />-->
+<!--								<field name="stage_total" readonly="True" />-->
+
+<!--							</tree>-->
+<!--						</field>-->
+
+<!--						<group>-->
+<!--							<field name="schedule_note" nolabel="1" placeholder="Note....." />-->
+
+<!--						</group>-->
+<!--					</page> &ndash;&gt;-->
+
+<!--					<page string="Work Report"-->
+<!--						groups="project.group_project_manager,hiworth_construction.group_estimation_user">-->
+<!--						<field name="labour_report_ids" string="Work Details">-->
+<!--							<tree editable="bottom">-->
+<!--								&lt;!&ndash; <field name="line_no" /> &ndash;&gt;-->
+<!--								<field name="date" required="True" />-->
+<!--								<field name="name" string="Description" required="True" />-->
+<!--								&lt;!&ndash; <field name="task_id" required="True" /> <field name="name"-->
+<!--									/> <field name="amount" sum="Total" /> &ndash;&gt;-->
+<!--								&lt;!&ndash; <field name="due_on" /> <field name="stage_total" readonly="True"-->
+<!--									/> &ndash;&gt;-->
+
+<!--							</tree>-->
+<!--							&lt;!&ndash; <form string="Work Details"> <group> <field name="date" reqiured="True"-->
+<!--								/> <field name="task_id" reqiured="True" /> <field name="name" reqiured="True"-->
+<!--								/> <field name="amount" reqiured="True" /> </group> <group string="Labour-->
+<!--								Details"> <field name="labour_detail_ids" nolabel="1" string="Work Details">-->
+<!--								<tree editable="bottom"> <field name="product_id" string="Product" /> <field-->
+<!--								name="qty" string="Nos" /> <field name="rate" /> <field name="amount" />-->
+<!--								</tree> </field> </group> </form> &ndash;&gt;-->
+<!--						</field>-->
+<!--					</page>-->
+
+<!--					<page string="Directory"-->
+<!--						groups="project.group_project_manager,hiworth_construction.group_estimation_user">-->
+<!--						<group col="4">-->
+<!--							<field name="directory_ids" string="Directory" colspan="2"-->
+<!--								nolabel="1">-->
+<!--								<tree editable="bottom">-->
+<!--									<field name="directory_id" required="True" />-->
+<!--									<button name="open_selected_directory" type="object"-->
+<!--										string="Goto Directory" icon="gtk-go-forward" class="oe_inline" />-->
+<!--									&lt;!&ndash; <field name="date" required="True" /> <field name="task_id"-->
+<!--										required="True" /> <field name="name" /> <field name="amount" sum="Total"-->
+<!--										/> <field name="due_on" /> <field name="stage_total" readonly="True" /> &ndash;&gt;-->
+<!--								</tree>-->
+<!--								&lt;!&ndash;<form string="Work Details"> <group> <field name="date" reqiured="True"-->
+<!--									/> <field name="task_id" reqiured="True" /> <field name="name" reqiured="True"-->
+<!--									/> <field name="amount" reqiured="True" /> </group> <group string="Labour-->
+<!--									Details"> <field name="labour_detail_ids" nolabel="1" string="Work Details">-->
+<!--									<tree editable="bottom"> <field name="product_id" string="Product" /> <field-->
+<!--									name="qty" string="Nos" /> <field name="rate" /> <field name="amount" />-->
+<!--									</tree> </field> </group> </form> &ndash;&gt;-->
+<!--							</field>-->
+<!--						</group>-->
+<!--					</page>-->
+<!--					<page string="Modifications">-->
+<!--						<field name="modification_ids">-->
+<!--							<tree editable="bottom">-->
+<!--								<field name="name" string="Work Details" required="1" />-->
+<!--								<field name="qty" sum="Total" />-->
+<!--								<field name="rate" />-->
+<!--								<field name="amount" sum="Total" />-->
+<!--								<field name="remarks" />-->
+<!--								<field name="binary_field" filename="filename" />-->
+<!--								<field name="filename" invisible="1" />-->
+<!--							</tree>-->
+<!--						</field>-->
+<!--					</page>-->
+<!--					<page string="Attachments">-->
+<!--						<field name="tender_attachment_ids">-->
+<!--							<tree create="false" edit="false" delete="false">-->
+<!--								<field name="date"/>-->
+<!--								<field name="name" />-->
+<!--								<field name="binary_field" />-->
+<!--								<field name="filename" />-->
+
+<!--							</tree>-->
+<!--						</field>-->
+<!--					</page>-->
+
+
+<!--				</xpath>-->
+
+
+<!--				<xpath expr="//notebook/page/group/field[@name='date_start']"-->
+<!--					position="replace">-->
+<!--					<field name="date_start" string="Start Date" invisible="True" />-->
+<!--				</xpath>-->
+<!--				<xpath expr="//notebook/page/group/field[@name='date']"-->
+<!--					position="replace">-->
+<!--					<field name="date" invisible="True" />-->
+<!--				</xpath>-->
+<!--				<xpath expr="//group/group[1]" position="replace">-->
+<!--					<group>-->
+<!--						<group>-->
+<!--							<field name="user_id" string="Project Manager"-->
+<!--								   attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" required="1"-->
+<!--								   context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}" />-->
+<!--						</group>-->
+<!--						<group>-->
+
+
+<!--							<field name="company_contractor_id" required="1" options="{'no_create':True}"/>-->
+<!--						</group>-->
+<!--						&lt;!&ndash;						<field name="partner_id" on_change="onchange_partner_id(partner_id)"&ndash;&gt;-->
+<!--						&lt;!&ndash;							colspan="2" string="Awarder" />&ndash;&gt;-->
+<!--						&lt;!&ndash; <field name="civil_contractor" colspan="2" string="Civil Contractor"-->
+<!--							/> &ndash;&gt;-->
+<!--					</group>-->
+<!--				</xpath>-->
+
+<!--				<xpath expr="//group[1]" position="after">-->
+<!--						<group col="8">-->
+<!--&lt;!&ndash;							<field name="building_sqf" class="oe_inline" />&ndash;&gt;-->
+<!--&lt;!&ndash;							&lt;!&ndash; <p class="oe_inline"> X </p> &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;							<field name="rate" />&ndash;&gt;-->
+<!--&lt;!&ndash;							<newline />&ndash;&gt;-->
+<!--&lt;!&ndash;							<field name="cent" />&ndash;&gt;-->
+<!--&lt;!&ndash;							<newline />&ndash;&gt;-->
+<!--&lt;!&ndash;							<field name="remark1" style="width: 380%%" />&ndash;&gt;-->
+<!--							<newline />-->
+<!--							<field name="start_date" reqiured="1"/>-->
+<!--							<field name="date_end" />-->
+<!--							<field name="expected_start" />-->
+<!--							<field name="expected_end" />-->
+
+<!--						</group>-->
+<!--&lt;!&ndash;						<group col="2">&ndash;&gt;-->
+<!--&lt;!&ndash;							 <field name="cent"/>&ndash;&gt;-->
+<!--&lt;!&ndash;							<field name="building_sqf"/>&ndash;&gt;-->
+<!--&lt;!&ndash;							<field name="rate"/>&ndash;&gt;-->
+<!--&lt;!&ndash;							<field name="total_value" />&ndash;&gt;-->
+<!--&lt;!&ndash;							<field name="estimated_cost" />&ndash;&gt;-->
+<!--&lt;!&ndash;							<field name="estimated_cost_extra"&ndash;&gt;-->
+<!--&lt;!&ndash;								attrs="{'invisible':[('estimated_cost_extra','=', 0)]}" />&ndash;&gt;-->
+<!--&lt;!&ndash;							<field name="total_estimated_cost"&ndash;&gt;-->
+<!--&lt;!&ndash;								attrs="{'invisible':[('estimated_cost_extra','=', 0)]}" class="oe_inline" />&ndash;&gt;-->
+<!--&lt;!&ndash;							<button name="compute_estimated_cost" type="object" icon="gtk-refresh" />&ndash;&gt;-->
+<!--&lt;!&ndash;						</group>&ndash;&gt;-->
+<!--				</xpath>-->
+<!--				<xpath expr="//notebook/page[@string='Project Stages']"-->
+<!--					position="replace">-->
+<!--					<page string="Project Stages" invisible="True">-->
+<!--					</page>-->
+<!--				</xpath>-->
+<!--				<xpath expr="//group/p[1]" position="replace">-->
+<!--				</xpath>-->
+<!--				<xpath expr="//div[1]" position="replace">-->
+<!--					<div class="oe_title">-->
+<!--						<label for="project_number" string="Project Number" />-->
+<!--						<h1>-->
+<!--							<field name="project_number" string="Project Number" colspan="2"/>-->
+<!--						</h1>-->
+<!--						<label for="name" string="Project Name" />-->
+<!--						<h1>-->
+<!--							<field name="name" string="Project Name" colspan="2"/>-->
+<!--						</h1>-->
+<!--						<label for="project_value" string="Project Value" />-->
+<!--						<h1>-->
+<!--							<field name="project_value" string="Project Value" required="1" colspan="2"/>-->
+<!--						</h1>-->
+
+<!--						<label for="tender_id" string="Tender Number" />-->
+<!--						<h2>-->
+<!--							<field name="tender_id"/>-->
+<!--						</h2>-->
+
+<!--						<label for="project_location_ids" string="Project Locations" />-->
+<!--						<h1>-->
+<!--							<field name="project_location_ids" string="Project Location"-->
+<!--								required="True" widget="many2many_tags"/>-->
+<!--						</h1>-->
+<!--						<div name="options_active">-->
+<!--							<field name="use_tasks" class="oe_inline" />-->
+<!--							<label for="use_tasks" string="Use Tasks" />-->
+<!--						</div>-->
+<!--					</div>-->
+<!--&lt;!&ndash;					<div class="oe_title">&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;					<group>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;						<group col="5">&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;							<label for="name" string="Project Name" />&ndash;&gt;-->
+<!--&lt;!&ndash;							<h1>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="name" string="Project Name" />&ndash;&gt;-->
+<!--&lt;!&ndash;							</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;						</group>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;						<group col="5">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;							<label for="tender_id" string="Tender Number" />&ndash;&gt;-->
+<!--&lt;!&ndash;							<field name="tender_id" />&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;						</group>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;					</group>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;					<group>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;						<group>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;							<h1>&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="project_location_ids" string="Project Location"&ndash;&gt;-->
+<!--&lt;!&ndash;									   required="True" widget="many2many_tags"/>&ndash;&gt;-->
+<!--&lt;!&ndash;							</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;							<div name="options_active">&ndash;&gt;-->
+<!--&lt;!&ndash;								<field name="use_tasks" class="oe_inline" />&ndash;&gt;-->
+<!--&lt;!&ndash;								<label for="use_tasks" string="Use Tasks" />&ndash;&gt;-->
+<!--&lt;!&ndash;							</div>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;						</group>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;						<group>&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;						</group>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;					</group>&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;					</div>&ndash;&gt;-->
+<!--				</xpath>-->
+<!--				<xpath expr="//div[@class='oe_chatter']" position="replace">-->
+<!--				</xpath>-->
+<!--				<xpath expr="//field[@name='state']" position="replace">-->
+<!--					<field name="state" widget="statusbar" statusbar_visible="draft,open,close" readonly="1"/>-->
+<!--				</xpath>-->
+
+<!--				<xpath expr="//header/button[@name='set_open']" position="after">-->
+<!--					<button name="set_open_project" string="Open project" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>-->
+<!--				</xpath>-->
+
+<!--				<xpath expr="//header/button[@name='set_cancel']"-->
+<!--					position="attributes">-->
+<!--					<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+<!--				<xpath expr="//header/button[@name='set_template']"-->
+<!--					position="attributes">-->
+<!--					<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+<!--				<xpath expr="//header/button[@name='set_pending']"-->
+<!--					position="attributes">-->
+<!--					<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+
+
+
+<!--				&lt;!&ndash; <xpath expr="//notebook" position="after"> <separator string="Project-->
+<!--					items estimation" /> <field name="project_product_ids"> <tree editable="bottom">-->
+<!--					<field name="name" /> <field name="quantity" /> <field name="unit_price"-->
+<!--					/> <field name="estimated_price" /> </tree> </field> </xpath> &ndash;&gt;-->
+
+<!--			</field>-->
+<!--		</record>-->
+
+
+
+<!--		<record id="product_template_form_view_changed" model="ir.ui.view">-->
+<!--			<field name="name">product.template.common.form.changed</field>-->
+<!--			<field name="model">product.template</field>-->
+<!--			&lt;!&ndash; <field name="mode">primary</field> &ndash;&gt;-->
+<!--			<field name="inherit_id" ref="product.product_template_form_view" />-->
+<!--			<field name="arch" type="xml">-->
+<!--				<xpath expr="//label[@for='name']" position="replace">-->
+<!--					<label for="name" string="Resource Name" />-->
+<!--				</xpath>-->
+<!--				<xpath expr="//div/div[@name='options']" position="before">-->
+<!--					<newline />-->
+<!--					<div class="oe_title" style="width: 150px;">-->
+<!--						<label for="categ_id" string="Resource Category" />-->
+
+<!--						<h1>-->
+<!--							<field name="categ_id" class="oe_inline" />-->
+
+<!--						</h1>-->
+<!--						<label for="brand_name" string="Brand" />-->
+<!--						<h3>-->
+<!--							<field name="brand_name" string="Brand"/>-->
+<!--						</h3>-->
+<!--						<label for="model_name" string="Model" />-->
+<!--						<h3>-->
+<!--							<field name="model_name" string="Model"/>-->
+<!--						</h3>-->
+
+<!--					</div>-->
+<!--				</xpath>-->
+<!--			</field>-->
+<!--		</record>-->
+
+<!--		<record id="product_template_form_view_changed2" model="ir.ui.view">-->
+<!--			<field name="name">product.template.form.inherit.changed2</field>-->
+<!--			<field name="model">product.template</field>-->
+<!--			<field name="priority">4</field>-->
+<!--			<field name="inherit_id" ref="account.product_template_form_view" />-->
+<!--			<field name="arch" type="xml">-->
+
+<!--				<xpath expr="//page/group/div/field[@name='categ_id']"-->
+<!--					position="replace">-->
+<!--					&lt;!&ndash; <field name="categ_id" colspan="3" nolabel="1" invisible="True"-->
+<!--						/> &ndash;&gt;-->
+<!--				</xpath>-->
+
+<!--				<xpath expr="//label[@for='categ_id']" position="replace">-->
+<!--					<label for="categ_id" string="Internal Category" invisible="True" />-->
+<!--				</xpath>-->
+
+
+<!--			</field>-->
+<!--		</record>-->
+
+
+		<!-- <record id="view_project_task_form_altered" model="ir.ui.view"> <field
+			name="name">project.task.form.altered</field> <field name="model">project.task</field>
+			<field name="inherit_id" ref="project_task_activity.view_project_task_form"
+			/> <field name="arch" type="xml"> <field name="activity_ids"> <tree editable="top"
+			colors="gray:state == 'cancel';blue:state == 'pending'"> <field name="sequence"
+			widget="handle" /> <field name="name" /> <field name="user_id" required="True"
+			/> <field name="description" /> <field name="pro_id" /> <field name="qty"
+			/> <field name="estimated_cost_sum" /> <field name="customer" string="Client"
+			/> <field name="location" /> <field name="planned_date" /> <field name="done_date"
+			/> <field name="state" readonly="1" /> <button name="action_done" string="Done"
+			type="object" icon="gtk-go-forward" help="Done" attrs="{'invisible':[('state','!=','pending'),('state','!=','cancel')]}"
+			/> <button name="action_done" string="Pending" type="object" icon="gtk-go-back"
+			help="Pending" attrs="{'invisible':[('state','!=','done')]}" /> <button name="action_cancel"
+			string="Cancel" type="object" icon="gtk-cancel" help="Cancel" attrs="{'invisible':[('state','=','cancel')]}"
+			/> </tree> </field> </field> </record> -->
+
+		<!-- <record id="view_project_task_activity_tree_changed" model="ir.ui.view">
+			<field name="name">project.task_activity.tree.changed</field> <field name="model">project.task.activity</field>
+			<field name="arch" type="xml"> <tree colors="gray:state == 'cancel';blue:state
+			== 'pending'"> <field name="name" /> <field name="user_id" /> <field name="pro_id"
+			/> <field name="qty" /> <field name="planned_date" /> <field name="done_date"
+			/> <field name="state" readonly="1" /> <button name="action_done" string="Done"
+			type="object" icon="gtk-go-forward" help="Done" attrs="{'invisible':[('state','!=','pending'),('state','!=','cancel')]}"
+			/> <button name="action_done" string="Pending" type="object" icon="gtk-go-back"
+			help="Pending" attrs="{'invisible':[('state','!=','done')]}" /> <button name="action_cancel"
+			string="Cancel" type="object" icon="gtk-cancel" help="Cancel" attrs="{'invisible':[('state','=','cancel')]}"
+			/> <field name="description" /> </tree> </field> </record> -->
+
+		<!-- <record id="view_project_task_activity_form_changed" model="ir.ui.view">
+			<field name="name">project.task_activity.form.changed</field> <field name="model">project.task.activity</field>
+			<field name="priority" eval="1" /> <field name="arch" type="xml"> <form>
+			<header> <button name="action_done" string="Done" type="object" icon="gtk-go-forward"
+			help="Done" attrs="{'invisible':[('state','!=','pending'),('state','!=','cancel')]}"
+			/> <button name="action_done" string="Pending" type="object" icon="gtk-go-back"
+			help="Pending" attrs="{'invisible':[('state','!=','done')]}" /> <button name="action_cancel"
+			string="Cancel" type="object" icon="gtk-cancel" help="Cancel" attrs="{'invisible':[('state','=','cancel')]}"
+			/> <field name="state" widget="statusbar" statusbar_visible="pending,done,cancel"
+			statusbar_colors='{"pending":"blue","done":"red","cancel":"red"}' readonly="1"
+			/> </header> <sheet> <group> <group> <field name="name" /> <field name="project_id"
+			/> <field name="task_id" /> <field name="planned_date" /> <field name="done_date"
+			/> </group> <group> <field name="date_order" /> <field name="user_id" />
+			<field name="pro_id" required="True" /> <field name="qty" required="True"
+			/> <field name="estimated_cost_sum" /> <field name="state" invisible="True"
+			/> </group> </group> <group> <field name="description" /> </group> </sheet>
+			</form> </field> </record> -->
+
+
+	<record id="purchase_item_category_form" model="ir.ui.view">
+		<field name="name">purchase.item.category.form</field>
+		<field name="model">purchase.item.category</field>
+		<field name="arch" type="xml">
+		<form string="Category Account Relation">
+			<sheet>
+				<group>
+						<field name="name" required="1"/>
+						<field name="account_id"  required="1" />
+				</group>
+			</sheet>
+		</form>
+	</field>
+</record>
+
+	<record id="purchase_item_category_tree" model="ir.ui.view">
+		<field name="name">purchase.item.category.tree</field>
+		<field name="model">purchase.item.category</field>
+		<field name="arch" type="xml">
+		<tree string="Category Account Relation">
+					<field name="name" />
+					<field name="account_id" />
+		</tree>
+	</field>
+</record>
+
+		<record id="action_purchase_item_category" model="ir.actions.act_window">
+			<field name="name">Item Category</field>
+			<field name="res_model">purchase.item.category</field>
+			<field name="view_mode" >form,tree</field>
+			<field name="view_type" >form</field>
+		</record>
+
+
+
+		<record id="purchase_order_form_changed" model="ir.ui.view">
+			<field name="name">purchase.order.form.changed</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.purchase_order_form" />
+			<field name="arch" type="xml">
+					<xpath expr="//form" position="attributes">
+<attribute name="create">false</attribute>
+				</xpath>
+				<xpath expr="//sheet/div/h1/label" position="replace">
+
+				</xpath>
+				<xpath expr="//group/group/field[@name='partner_id']"
+					position="replace">
+					<field name="partner_id" on_change="onchange_partner_id(partner_id, context)"
+						context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}"
+						domain="[('supplier','=',True)]" required="1" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>
+					<field name="merged_po" invisible="1"/>
+						<field name="site_purchase_id" string="Purchase Request" attrs="{'readonly':[('state','in',['done','approved','cancel'])],'invisible':[('merged_po','=',True)]}"/>
+					<field name="site_purchase_ids" readonly="1" widget="many2many_tags" attrs="{'invisible':[('merged_po','=',False)]}"/>
+						<field name="quotation_id" readonly="1" attrs="{'invisible':[('quotation_id','=',False)]}"/>
+					<field name="comparison_id" readonly="1" attrs="{'invisible':[('comparison_id','=',False)]}"/>
+
+				</xpath>
+				<xpath expr="//group/group/field[@name='partner_ref']"
+					position="replace">
+					<field name="partner_ref" invisible="1" string="Invoice No"
+						attrs="{'readonly':[('state','in',['paid','done','cancel'])]}" />
+					<field name="is_requisition" invisible="1" />
+					<field name="invoice_date" invisible="1"
+						attrs="{'readonly':[('state','in',['paid','done','cancel'])]}"/>
+					<field name="project_id" attrs="{'readonly':[('state','in',['confirmed','approved','done','cancel'])]}"/>
+					<field name="location_id" string="Location" attrs="{'readonly':[('state','in',['confirmed','approved','done','cancel'])]}"/>
+				</xpath>
+
+				<!-- <xpath expr="//button[@string='Receive Invoice']" position="replace">
+					<button name="view_invoice" string="Receive Invoicewfssdfs" type="object"
+					attrs="{'invisible': ['|', ('invoice_method','in', ['picking', 'manual']),
+					'|', ('shipped','=', ), ('invoiced','=',True) ]}" class="oe_highlight" />
+					</xpath> -->
+
+				<!-- <xpath expr="//notebook/page/field/tree/field[@name='product_id']"
+					position="replace">
+					<field name="product_id" string="Item" required="1"
+						options="{'no_create': True, 'no_create_edit':True}"/>
+				</xpath> -->
+				<!-- <xpath expr="//notebook/page/field/tree/field[@name='product_qty']"
+					position="replace">
+					<field name="product_qty" string="Nos"/>
+				</xpath> -->
+				<!-- <xpath expr="//notebook/page/field/tree/field[@name='product_uom']"
+					position="replace">
+					<field name="product_uom" groups="product.group_uom" string="Unit"
+						on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)" />
+				</xpath> -->
+				<!-- <xpath expr="//notebook/page/field/tree/field[@name='price_unit']"
+					position="replace">
+					<field name="price_unit" string="Rate" />
+				</xpath> -->
+				<!-- <xpath expr="//notebook/page/group/group/field[@name='minimum_planned_date']"
+					position="replace"> <field name="minimum_planned_date" invisible="True"/>
+					</xpath> -->
+				<!-- <xpath expr="//notebook/page/group/group/field[@name='location_id']"
+					position="replace">
+				</xpath> -->
+
+				<field name="payment_term_id" position="replace">
+	<field name="deliver_to"/>
+				</field>
+				<xpath
+					expr="//notebook/page/group/group/field[@name='minimum_planned_date']"
+					position="replace">
+				</xpath>
+				<xpath expr="//group/group/field[@name='date_order']"
+					position="after">
+					<field name="minimum_plann_date"  string="Minimum Expected Date" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>
+					<field name="maximum_planned_date" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>
+					<field name="vehicle_id" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>
+				</xpath>
+				<xpath expr="//group/group/field[@name='origin']"
+					position="replace">
+
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='name']"
+					position="after">
+
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='date_planned']"
+					position="replace">
+					<field name="date_planned" invisible="True" />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='company_id']"
+					position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='product_id']"
+					position="after">
+					<field name="brand_name" string="Brand"/>
+				</xpath>
+
+
+				<xpath expr="//notebook/page/field/tree/field[@name='product_qty']"
+					position="before">
+					<field name="igst_tax" invisible="1"/>
+					<field name="gst_tax" invisible="1"/>
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='product_qty']"
+					position="replace">
+					<field name="required_qty" string="Required Qty" widget="char" required="1"/>
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='price_unit']"
+					position="replace">
+					<field name="expected_rate" string="Expected Rate" required="1"/>
+					<field name="received_qty"  string="Received Qty" widget="char" readonly="1" required="0"/>
+					<field name="received_rate" string="Received Rate" widget="char" readonly="1" required="0"/>
+					<field name="closed_qty"   readonly="1" />
+				</xpath>
+
+				<xpath expr="//field[@name='order_line']" position="attributes">
+					<attribute name="attrs">{'readonly':[('state','in',['done','approved','cancel'])]}
+					</attribute>
+					<attribute name="create">0</attribute>
+					<attribute name="delete">0</attribute>
+				</xpath>
+				<xpath expr="//field[@name='order_line']/tree" position="attributes">
+					<attribute name="create">0</attribute>
+					<attribute name="delete">0</attribute>
+				</xpath>
+
+				<xpath expr="//field[@name='order_line']/tree/field[@name='product_id']"
+					position="before">
+					<!-- <field name="line_no" string="Sl No." readonly="1" /> -->
+					<field name="task_id" required="0" invisible="1" />
+				</xpath>
+				<!-- <xpath expr="//field[@name='order_line']/tree/field[@name='name']"
+					position="after">
+					<field name="account_id" invisible="1" options="{'no_create': True, 'no_create_edit':True}"/>
+					<field name="location_id" />
+				</xpath> -->
+				<!-- <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']"
+					position="replace">
+					<field name="unit_price" string="Unit Price"/>
+					<field name="other_charge" string="Other Charge"/>
+					<field name="price_unit" string="Effective Rate"/>
+
+				</xpath> -->
+
+				<xpath expr="//div[@class='oe_chatter']" position="replace">
+				</xpath>
+				<xpath expr="//notebook/page/group/group/field[@name='location_id']"
+					position="replace">
+
+				</xpath>
+
+				<xpath expr="//notebook/page/group/group/field[@name='shipped']"
+					position="after">
+					<field name="invoice_created" invisible="1"/>
+				</xpath>
+				<xpath expr="//notebook/page/group"
+					position="replace">
+				<group>
+					<group>
+						<field name="packing_charge" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>
+						<!--					<field name="packing_tax_id" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>-->
+						<field name="loading_tax" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>
+						<!--					<field name="loading_tax_id" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>-->
+						<field name="transport_cost" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>
+						<!--					<field name="transport_cost_tax_id" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>-->
+
+					</group>
+					<group class="oe_subtotal_footer oe_right">
+						<field name="new_gross_total" widget="monetary" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>
+						<field name="tax_amount" readonly="1" widget="monetary" string="Tax"/>
+
+
+						<!--					<field name="new_sgst_tax" widget="monetary"-->
+						<!--						attrs="{'invisible':[('new_sgst_tax','=',0)]}"/>-->
+						<!--					<field name="new_cgst_tax" widget="monetary"-->
+						<!--						attrs="{'invisible':[('new_cgst_tax','=',0)]}"/>-->
+						<!--					<field name="new_igst_tax" widget="monetary"-->
+						<!--						attrs="{'invisible':[('new_igst_tax','=',0)]}"/>-->
+
+					<field name="other_charge" widget="monetary" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>
+
+					<field name="non_taxable_amount" widget="monetary" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>
+					<field name="discount_amount" widget="monetary" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>
+					<field name="round_off_amount" widget="monetary" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>
+					<field name="amount_total" widget="monetary" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>
+
+					</group>
+				</group>
+
+				</xpath>
+
+<!--				<xpath expr="//notebook/page/group/field[@name='amount_untaxed']"-->
+<!--					position="attributes">-->
+
+<!--					<attribute name="string">Gross Total</attribute>-->
+<!--				</xpath>-->
+<!--				<xpath expr="//notebook/page/group/field[@name='amount_untaxed']"-->
+<!--					   position="replace">-->
+<!--					<field name="new_gross_total" />-->
+<!--				</xpath>-->
+
+<!--				<xpath expr="//notebook/page/group/field[@name='amount_tax']"-->
+<!--					position="replace">-->
+<!--					<field name="tax_amount" readonly="1" widget="monetary" string="Tax"/>-->
+
+
+<!--&lt;!&ndash;					<field name="new_sgst_tax" widget="monetary"&ndash;&gt;-->
+<!--&lt;!&ndash;						attrs="{'invisible':[('new_sgst_tax','=',0)]}"/>&ndash;&gt;-->
+<!--&lt;!&ndash;					<field name="new_cgst_tax" widget="monetary"&ndash;&gt;-->
+<!--&lt;!&ndash;						attrs="{'invisible':[('new_cgst_tax','=',0)]}"/>&ndash;&gt;-->
+<!--&lt;!&ndash;					<field name="new_igst_tax" widget="monetary"&ndash;&gt;-->
+<!--&lt;!&ndash;						attrs="{'invisible':[('new_igst_tax','=',0)]}"/>&ndash;&gt;-->
+
+<!--					<field name="other_charge" widget="monetary" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>-->
+
+<!--					<field name="non_taxable_amount" widget="monetary" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>-->
+<!--					<field name="discount_amount" widget="monetary" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>-->
+<!--					<field name="round_off_amount" widget="monetary" attrs="{'readonly':[('state','in',['done','approved','cancel'])]}"/>-->
+<!--				</xpath>-->
+				<!-- <xpath expr="//notebook/page/group/div/label[@for='amount_total']"
+					position="replace">
+					 <label for="amount_total2"/>
+				</xpath> -->
+
+				<!-- <xpath expr="//notebook/page/group/field[@name='amount_total']"
+					position="replace">
+					 <field name="amount_total2" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+				</xpath> -->
+
+				<xpath expr="//notebook/page/field[@name='notes']"
+					position="before">
+					<group>
+						<group>
+							<field name="payment_term_id"/>
+						</group>
+						<group></group>
+					</group>
+					<group>
+						<group>
+						</group>
+						<group>
+							<field name="round_off_account" attrs="{'required':[('round_off_amount','!=',0)],'invisible':[('round_off_amount','=',0)]}"/>
+						</group>
+					</group>
+					<group>
+						<group>
+						</group>
+						<group>
+							<field name="discount_account"
+								attrs="{'required':[('discount_amount','!=',0)],'invisible':[('discount_amount','=',0)]}"/>
+						</group>
+					</group>
+				</xpath>
+<!--				<xpath expr="//notebook/page/field[@name='notes']"-->
+<!--					position="attributes">-->
+<!--					<attribute name="attrs">{'readonly':[('state','in', ['done','paid','cancel'])]}</attribute>-->
+<!--					<attribute name="string">Terms &amp; Conditions</attribute>-->
+<!--				</xpath>-->
+				<xpath expr="//notebook/page/field[@name='notes']"
+					position="replace">
+					<div class="oe_clear"/>
+					<label for="additional_terms" string="Additional terms &amp; Conditions"/>
+							<field name="additional_terms"/>
+<!--					1	Starting date will be 19-Jan 2021, site working timing is from 7AM to 6PM in-between 1 hour lunch break.-->
+<!--					2	All workers to arrive with required PPE & proper uniform only safety jacket will be provided by us and to ware strictly.-->
+<!--					3	No workers are entertained without our safety vast from Bureau Green.-->
+<!--					4	Site performance check will be done to verify their category and if found unskilled then need to replace with skilled labours as per trade mention in LPO.-->
+<!--					5	Any misbehaviour worker on site will be removed and will be marked absent for that day.-->
+<!--					6	All workers to strictly follow our Engineer, Supervisor, Forman instruction.-->
+
+
+
+<!--							<field name="additional_terms" attrs="{'readonly':[('state','in', ['done','paid','cancel'])]}"/>-->
+				</xpath>
+
+
+				<xpath expr="//group/group/field[@name='company_id']" position="replace">
+<!--					<field name="company_contractor_id" readonly="1"/>-->
+					<field name="vehicle_agent_id" readonly="1"/>
+				</xpath>
+				<xpath expr="//group/group/field[@name='picking_type_id']" position="attributes">
+					<attribute name="readonly">1</attribute>
+					<attribute name="invisible">1</attribute>
+				</xpath>
+
+				<xpath expr="//field[@name='partner_ref']" position="attributes">
+					<attribute name="attrs">{'readonly':['|',('shipped','=',True),('state','in', ['done','paid','cancel'])]}
+					</attribute>
+					<attribute name="invisible">1</attribute>
+				</xpath>
+				<xpath expr="//field[@name='date_order']" position="attributes">
+					<attribute name="attrs">{'readonly':[('state','in',['done','approved','cancel'])]}
+					</attribute>
+				</xpath>
+
+				<field name="picking_type_id" position="after">
+
+				</field>
+
+				<!-- <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal]"
+					position="after">
+				</xpath> -->
+				<xpath expr="//notebook/page/field/tree/field[@name='price_subtotal']"
+					position="replace">
+					new_sub_total
+					<field name="new_sub_total"/>
+<!--					<field name="gst_tax"/>-->
+<!--					<field name="igst_tax"/>-->
+					<field name="tax_amount"/>
+					<field name="total"/>
+				</xpath>
+
+				<xpath expr="//notebook/page/field/tree/field[@name='product_uom']"
+					position="attributes">
+					<attribute name="string">Uom</attribute>
+				</xpath>
+				<xpath expr="//notebook/page[2]"
+					position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+
+				<xpath expr="//header/button[@name='view_invoice']"
+					position="replace">
+					<button name="view_invoice" string="View Invoice" type="object" invisible="1" attrs="{'invisible': ['|', ('invoice_method','in', ['manual']),('state','not in', ['done'])]}" class="oe_highlight"/>
+
+
+				</xpath>
+				<xpath expr="//header/field[@name='state']"
+					position="replace">
+					<field name="state" widget="statusbar" statusbar_visible="confirmed,approved1,approved,done,cancel" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue"}' readonly="1"/>
+				</xpath>
+
+				<xpath expr="//header/button[@string='Re-Print RFQ']"
+					position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+					<xpath expr="//header/button[@id='draft_confirm']"
+					position="attributes">
+					<attribute name="states">confirmed</attribute>
+						<attribute name="type">object</attribute>
+				</xpath>
+				<xpath expr="//header/button[@string='Bid Received']"
+					position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+<!--				<xpath expr="//header/button[@string='Send RFQ by Email']"-->
+<!--					position="attributes">-->
+<!--					<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+<!--				<xpath expr="//header/button[@string='Re-Send RFQ by Email']"-->
+<!--					position="attributes">-->
+<!--					<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+
+				<xpath expr="//header/button[@name='purchase_approve']"
+					position="attributes">
+					<attribute name="invisible">0</attribute>
+						<attribute name="states">approved1</attribute>
+					<attribute name="type">object</attribute>
+				</xpath>
+				<xpath expr="//header/button[@name='action_cancel_draft']"
+					position="attributes">
+					<attribute name="invisible">1</attribute>
+
+				</xpath>
+				<xpath expr="//header/button[@name='view_picking']"
+					position="replace">
+
+
+					  <button name="force_po_close" class="oe_highlight" string="Foreclosure" states="approved" type="object" />
+					<button name="button_view_invoice" string="Receive Products" states="approved" class="oe_highlight" type="object" />
+				</xpath>
+				<!-- <xpath expr="//header/button[@name='print_quotation']"
+					position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+				<xpath expr="//header/button[@name='print_quotation']"
+					position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath> -->
+
+
+
+			</field>
+		</record>
+
+
+		<record model="ir.ui.view" id="purchase_order_search_inherit_hiworth">
+	        <field name="name">purchase.order.list.select.inherit</field>
+	        <field name="model">purchase.order</field>
+	        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+	        <field name="arch" type="xml">
+				<xpath expr="//field[@name='create_uid']" position="after">
+					<field name="origin"/>
+
+				</xpath>
+	            <xpath expr="//filter[@name='draft']" position="after">
+	                <filter name="to_receive" string="To Receive" domain="[('state','in',(approved'))]"/>
+	            </xpath>
+				<xpath expr="//group" position="inside">
+					  <filter string="Company" icon="terp-partner" domain="[]" />
+				</xpath>
+	        </field>
+    	</record>
+
+		<record id="stock.view_stock_product_tree" model="ir.ui.view">
+			<field name="name">product.product.stock.inherit.tree</field>
+			<field name="model">product.product</field>
+
+			<field name="arch" type="xml">
+				<tree position="attributes">
+                    <attribute name="colors" translation="off">red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')</attribute>
+                </tree>
+                <field name="price" position="after">
+                    <field name="qty_available"/>
+                    <field name="virtual_available" invisible="1"/>
+                </field>
+			</field>
+		</record>
+
+		<record id="stock_purchase_product_tree_view_product" model="ir.ui.view">
+			<field name="name">product.product.stock.inherit.tree.inherit.product</field>
+			<field name="model">product.product</field>
+			<field name="inherit_id" ref="product.product_product_tree_view"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="before">
+					<field name="categ_id"/>
+					<field name="model_name"/>
+				</xpath>
+				<xpath expr="//field[@name='default_code']" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+			</field>
+		</record>
+
+		  <record id="purchase_order_tree_hiworth" model="ir.ui.view">
+			<field name="name">purchase.order.tree.hiworth</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.purchase_order_tree" />
+			<field name="arch" type="xml">
+					<xpath expr="//field[@name='name']"
+					position="attributes">
+					<attribute name="string">PO No</attribute>
+				</xpath>
+				<xpath expr="//tree"
+					position="attributes">
+					<attribute name="create">false</attribute>
+					<attribute name="colors">red:state=='cancel'</attribute>
+				</xpath>
+				<xpath expr="//field[@name='origin']"
+					position="replace">
+
+				</xpath>
+				<xpath expr="//field[@name='name']"
+					position="before">
+					<field name="origin" string="P.R NO"/>
+					<field name="quotation_id"/>
+					<field name="comparison_id"/>
+				</xpath>
+				<xpath expr="//field[@name='minimum_planned_date']"
+					position="replace">
+
+				</xpath>
+				<xpath expr="//field[@name='partner_id']"
+					position="before">
+					<field name="minimum_plann_date" />
+				</xpath>
+<!--					<xpath expr="//field[@name='company_id']"-->
+<!--					position="replace">-->
+<!--					<field name="company_contractor_id" />-->
+<!--				</xpath>-->
+
+			</field>
+		</record>
+
+<!--		<record id="invoice_form_changed_supplier" model="ir.ui.view">-->
+<!--			<field name="name">account.invoice.form.changed</field>-->
+<!--			<field name="model">account.invoice</field>-->
+<!--			<field name="inherit_id" ref="account.invoice_supplier_form" />-->
+<!--			<field name="arch" type="xml">-->
+<!--				<xpath expr="//sheet/notebook/page[1]/group/field[@name='amount_untaxed']" position="after">-->
+<!--					<field name="other_charge" widget="monetary"/>-->
+<!--				</xpath>-->
+<!--			</field>-->
+<!--		</record>-->
+
+		<record id="invoice_form_changed" model="ir.ui.view">
+			<field name="name">account.invoice.form.changed</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//h1" position="replace">
+					<h1>
+						 <field name="number" readonly="1" invisible="1" />
+<!--						 <field name="prime_invoice" readonly="1" nolabel="1"/>-->
+					</h1>
+				</xpath>
+
+
+				<xpath expr="//notebook/page/field/tree/field[@name='quantity']"
+					position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+				<!-- <xpath expr="//notebook/page/field/tree/field[@name='price_unit']"
+					position="attributes">
+					<attribute name="string"></attribute>
+				</xpath> -->
+				<xpath expr="//notebook/page/field/tree/field[@name='invoice_line_tax_id']"
+					position="after">
+					<field name="discount"/>
+				</xpath>
+				<!-- <xpath expr="//notebook/page/field/tree/field[@name='invoice_line_tax_id']"
+					position="after">
+					<field name="net_total"/>
+				</xpath> -->
+				<!-- <xpath expr="//notebook/page/field/tree/field[@name='price_subtotal']"
+					position="attributes">
+					<attribute name="string">Grand Total</attribute>
+				</xpath> -->
+
+				<!-- <xpath expr="//button[@name='invoice_cancel']" position="replace">
+					<button name="invoice_cancel" states="draft,proforma2,open" string="Cancel
+					Invoice777" groups="base.group_no_one" /> </xpath> -->
+
+				<xpath expr="//notebook/page/field/tree/field[@name='product_id']"
+					position="replace">
+					<field name="product_id" string="Item"
+						on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)" />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='uos_id']"
+					position="replace">
+					<field name="uos_id" groups="product.group_uom" string="Unit"
+						on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)" />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='price_unit']"
+					position="replace">
+					<field name="price_unit" string="Consultancy Fee" />
+				</xpath>
+
+				<xpath expr="//notebook/page/field/tree/field[@name='date']"
+					position="before">
+					<field name="description2" string="Description/Nature Of Work" />
+				</xpath>
+
+				<xpath expr="//group/group/field[@name='partner_id']"
+					position="after">
+<!--					<field name="account_invoice_ids"/>-->
+<!--					<field name="project_id" string="Project" />-->
+<!--					<field name="contractor_id"/>-->
+<!--					<field name="district"/>-->
+
+
+
+				</xpath>
+				<xpath expr="//group/group/field[@name='account_id']"
+					position="after">
+<!--					<field name="person"  />-->
+<!--					<field name="total_tender_amount"  />-->
+<!--					<field name="balance_amount"  />-->
+
+				</xpath>
+<!--				<xpath expr="//notebook/page[@string='Invoice Lines']" position="after">-->
+<!--				  <page string="Bill Status Update">-->
+<!--						<group >-->
+<!--							<field name="statusline_ids" nolabel="1">-->
+
+<!--								<tree editable="bottom">-->
+<!--									<field name="date" />-->
+<!--&lt;!&ndash;									<field name="bill_status" colspan="1"/>&ndash;&gt;-->
+<!--									<field name="state" string='State'/>-->
+<!--								</tree>-->
+
+<!--							</field>-->
+
+<!--						</group>-->
+<!--					</page>-->
+<!--				</xpath>-->
+
+<!--				<xpath expr="//sheet/notebook/page[1]/group/field[@name='amount_untaxed']" position="after">-->
+<!--					<field name="other_charge" widget="monetary"/>-->
+<!--				</xpath>-->
+			</field>
+		</record>
+
+		<record id="view_invoice_supplier_changed" model="ir.ui.view">
+			<field name="name">account.invoice.supplier.pay</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account_voucher.view_invoice_supplier" />
+			<field name="arch" type="xml">
+				<xpath expr="//button[@name='invoice_pay_customer']" position="replace">
+					<button name="invoice_pay_customer" type="object" string="Pay"
+					 class="oe_highlight" groups="base.group_user" />
+
+				</xpath>
+			</field>
+		</record>
+
+		 <record id="invoice_supplier_form_changed_inherit" model="ir.ui.view">
+			<field name="name">account.invoice.supplier.form.changed</field>
+			<field name="model">account.invoice</field>
+			<field name="priority">2</field>
+			<field name="inherit_id" ref="account.invoice_supplier_form" />
+			<field name="arch" type="xml">
+<!--					<xpath expr="//sheet/group/group[2]/field[@name='journal_id']" position="after">-->
+
+<!--					<field name="location_id"/>-->
+
+<!--				</xpath>-->
+
+
+				<xpath expr="//sheet/group/group[1]/field[@name='supplier_invoice_number']" position="attributes">
+
+					<attribute name="required">1</attribute>
+
+				</xpath>
+			<!--	<xpath expr="//button[@name='invoice_open']" position="after">
+					<button name="invoice_approve" states="open" string="Approve"
+						type="object" class="oe_highlight" groups="account.group_account_manager" />
+				</xpath>
+
+				<xpath expr="//button[@string='Ask Refund']" position="replace">
+					<button name="%(account.action_account_invoice_refund)d"
+						type='action' string='Ask Refund' states='approve,paid'
+						groups="account.group_account_invoice" />
+				</xpath>
+
+				<xpath expr="//header/field[@name='state']" position="replace">
+					<field name="state" widget="statusbar" statusbar_visible="draft,open,approve,paid"
+						statusbar_colors='{"proforma":"blue","proforma2":"blue"}' />
+				</xpath>
+
+				<xpath expr="//notebook/page/field[@name='invoice_line']"
+					position="before">
+					<field name="visible_previous_bill" invisible="True" />
+					<field name="visible_bills" invisible="True" />
+					<button name="refresh_prevoius_bills" string="View Prevoius Bills"
+						type="object" icon="gtk-refresh"
+						attrs="{'invisible':['|',('visible_previous_bill','!=', True),('visible_bills','=', True)]}" />
+
+					<button name="hide_prevoius_bills" string="Hide Bills" type="object"
+						attrs="{'invisible':[('visible_bills','!=', True)]}" />
+					<separator string="Previous Bills"
+						attrs="{'invisible':[('visible_bills','!=', True)]}" />
+					<field name="prevous_bills" attrs="{'invisible':[('visible_bills','!=', True)]}">
+						<tree>
+							<field name="date_invoice" />
+							<field name="amount_total" />
+							<field name="balance2" string="Balance" />
+							<field name="state" />
+						</tree>
+					</field>
+
+					<group col="4">
+						<separator />
+						<field name="agreed_amount"
+							attrs="{'invisible':[('visible_previous_bill','!=', True)]}" />
+					</group>
+					<separator string="Current Bill"
+						attrs="{'invisible':[('visible_previous_bill','!=', True)]}" />
+				</xpath>
+
+				<xpath expr="//notebook/page/field/tree/field[@name='product_id']"
+					position="replace">
+					<field name="product_id" string="Item"
+						on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)" />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='uos_id']"
+					position="replace">
+					<field name="uos_id" groups="product.group_uom" string="Unit"
+						on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)" />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='price_unit']"
+					position="replace">
+					<field name="price_unit" string="Rate" />
+				</xpath>
+
+				<xpath expr="//notebook/page/field/tree/field[@name='date']"
+					position="before">
+					<field name="description2" string="Description" />
+				</xpath>
+
+				<xpath expr="//group/group/field[@name='partner_id']"
+					position="after">
+					<newline />
+					<field name="project_id" string="Project" invisible="1"/>
+					<field name="is_contractor_bill" string="Contract Bill"
+						invisible="True" />
+					<field name="task_related"
+						attrs="{'invisible':[('is_contractor_bill','!=',True)]}" />
+
+					<field name="task_id" string="Task"
+						attrs="{'invisible':[('task_related','!=',True)]}" />
+				</xpath>
+
+				<xpath expr="//group/group/field[@name='journal_id']"
+					position="after">
+					<field name="customer_id" string="Client" />
+				</xpath>
+
+				<xpath expr="//group/group/field[@name='fiscal_position']"
+					position="replace">
+				</xpath>
+				<xpath expr="//group/group/field[@name='date_invoice']"
+					position="replace">
+					<field name="date_invoice" required="True"
+						on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" />
+
+				</xpath>
+
+				<xpath expr="//group/group/field[@name='partner_id']"
+					position="replace">
+
+					<label for="partner_id" string="Supplier"
+						attrs="{'invisible':[('is_contractor_bill','=',True)]}" />
+
+					<label for="partner_id" string="Civil Contractor"
+						attrs="{'invisible':[('is_contractor_bill','!=',True)]}" />
+					<field string="Supplier" name="partner_id" nolabel="1"
+						colspan="2"
+						on_change="onchange_partner_id(type, partner_id, date_invoice, payment_term, partner_bank_id, company_id, context)"
+						context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
+				</xpath>
+
+				<xpath expr="//notebook/page/group/field[@name='residual']"
+					position="after">
+					<field name="balance2" widget="monetary" string="Balance"
+						attrs="{'invisible':[('visible_bills','!=', True)]}" />
+					<field name="previous_balance" widget="monetary"
+						attrs="{'invisible':[('visible_bills','!=', True)]}" />
+					<field name="net_total" widget="monetary"
+						attrs="{'invisible':[('visible_bills','!=', True)]}" />
+				</xpath>
+
+
+				<xpath expr="//header/button[@name='invoice_open']" position="replace">
+					<button name="invoice_open" states="draft,proforma2" string="Validate"
+						class="oe_highlight" invisible="1"
+						groups="account.group_account_invoice,hiworth_construction.group_accounts_user,account.group_account_manager" />
+				</xpath>
+
+				<xpath expr="//notebook/page[@string='Other Info']" position="before">
+					<page string="Attachments">
+						<field name="attachment_ids" nolabel="1">
+							<tree editable="bottom">
+								<field name="parent_id" />
+								<field name="attachment_id" />
+								<field name="filename" readonly="True" string="File Name"
+									invisible="True" />
+								<field name="binary_field" readonly="True" filename="filename" />
+								<field name="name" string="Description" />
+								<field name="parent_id" />
+							</tree>
+
+						</field>
+					</page>
+				</xpath>
+
+				<xpath expr="//notebook/page/field/tree/field[@name='product_id']"
+					position="replace">
+					<field name="product_id"
+						on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, parent.task_related, parent.task_id,  context)" />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='quantity']"
+					position="before">
+					<field name="total_assigned_qty" readonly="True" />
+				</xpath>-->
+
+
+			</field>
+		</record>
+
+
+
+		<record id="invoice_supplier_cancel_form_inherit" model="ir.ui.view">
+			<field name="name">invoice.supplier.cancel.form.inherit</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id"
+				ref="account_cancel.invoice_supplier_cancel_form_inherit" />
+			<field name="arch" type="xml">
+				<xpath expr="//button[@name='invoice_cancel']" position="replace">
+					<button name="invoice_cancel" states="draft,proforma2,sale,open,approve"
+						string="Cancel Invoice" groups="account.group_account_invoice" />
+				</xpath>
+			</field>
+		</record>
+
+
+
+		<!-- <record model="ir.ui.view" id="invoice_follow_up">
+			<field name="name">invoice.followup.inherit</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="/field/form/sheet/notebook/page[3]" position="af">
+					  <page string="Bill Status Update">
+							<group >
+								<field name="status_line_ids" nolabel="1">
+
+									<tree editable="bottom">
+										<field name="date" />
+										<field name="bill_status" colspan="1"/>
+									</tree>
+
+								</field>
+							</group>
+						</page>
+				</xpath>
+			</field>
+		</record> -->
+		 <record id="purchase.purchase_form_action" model="ir.actions.act_window">
+            <field name="name">Purchase Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">tree,form,graph,calendar</field>
+            <field name="context">{}</field>
+            <field name="domain">[('state','not in',('draft','sent','bid'))]</field>
+            <field name="search_view_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation that will be converted into a purchase order.
+              </p><p>
+                Use this menu to search within your purchase orders by
+                references, supplier, products, etc. For each purchase order,
+                you can track the related discussion with the supplier, control
+                the products received and control the supplier invoices.
+              </p>
+            </field>
+        </record>
+
+		<record id="purchase_form_action_merged_po" model="ir.actions.act_window">
+            <field name="name">Merged - Purchase Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">tree,form,graph,calendar</field>
+            <field name="context">{}</field>
+            <field name="domain">[('merged_po','=',True)]</field>
+            <field name="search_view_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation that will be converted into a purchase order.
+              </p><p>
+                Use this menu to search within your purchase orders by
+                references, supplier, products, etc. For each purchase order,
+                you can track the related discussion with the supplier, control
+                the products received and control the supplier invoices.
+              </p>
+            </field>
+        </record>
+
+		 <menuitem name="Merged - Purchase Orders"
+            id="menu_merged_purchase"
+            parent="purchase.menu_procurement_management"
+            action= "purchase_form_action_merged_po"
+            sequence="14"/>
+
+		 <record id="purchase.view_purchase_order_group" model="ir.ui.view">
+            <field name="name">Merger Purchase Orders</field>
+            <field name="model">purchase.order.group</field>
+            <field name="arch" type="xml">
+               <form string="Merge orders">
+                    <group>
+                        <separator string="Are you sure you want to merge these orders?"/>
+                        <label string="
+Please note that: &#10; &#10;
+Orders will only be merged if: &#10;
+* Purchase Orders are in Order Placed mode &#10;
+* belong to the same supplier, &#10;
+same stock location, same pricelist,same GST Rate calculation and same currency lines. &#10; &#10;
+" colspan="4"/>
+                    </group>
+
+                    <footer>
+                        <button name="merge_orders" string="Merge orders" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+<!--		<record model="ir.ui.view" id="view_vendor_receipt_dialog_form_changed">-->
+<!--			<field name="name">account.voucher.receipt.dialog.form.changed-->
+<!--			</field>-->
+<!--			<field name="model">account.voucher</field>-->
+<!--			<field name="priority">30</field>-->
+<!--			<field name="inherit_id" ref="account_voucher.view_vendor_receipt_dialog_form" />-->
+<!--			<field name="arch" type="xml">-->
+<!--				<xpath expr="//group/group/field[@name='partner_id']"-->
+<!--					position="before">-->
+<!--					<field name="description" required="True" />-->
+<!--				</xpath>-->
+
+<!--			</field>-->
+<!--		</record>-->
+
+
+<!--		<record model="ir.ui.view" id="view_voucher_tree_changed">-->
+<!--			<field name="name">account.voucher.tree.changed</field>-->
+<!--			<field name="model">account.voucher</field>-->
+<!--			<field name="inherit_id" ref="account_voucher.view_voucher_tree" />-->
+<!--			<field name="arch" type="xml">-->
+
+<!--				<xpath expr="//field[@name='date']" position="before">-->
+<!--					<field name="description" />-->
+<!--				</xpath>-->
+
+<!--			</field>-->
+<!--		</record>-->
+
+<!--		<record id="product_template_form_view_cost_update" model="ir.ui.view">-->
+<!--			<field name="name">product.template.common.form.cost.update</field>-->
+<!--			<field name="model">product.template</field>-->
+<!--			&lt;!&ndash; <field name="mode">primary</field> &ndash;&gt;-->
+<!--			<field name="inherit_id" ref="product.product_template_form_view" />-->
+<!--			<field name="arch" type="xml">-->
+
+<!--				<xpath expr="//notebook/page/group/group/field[@name='standard_price']"-->
+<!--					position="after">-->
+<!--					<field name="old_price" string="Previous Cost Price" />-->
+<!--					<div colspan="4">-->
+
+<!--						<field name="show_cost_variation" invisible="True" />-->
+<!--						<button name="show_cost_variation2" type="object"-->
+<!--							attrs="{'invisible':[('show_cost_variation','=',True)]}" string="Show Cost Variation"-->
+<!--							class="oe_inline" />-->
+<!--						<button name="hide_cost_variation" type="object"-->
+<!--							attrs="{'invisible':[('show_cost_variation','=',False)]}" string="Hide Cost Variation"-->
+<!--							class="oe_inline" />-->
+<!--						&lt;!&ndash; <field name="property_stock_inventory" /> &ndash;&gt;-->
+<!--						<field name="cost_table_id" nolabel="1" readonly="1"-->
+<!--							attrs="{'invisible':[('show_cost_variation','!=',True)]}">-->
+<!--							<tree editable="top">-->
+<!--								<field name="date" />-->
+<!--								<field name="location_id" />-->
+<!--								<field name="product_id" invisible="True" />-->
+<!--								<field name="qty"/>-->
+<!--								<field name="purchase_id" />-->
+<!--								<field name="standard_price" />-->
+<!--								&lt;!&ndash; <field name="date" /> &ndash;&gt;-->
+<!--							</tree>-->
+<!--						</field>-->
+<!--						&lt;!&ndash; <button name="compute_total_in_qty" type="object" string="Total-->
+<!--							in"/> &ndash;&gt;-->
+<!--					</div>-->
+<!--				</xpath>-->
+
+<!--				&lt;!&ndash; <xpath expr="//div/div/div/label[@for='sale_ok']" position="after">-->
+<!--					<newline /> <field name="process_ok" /> <label for="process_ok" /> </xpath> &ndash;&gt;-->
+<!--				<xpath expr="//notebook/page/group/group/field[@name='list_price']"-->
+<!--					position="before">-->
+<!--					<field name="allocation_no" />-->
+<!--					<field name="battery" />-->
+<!--					<field name="tyre" />-->
+<!--					<field name="tyre_retread" />-->
+<!--						<field name="gps" />-->
+<!--				</xpath>-->
+<!--				<xpath expr="//page/group/group/field[@name='supplier_taxes_id']"-->
+<!--					position="attributes">-->
+<!--					<attribute name="attrs">{'invisible': 1}</attribute>-->
+<!--				</xpath>-->
+
+<!--			</field>-->
+<!--		</record>-->
+
+<!--		<record id="view_template_property_form_changed" model="ir.ui.view">-->
+<!--			<field name="name">product.template.stock.property.form.inherit.changed-->
+<!--			</field>-->
+<!--			<field name="model">product.template</field>-->
+<!--			<field name="inherit_id" ref="stock.view_template_property_form" />-->
+<!--			<field name="arch" type="xml">-->
+<!--				<xpath expr="//group/group/field[@name='virtual_available']"-->
+<!--					position="after">-->
+<!--					<field name="qty_in" />-->
+<!--				</xpath>-->
+<!--				<xpath expr="//group/group/div/button[@string='⇒ Update']"-->
+<!--					position="replace">-->
+<!--					<button name="%(stock.action_view_change_product_quantity)d"-->
+<!--						string="⇒ Update" type="action" class="oe_link" groups="stock.group_stock_manager" />-->
+<!--				</xpath>-->
+<!--				<xpath expr="//group/group/div/button[@string='⇒ Request Procurement']"-->
+<!--					position="replace">-->
+<!--					<button string="⇒ Request Procurement" name="%(stock.act_make_procurement)d"-->
+<!--						type="action" class="oe_link" groups="stock.group_stock_manager" />-->
+<!--				</xpath>-->
+<!--			</field>-->
+<!--		</record>-->
+
+
+
+		<record id="view_stock_history_report_tree_with_tax" model="ir.ui.view">
+			<field name="name">Stock Value At Date with tax</field>
+			<field name="model">stock.history</field>
+			<field name="inherit_id" ref="stock_account.view_stock_history_report_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='inventory_value']" position="before">
+					<field name="uom_id" />
+				</xpath>
+			</field>
+		</record>
+
+
+		<record model="ir.ui.view" id="stock_account.view_stock_history_report_graph">
+		    <field name="name">	stock.history.value.graph</field>
+		    <field name="model">stock.history</field>
+		    <field name="arch" type="xml">
+		        <graph string="Stock Value At Date" type="pivot">
+	                <field name="product_id" type="row"/>
+	               <!--  <field name="inventory_value" type="measure"/> -->
+	                <field name="quantity" type="measure"/>
+	                <field name="location_id" type="col"/>
+            </graph>
+		    </field>
+		</record>
+
+		   <record id="stock.action_inventory_form" model="ir.actions.act_window">
+            <field name="name">Op:Bal:Material/Inventory Entry</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.inventory</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="stock.view_inventory_tree"/>
+            <field name="search_view_id" ref="stock.view_inventory_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start an inventory.
+              </p><p>
+                Periodical Inventories are used to count the number of products
+                available per location. You can use it once a year when you do
+                the general inventory or whenever you need it, to adapt the
+                current inventory level of a product.
+              </p>
+            </field>
+        </record>
+		 <record id="stock_account.action_history_tree" model="ir.actions.act_window">
+            <field name="name">Location Wise Inventory Value</field>
+            <field name="res_model">stock.history</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d %H:%M:%S'))]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="context">{'search_default_group_by_product': True, 'search_default_group_by_location': True}</field>
+    </record>
+
+
+		<record id="res_partner_view_for_attachment" model="ir.ui.view">
+			<field name="name">res.partner.view.attachment</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//label[@string='Address']" position="before">
+
+				</xpath>
+				<xpath expr="//field[@name='website']" position="replace">
+					<field name="phone" string="Tel"/>
+					<field name="fax"/>
+
+					<field name="sp_code" string="Vendor ID" attrs="{'invisible':[('supplier','!=',True)]}" />
+<!--					<field name="tin_no" attrs="{'invisible':[('supplier','!=',True)]}" />-->
+					<field name="kara" attrs="{'invisible':[('customer','!=',True)]}" />
+					<field name="desam" attrs="{'invisible':[('customer','!=',True)]}" />
+<!--					<field name="village" attrs="{'invisible':[('customer','!=',True)]}" />-->
+<!--					<field name="Municipality" attrs="{'invisible':[('customer','!=',True)]}" />-->
+<!--					<field name="taluk" attrs="{'invisible':[('customer','!=',True)]}" />-->
+					<field name="account_receivable" invisible="1"/>
+					<field name="account_payable"  invisible="1"/>
+					<!-- <field name="dist" attrs="{'invisible':[('customer','!=',True)]}"
+						/> -->
+				</xpath>
+
+				<xpath expr="//field[@name='function']" position="replace">
+
+				</xpath>
+				<xpath expr="//field[@name='title']" position="replace">
+
+				</xpath>
+				<xpath expr="//field[@name='email']" position="after">
+
+					<field name="tds_applicable" invisible="1"/>
+<!--					<field name="pan_no" attrs="{'required':[('tds_applicable','=',True)]}" invisible="1"/>-->
+				</xpath>
+				<xpath expr="//field[@name='email']" position="attributes">
+					<field name="required">0</field>
+				</xpath>
+				<xpath expr="//field[@name='street2']" position="after">
+					<field name="post" placeholder="Post" />
+				</xpath>
+				<xpath expr="//field[@name='city']" position="replace">
+					<field name="city" placeholder="City" style="width: 40%%" />
+				</xpath>
+				<xpath expr="//field[@name='street']" position="replace">
+					<field name="street" placeholder="House no., House name" />
+				</xpath>
+				<xpath expr="//field[@name='street2']" position="replace">
+					<field name="street2" placeholder="Place" />
+				</xpath>
+			</field>
+		</record>
+
+		<!-- ################  search view ######################### -->
+
+		<record id="contractors_search_view" model="ir.ui.view">
+			<field name="name">contractors.search.view</field>
+			<field name="model">res.partner</field>
+			<field name="arch" type="xml">
+				<search string="Contractors">
+					<field name="name" />
+					<field name="parent_id" />
+					<!-- <field name="category_id" /> -->
+					<group expand="0" string="group by">
+						<!-- <filter name="groupby_name" string="Category"
+							context="{'group_by':'name'}"/> -->
+						<filter name="groupby_partner" context="{'group_by': 'parent_id'}" string="partner"  />
+						<!-- <filter name="groupby_category" context="{'group_by': 'category_id'}" string="category"  /> -->
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="res_partner_view_for_attachment_tree" model="ir.ui.view">
+			<field name="name">res.partner.view.attachment.tree</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='email']" position="after">
+					<field name="stage_id" />
+					<field name="account_receivable" invisible="1" />
+					<field name="account_payable" invisible="1" />
+				</xpath>
+
+			</field>
+		</record>
+
+		<record
+			id="view_partner_form_contractor"
+			model="ir.ui.view">
+			<field name="name">res.partner.form.contractor</field>
+			<field name="model">res.partner</field>
+			<field eval="1" name="priority" />
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//notebook/page/group/group/field[@name='supplier']"
+					position="after">
+					<field name="contractor" string="Sub Contractor"/>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="view_res_partner_filter" model="ir.ui.view">
+			<field name="name">res.partner.select.contractor</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_res_partner_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="//filter[@string='Suppliers']" position="after">
+					<filter string="Contractors" name="contractor" domain="[('contractor','=',1)]"
+						help="Contractor Partners" />
+				</xpath>
+			</field>
+		</record>
+
+<!--		<record id="project_stages_view_form" model="ir.ui.view">-->
+<!--			<field name="name">project.stages.view.form</field>-->
+<!--			<field name="model">project.stages.line</field>-->
+<!--			<field name="arch" type="xml">-->
+<!--				<form string="Customer Status">-->
+<!--					<sheet>-->
+<!--						<group>-->
+<!--							<field name="seq" reqiured="True" />-->
+<!--							<field name="name" reqiured="True" />-->
+<!--						</group>-->
+<!--					</sheet>-->
+<!--				</form>-->
+<!--			</field>-->
+<!--		</record>-->
+
+<!--		<record id="project_stages_view_tree2" model="ir.ui.view">-->
+<!--			<field name="name">project.stages.view.tree</field>-->
+<!--			<field name="model">project.stages.line</field>-->
+<!--			<field name="arch" type="xml">-->
+<!--				<tree string="Customer Status">-->
+<!--					<field name="seq" />-->
+<!--					<field name="name" />-->
+
+<!--				</tree>-->
+<!--			</field>-->
+<!--		</record>-->
+
+<!--		<record id="action_project_stages_view_tree" model="ir.actions.act_window">-->
+<!--			<field name="name">Status</field>-->
+<!--			<field name="res_model">project.stages.line</field>-->
+<!--			<field name="view_type">form</field>-->
+<!--			<field name="view_mode">tree,form</field>-->
+<!--			<field name="view_id" ref="project_stages_view_tree2" />-->
+<!--		</record>-->
+
+		<!-- <record id="view_partner_simple_form_status_included" model="ir.ui.view">
+			<field name="name">res.partner.simplified.form.status_included</field> <field
+			name="model">res.partner</field> <field name="inherit_id" ref="base.view_partner_simple_form"
+			/> <field name="arch" type="xml"> <xpath expr="//div/h1/field[@name='name']"
+			position="after"> <field name="stage_id" default_focus="1" placeholder="Status"
+			/> </xpath> </field> </record> -->
+
+
+		<record model="ir.ui.view" id="view_picking_form_inherited">
+			<field name="name">stock.picking.form</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_form" />
+			<field name="arch" type="xml">
+				<header position="replace">
+					<header>
+						<button name="action_confirm" string="Request" type="object"
+							class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"
+							groups="purchase.group_purchase_manager,hiworth_construction.group_warehouse_user" />
+						<button name="approve_picking" states="approve" string="Approve"
+							type="object" class="oe_highlight" groups="purchase.group_purchase_manager" />
+						<button name="action_assign" states="confirmed" string="Check Availability"
+							type="object" class="oe_highlight"
+							groups="purchase.group_purchase_manager,hiworth_construction.group_warehouse_user" />
+						<button name="rereserve_pick" string="Recheck Availability"
+							type="object" class="oe_highlight"
+							groups="purchase.group_purchase_manager,hiworth_construction.group_warehouse_user"
+							attrs="{'invisible': ['|', ('state', 'not in', ('waiting', 'partially_available')), ('pack_operation_exist','=',True)]}" />
+						<button name="force_assign" states="confirmed,waiting,partially_available"
+							string="Force Availability" type="object"
+							groups="purchase.group_purchase_manager,hiworth_construction.group_warehouse_user" />
+						<button name="do_enter_transfer_details" states="assigned,partially_available"
+							string="Transfer" type="object" class="oe_highlight"
+							groups="purchase.group_purchase_manager,hiworth_construction.group_warehouse_user" />
+						<button name="do_print_picking" string="Print Picking List"
+							groups="purchase.group_purchase_manager,hiworth_construction.group_warehouse_user"
+							type="object"
+							attrs="{'invisible': ['|', ('picking_type_code', '=', 'outgoing'), ('state', '!=', 'assigned')]}" />
+						<button name="%(stock.act_stock_return_picking)d" string="Reverse Transfer"
+							states="done" type="action"
+							groups="purchase.group_purchase_manager,hiworth_construction.group_warehouse_user" />
+						<button name="action_cancel"
+							attrs="{'invisible': [('state', 'not in', ['assigned', 'confirmed','partially_available','draft','waiting'])]}"
+							string="Cancel Transfer" type="object"
+							groups="purchase.group_purchase_manager,hiworth_construction.group_warehouse_user" />
+						<button name="do_unreserve" string="Unreserve" type="object"
+							attrs="{'invisible': [('quant_reserved_exist', '=', False)]}"
+							groups="purchase.group_purchase_manager,hiworth_construction.group_warehouse_user" />
+						<button name="set_to_draft" string="Set To Draft"
+							groups="purchase.group_purchase_manager,hiworth_construction.group_warehouse_user"
+							type="object" attrs="{'invisible': [('state', '!=', 'cancel')]}" />
+						<field name="state" widget="statusbar"
+							statusbar_visible="draft,confirmed,partially_available,approve,assigned,done,returned"
+							statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}' />
+					</header>
+				</header>
+				<xpath expr="//notebook/page/field[@name='note']" position="before">
+					<group class="oe_subtotal_footer oe_right">
+						<field name="inventory_value" />
+					</group>
+				</xpath>
+				<xpath expr="//notebook/page/group/group/field[@name='picking_type_id']"
+					position="replace">
+				</xpath>
+				<xpath expr="//group/group/field[@name='partner_id']"
+					position="after">
+					<field name="picking_type_id" options='{"no_create": 1, "no_create_edit": 1}' invisible="1"/>
+					<field name="is_task_related" invisible="True" />
+					<field name="task_id" invisible="True" />
+					<field name="request_user" attrs="{'invisible': [('is_eng_request', '!=', True)]}"
+						readonly="1"/>
+				</xpath>
+				<xpath expr="//group/group/field[@name='origin']" position="after">
+					<button name="open_purchase_order" type="object" icon="gtk-go-forward"
+						class="oe_inline" colspan="1" />
+					<newline />
+					<field name="is_eng_request" invisible="True" />
+					<field name="is_other_move" invisible="1" />
+					<field name="is_stock_reciept" invisible="True" />
+					<field name="is_purchase" invisible="1"/>
+
+				</xpath>
+				<xpath expr="//div[@class='oe_chatter']" position="replace">
+				</xpath>
+				<field name="partner_id" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</field>
+				<field name="date_done" position="replace">
+				</field>
+				<field name="partner_id" position="after">
+					<field name="source_location_id"  attrs="{'required': [('is_purchase', '!=', True)]}"/>
+					<field name="date_done" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+					<field name="journal_id" attrs="{'required': [('is_purchase', '!=', True)], 'invisible': [('is_purchase', '=', True)]}"/>
+					<field name="account_id"  attrs="{'required': [('is_purchase', '!=', True)], 'invisible': [('is_purchase', '=', True)]}"/>
+					<field name="vehicle_id"/>
+				</field>
+				<field name="date" position="attributes">
+					<attribute name="string">Date</attribute>
+				</field>
+
+				<xpath expr="//sheet/notebook/page[2]" position="after">
+					<page string="Returned Products" name="returned_products" attrs="{'invisible':[('state','!=',['returned','partially_returned'])]}">
+						<field name="returned_move_ids">
+							<tree>
+								<field name="product_id"/>
+								<field name="name"/>
+								<field name="available_qty"/>
+								<field name="product_uom_qty"/>
+								<field name="returned_qty"/>
+								<field name="price_unit"/>
+								<field name="inventory_value"/>
+								<field name="product_uom"/>
+								<field name="location_dest_id"/>
+								<field name="state"/>
+							</tree>
+						</field>
+
+					</page>
+
+				</xpath>
+
+
+
+			</field>
+		</record>
+
+		<record id="vpicktree_with_inventory_value" model="ir.ui.view">
+			<field name="name">stock.picking.tree.inventory.value</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.vpicktree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='state']" position="before">
+					<field name="inventory_value" />
+				</xpath>
+			</field>
+		</record>
+
+
+		<record id="view_picking_internal_search_changed" model="ir.ui.view">
+			<field name="name">stock.picking.internal.search.changed</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_internal_search" />
+			<field name="arch" type="xml">
+				<xpath expr="//filter[@name='backorder']" position="after">
+					<filter name="task_related" string="Task Related"
+						domain="[('is_task_related','=', True)]" />
+					<filter name="other_moves" string="Other Moves"
+						domain="[('is_task_related','=', False)]" />
+				</xpath>
+
+				<xpath expr="//group" position="inside">
+
+					<filter string="Invoice Control" domain="[]" context="{'group_by':'invoice_state'}"/>
+					<filter string="Inventory Value" domain="[]" context="{'group_by':'inventory_value'}"/>
+					<filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+
+				</xpath>
+
+
+			</field>
+		</record>
+
+
+
+		<record model="ir.actions.act_window" id="move_stock_form_view">
+			<field name="name">Move new stock</field>
+			<field name="res_model">stock.move</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="stock.view_move_form" />
+			<field name="target">new</field>
+		</record>
+
+		<!-- 'stock.move' model used for one2many field on 'Material request' -->
+		<record model="ir.ui.view" id="view_move_tree_inherited">
+			<field name="name">stock.move.tree.inherited</field>
+			<field name="model">stock.move</field>
+			<field name="inherit_id" ref="stock.view_move_picking_tree"/>
+			<field name="arch" type="xml">
+				<tree colors="grey:scrapped == True" string="Stock Moves"
+					position="replace">
+					<tree colors="grey:scrapped == True" string="Stock Moves"
+						editable="bottom">
+						<!-- <field name="line_no" /> -->
+						<field name="is_task_related" invisible="True" />
+						<field name="project_id"
+							attrs="{'readonly': [('is_task_related', '!=', True)]}" options='{"no_create": 1, "no_create_edit": 1}' invisible="1"/>
+						<field name="task_id"
+							attrs="{'readonly': [('is_task_related', '!=', True)]}" options='{"no_create": 1, "no_create_edit": 1}' invisible="1"/>
+						<field name="product_id" options="{'no_quick_create': True, 'no_create_edit' : True}" />
+
+						<field name="is_purchase" invisible="1"/>
+						<!-- <field name="asset_account_id"  attrs="{'required': [('is_purchase', '!=', True)]}"/> -->
+						<field name="name" />
+						<field name="location_id" options="{'notes':1}" invisible="1"/>
+						<field name="available_qty" />
+						<field name="product_uom_qty" />
+						<field name="is_request_more_btn_visible" invisible="1" />
+						<button name="request_more_task_qty" string="Request for more quantity"
+							type="object" icon="gtk-go-forward"
+							attrs="{'invisible':[('is_request_more_btn_visible','=', False)]}" />
+						<field name="price_unit" />
+						<field name="inventory_value" />
+						<field name="product_uom" string="Unit of Measure" groups="product.group_uom" />
+						<field name="product_uos_qty" groups="product.group_uos"
+							on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" invisible="1"/>
+						<field name="product_uos" groups="product.group_uos" invisible="1"/>
+						<!-- <field name="location_id" groups="stock.group_locations" options='{"no_create": 1, "no_create_edit": 1}' required="False" invisible="1"/> -->
+						<field name="picking_id" invisible="1" />
+						<field name="create_date" invisible="1" />
+						<field name="date_expected" invisible="1" />
+						<button name="%(stock.move_scrap)d" string="Scrap Products"
+							type="action" icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+							states="draft,waiting,confirmed,assigned" groups="stock.group_stock_user" />
+						<field name="scrapped" invisible="1" />
+						<field name="availability" invisible="1" />
+						<field name="reserved_availability" invisible="1" />
+						<field name="location_dest_id" groups="stock.group_locations" options='{"no_create": 1, "no_create_edit": 1}' domain="[('usage','=','internal')]"/>
+						<field name="account_id" attrs="{'required': [('is_purchase', '!=', True)]}" string="Expense Account" invisible="1"/>
+						<field name="remaining_qty" invisible="1" />
+						<field name="string_availability_info" invisible="1" />
+						<field name="state" />
+						<button name="generate_prchase_order" string="Stock product"
+							type="object" icon="gtk-go-forward" states="confirmed" />
+						<!-- ontext="{'default_product_id': product_id, 'default_product_uom_qty':
+							product_uom_qty}" -->
+					</tree>
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_move_tree_hiworth3" model="ir.ui.view">
+			<field name="name">stock.move.tree.hiworth3</field>
+			<field name="model">stock.move</field>
+			<field eval="8" name="priority" />
+			<field name="inherit_id" ref="stock.view_move_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position='attributes'>
+					<attribute name="invisible">1</attribute>
+				</xpath>
+				<xpath expr="//field[@name='date_expected']" position='replace'>
+
+				</xpath>
+
+				<xpath expr="//field[@name='name']" position='after'>
+					<field name="category_id"/>
+					<field name="partner_stmt_id" invisible="1"/>
+					<field name="mach_collection_id" invisible="1"/>
+					<field name="mach_allocation_id" invisible="1"/>
+					<field name="fuel_transfer_id" invisible="1"/>
+				</xpath>
+				<xpath expr='//tree[@string="Moves"]' position='attributes'>
+					<attribute name="create">false</attribute>
+					<attribute name="edit">false</attribute>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="view_move_form_hiworth3" model="ir.ui.view">
+			<field name="name">stock.move.form.hiworth3</field>
+			<field name="model">stock.move</field>
+			<field eval="1" name="priority" />
+			<field name="inherit_id" ref="stock.view_move_form" />
+			<field name="arch" type="xml">
+				<xpath expr='//form[@string="Stock Moves"]' position='attributes'>
+					<attribute name="create">false</attribute>
+					<attribute name="edit">false</attribute>
+				</xpath>
+			</field>
+		</record>
+
+
+		<record id="estimate_quantity_extra_request_tree" model="ir.ui.view">
+			<field name="name">estimate.quantity.extra.request.tree</field>
+			<field name="model">estimate.quantity.extra.request</field>
+			<field name="arch" type="xml">
+				<tree colors="grey:state == 'rejected';green:state == 'approved'">
+					<field name="task_id" />
+					<field name="product_id" />
+					<field name="quantity" />
+					<field name="date" />
+					<field name="state" string="Status" />
+					<!-- <button name="generate_prchase_order" string="Approve Request"
+						type="object" icon="gtk-go-forward" states="confirmed" groups="stock.group_stock_user"
+						/> -->
+				</tree>
+			</field>
+		</record>
+
+
+		<record model="ir.ui.view" id="estimate_quantity_extra_request_popup">
+			<field name="name">estimate.quantity.extra.request.popup</field>
+			<field name="model">estimate.quantity.extra.request</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<group>
+							<field name="task_id" />
+							<field name="product_id" />
+						</group>
+						<group>
+							<field name="quantity" />
+							<field name="date" />
+						</group>
+					</group>
+					<footer>
+						<button name="write" type="object" string="Send request" />
+						or
+						<button name="cancel" string="Cancel" special="cancel"
+							class="oe_link" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+
+		<record model="ir.ui.view" id="estimate_quantity_extra_request_form">
+			<field name="name">Approve request for extra resources</field>
+			<field name="model">estimate.quantity.extra.request</field>
+			<field name="priority" eval="15" />
+			<field name="arch" type="xml">
+				<form string="Extra request">
+					<header>
+						<button name="extra_request_approve" type="object" string="Approve"
+							help="Approve the extra request" class="oe_highlight" states="draft" />
+						<button name="extra_request_reject" type="object" string="Reject"
+							help="Reject the extra request" class="oe_highlight" states="draft" />
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="task_id" />
+								<field name="product_id" />
+							</group>
+							<group>
+								<field name="quantity" />
+								<field name="date" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="product_template_kanban_view" model="ir.ui.view">
+			<field name="name">Product.template.product.kanban</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_kanban_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='lst_price']" position="replace">
+					<field name="standard_price" />
+					<field name="allocation_no" />
+
+				</xpath>
+				<xpath expr="//templates/t/div/div/ul/li/field[@name='lst_price']"
+					position="replace">
+					<field name="standard_price" />
+					<!-- <field name="allocation_no" /> -->
+				</xpath>
+				<xpath expr="//templates/t/div/div/ul[1]" position="after">
+					<ul>
+						<li>
+							Box No:
+							<field name="allocation_no"></field>
+						</li>
+					</ul>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="product_template_tree_view_changed" model="ir.ui.view">
+			<field name="name">product.template.product.tree.changed</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_tree_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='uom_id']" position="replace">
+					<field name="uom_id" />
+				</xpath>
+				<xpath expr="//field[@name='state']" position="replace">
+					<field name="state" invisible="1" />
+				</xpath>
+
+
+			</field>
+		</record>
+
+		<record id="view_stock_product_template_tree_changed" model="ir.ui.view">
+			<field name="name">product.template.stock.tree.inherit.changed
+			</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="stock.view_stock_product_template_tree" />
+			<field name="arch" type="xml">
+
+				<field name="virtual_available" position="after">
+					<field name="qty_in" />
+					<field name="standard_price" string="Unit Price" />
+					<field name="inventory_value" />
+				</field>
+				<field name="type" position="after">
+					<field name="model_name" />
+					<field name="allocation_no" />
+				</field>
+
+			</field>
+		</record>
+
+
+		<record id="view_inventory_form_changed_for_warehouse_user_stock_account"
+			model="ir.ui.view">
+			<field name="name">stock.inventory.form</field>
+			<field name="model">stock.inventory</field>
+			<field name="inherit_id" ref="stock_account.view_inventory_form_inherit" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//field[@name='period_id']"
+					position="replace">
+					<field name="category_id"/>
+					</xpath>
+
+
+			</field>
+		</record>
+
+		<record id="view_inventory_form_changed_for_warehouse_user"
+			model="ir.ui.view">
+			<field name="name">stock.inventory.form</field>
+			<field name="model">stock.inventory</field>
+			<field name="inherit_id" ref="stock.view_inventory_form" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//notebook/page[1]/field[@name='line_ids']"
+					position="attributes">
+					<attribute name="context">{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id,
+						'default_category_id':category_id}</attribute>
+					</xpath>
+
+
+
+
+			</field>
+		</record>
+
+
+<!--		<record model="ir.ui.view" id="view_document_directory_form_hiworth">-->
+<!--			<field name="name">document.directory</field>-->
+<!--			<field name="model">document.directory</field>-->
+<!--			<field name="inherit_id" ref="document.view_document_directory_form" />-->
+<!--			<field name="arch" type="xml">-->
+<!--				<xpath expr="//group/field[@name='name']" position="after">-->
+<!--					<field name="is_parent" />-->
+<!--				</xpath>-->
+
+<!--				<xpath expr="//notebook/page[@string='Definition']" position="before">-->
+<!--					<page string="Sub Folders">-->
+<!--						&lt;!&ndash; attrs="{'invisible':[('is_parent','!=', True)]}" &ndash;&gt;-->
+<!--						<field name="child_ids" nolabel="1" context="{'default_parent_id':id}">-->
+<!--							&lt;!&ndash; <tree editable="bottom"> <field name="name" /> <field name="filename"-->
+<!--								/> <field name="binary_field" filename="filename" /> <field name="project_id"-->
+<!--								/> </tree> &ndash;&gt;-->
+<!--						</field>-->
+<!--						<group string="Attachments">-->
+<!--							<field name="pro_attachment_ids" nolabel="1">-->
+<!--								<tree editable="bottom">-->
+<!--									<field name="name" />-->
+<!--									<field name="filename" />-->
+<!--									<field name="binary_field" filename="filename" />-->
+<!--									<field name="project_id" />-->
+<!--								</tree>-->
+<!--							</field>-->
+<!--						</group>-->
+<!--					</page>-->
+<!--					&lt;!&ndash; <page string="Attachments"> <field name="pro_attachment_ids" nolabel="1">-->
+<!--						<tree editable="bottom"> <field name="name" /> <field name="filename" />-->
+<!--						<field name="binary_field" filename="filename" /> <field name="project_id"-->
+<!--						/> </tree> </field> </page> &ndash;&gt;-->
+<!--				</xpath>-->
+<!--				<xpath expr="//notebook/page/field[@name='group_ids']"-->
+<!--					position="replace">-->
+<!--					<field name="group_ids" colspan="4" nolabel="1"-->
+<!--						domain="[('company_group','=', True)]" />-->
+<!--				</xpath>-->
+
+<!--			</field>-->
+<!--		</record>-->
+
+<!--		<record model="ir.ui.view" id="view_document_directory_tree_hiworth">-->
+<!--			<field name="name">document.directory.hiworth</field>-->
+<!--			<field name="model">document.directory</field>-->
+<!--			<field name="field_parent">child_ids</field>-->
+<!--			<field name="inherit_id" ref="document.view_document_directory_tree" />-->
+<!--			<field name="arch" type="xml">-->
+<!--				<xpath expr="//field[@name='type']" position="replace">-->
+<!--				</xpath>-->
+<!--			</field>-->
+<!--		</record>-->
+
+<!--		<record id="view_document_directory_filter_grouped" model="ir.ui.view">-->
+<!--			<field name="name">Search View: Document Directory Grouped</field>-->
+<!--			<field name="model">document.directory</field>-->
+<!--			<field name="inherit_id" ref="document.view_document_directory_filter" />-->
+<!--			<field name="arch" type="xml">-->
+<!--				<xpath expr="//filter[@string='Resources']" position="after">-->
+<!--					<filter string="Parents" icon="terp-personal" name="group_is_parent"-->
+<!--						domain="[('is_parent','=', True)]" />-->
+<!--				</xpath>-->
+<!--			</field>-->
+<!--		</record>-->
+
+<!--		<record model="ir.actions.act_window" id="document.action_document_directory_form">-->
+<!--			<field name="name">Directories</field>-->
+<!--			<field name="type">ir.actions.act_window</field>-->
+<!--			<field name="res_model">document.directory</field>-->
+<!--			<field name="view_type">form</field>-->
+<!--			<field name="view_mode">tree,form</field>-->
+<!--			<field name="context">{"search_default_group_is_parent":1}</field>-->
+<!--			<field name="search_view_id" ref="view_document_directory_filter_grouped" />-->
+<!--		</record>-->
+
+
+<!--		<record id="project_task_estimation_tree" model="ir.ui.view">-->
+<!--			<field name="name">project.task.estimation.tree</field>-->
+<!--			<field name="model">project.task.estimation</field>-->
+<!--			<field name="arch" type="xml">-->
+<!--				<tree editable="bottom">-->
+<!--					<field name="project_id" />-->
+<!--					<field name="task_id" />-->
+<!--					<field name="pro_id" />-->
+<!--					<field name="name" />-->
+<!--					<field name="qty" />-->
+<!--					<field name="uom" />-->
+<!--					<field name="unit_price" />-->
+<!--					<field name="estimated_cost_sum" />-->
+<!--				</tree>-->
+<!--			</field>-->
+<!--		</record>-->
+
+<!--		<record id="project_task_estimation_search" model="ir.ui.view">-->
+<!--			<field name="name">project.task.estimation.search</field>-->
+<!--			<field name="model">project.task.estimation</field>-->
+<!--			<field name="arch" type="xml">-->
+<!--				<search>-->
+<!--					<field name="project_id" />-->
+<!--					<field name="task_id" />-->
+<!--					<field name="pro_id" />-->
+<!--					<field name="name" />-->
+<!--					<group expand="0" string="Group By">-->
+<!--						&lt;!&ndash; <filter string="Project" icon="terp-personal" domain="[]" context="{'group_by':'project_id'}"/> &ndash;&gt;-->
+<!--						<filter string="Task" icon="terp-personal" domain="[]"-->
+<!--							context="{'group_by':'task_id'}" />-->
+<!--					</group>-->
+<!--				</search>-->
+<!--			</field>-->
+<!--		</record>-->
+
+
+<!--		<record model="ir.actions.act_window" id="action_project_task_estimation2">-->
+<!--			<field name="name">Tasks</field>-->
+<!--			<field name="res_model">project.task.estimation</field>-->
+<!--			<field name="view_type">form</field>-->
+<!--			<field name="view_mode">tree</field>-->
+<!--			<field name="view_id" ref="project_task_estimation_tree" />-->
+<!--			&lt;!&ndash; <field name="target">new</field> &ndash;&gt;-->
+<!--		</record>-->
+
+
+		<record id="view_groups_form_hiworth" model="ir.ui.view">
+			<field name="name">res.groups.form.hiworth</field>
+			<field name="model">res.groups</field>
+			<field name="inherit_id" ref="base.view_groups_form" />
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="company_group" />
+				</field>
+			</field>
+		</record>
+
+
+
+		 <record id="product_category_form_view_hiworth2" model="ir.ui.view">
+			<field name="name">product.category.form.hiworth</field>
+			<field name="model">product.category</field>
+			 <field name="priority" eval="1"/>
+			<field name="arch" type="xml">
+				<form string="Product Categories">
+					<sheet>
+						<div class="oe_title">
+							<label for="name" class="oe_edit_only"/>
+							<h1>
+								<field name="name"/>
+							</h1>
+						</div>
+						<group>
+							<group name="parent" col="4">
+								<field name="parent_id"/>
+								<field name="type"/>
+							</group>
+						</group>
+						<group>
+							<group name="stock_account" >
+								<field name="stock_account_id" string="Defualt Purchase Account"/>
+							</group>
+							<group >
+							</group>
+						</group>
+
+						 <group string="Logistics" colspan="2">
+						<field name="route_ids" widget="many2many_tags"/>
+						<div class="oe_inline" colspan="2">
+							<p attrs="{'invisible':[('parent_id','=',False)]}">
+							The following routes will apply to the products in this category taking into account parent categories:
+							<field name="total_route_ids" nolabel="1" widget="many2many_tags"/>
+							</p>
+						</div>
+						<field name="removal_strategy_id" options="{'no_create': True}"/>
+					</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="product_category_tree_view_hiworth2" model="ir.ui.view">
+			<field name="name">product.category.tree.hiworth</field>
+			<field name="model">product.category</field>
+			<field name="arch" type="xml">
+				<tree string="Product Categories">
+					<field name="name"/>
+					<field name="stock_account_id"/>
+				</tree>
+			</field>
+		</record>
+
+
+
+		<record id="action_product_category_hiworth" model="ir.actions.act_window">
+			<field name="name">Product Category</field>
+			<field name="res_model">product.category</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<!-- <field name="domain">[["type", "!=", 'view']]</field> -->
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		 <menuitem id="stock.menu_stock_inventory_control"
+				   name="Inventory Control"
+				   parent="stock.menu_stock_root"
+				   sequence="2"/>
+
+		<menuitem action="stock_account.action_history_tree"
+            id="stock.menu_action_history_tree"
+				  string="Location Wise Inventory Value"
+            parent="stock.menu_stock_inventory_control"
+            groups="stock.group_locations"
+            sequence="2"/>
+
+
+		 <menuitem id="stock.menu_traceability"
+				   name="Materials Control"
+				   parent="stock.menu_stock_root"
+            sequence="3"/>
+
+
+		<menuitem action="stock.action_move_form2"
+				  id="stock.menu_action_move_form2"
+				  parent="stock.menu_traceability"
+				  sequence="3"
+				  string="Material/s stock move history"
+				  groups="stock.group_locations"/>
+
+	  <record id="stock.action_move_form2" model="ir.actions.act_window">
+            <field name="name">Material/s stock move history</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="stock.view_move_tree"/>
+            <field name="search_view_id" ref="stock.view_move_search"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a stock movement.
+              </p><p>
+                This menu gives you the full traceability of inventory
+                operations on a specific product. You can filter on the product
+                to see all the past or future movements for the product.
+              </p>
+            </field>
+        </record>
+
+	 <menuitem id="stock.menu_stock_configuration"
+			   name="Configuration"
+			   parent="stock.menu_stock_root"
+			   sequence="5"
+			   groups="stock.group_stock_manager"/>
+
+		<menuitem id="stock.menu_quants"
+				  name="Quants"
+				  parent="stock.menu_stock_inventory_control"
+				  sequence="3"
+				  action="stock.quantsact"
+				  groups="base.group_no_one,base.group_user"/>
+
+
+		 <menuitem action="stock.action_inventory_form"
+				   id="stock.menu_action_inventory_form"
+				   string="Op:Bal:Material/Inventory Entry"
+				   parent="stock.menu_stock_warehouse_mgmt"
+				   sequence="7"
+		 groups="stock.group_stock_manager"/>
+
+
+
+		<record id="action_product_category_hiworth_tree" model="ir.actions.act_window.view">
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="product_category_tree_view_hiworth2" />
+			<field name="act_window_id" ref="action_product_category_hiworth" />
+		</record>
+
+		<record id="action_product_category_hiworth_form" model="ir.actions.act_window.view">
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="product_category_form_view_hiworth2" />
+			<field name="act_window_id" ref="action_product_category_hiworth" />
+		</record>
+
+		<record model="ir.ui.view" id="purchase_order_line_form_view">
+			<field name="name">purchase.order.line.for.mv.iew</field>
+			<field name="model">purchase.order.line</field>
+			<field name="arch" type="xml">
+				<tree string="Purchase Order Lines" create="false">
+					 <field name="date_planned" widget="date" string="Date" width="135"/>
+                    <field name="order_id" string="PO NO"/>
+
+                    <field name="partner_id" string="Supplier"/>
+                    <field name="product_id"/>
+                    <field name="expected_rate"/>
+                    <field name="required_qty"/>
+					<field name="received_qty"/>
+                    <field name="product_uom" groups="product.group_uom"/>
+                    <field name="price_subtotal"/>
+
+                    <field name="state" invisible="1"/>
+                    <field name="invoiced" invisible="1"/>
+                </tree>
+			</field>
+		</record>
+
+		 <record id="product.product_normal_action" model="ir.actions.act_window">
+            <field name="name">Total Product Categories</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new product.
+              </p><p>
+                You must define a product for everything you buy or sell,
+                whether it's a physical product, a consumable or service.
+              </p>
+            </field>
+        </record>
+
+		 <menuitem
+            action="product.product_category_action_form" id="stock.menu_product_category_config_stock"
+            parent="stock.menu_stock_configuration" sequence="45"/>
+        <menuitem
+            action="product.product_normal_action" id="stock.menu_product_variant_config_stock"
+            parent="stock.menu_stock_configuration"
+			string="Total Product Categories" sequence="46"/>
+        <menuitem
+            action="product.product_template_action" id="stock.menu_product_template_config_stock"
+            parent="stock.menu_stock_configuration" sequence="47"/>
+
+
+
+
+
+
+
+
+<!-- menu_procurement_compute -->
+	</data>
+</openerp>

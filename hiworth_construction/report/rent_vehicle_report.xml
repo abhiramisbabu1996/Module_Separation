@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+
+    
+
+
+    <record id="view_report_wizard_form" model="ir.ui.view">
+                <field name="name">view.report.wizard.form</field>
+                <field name="model">rent.vehicle.statement</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form string="Report">
+                        <group>
+                            <field name="vehicle_owner" options="{'no_create':1}" required="1" />
+                        </group>
+                        <group>
+                        	<group>
+                        	<field name="from_date" required="1" />
+                        </group>
+                        <group>
+                        	<field name="to_date" required="1" />
+                        </group>
+                    </group>
+                        <footer>
+                            
+                            <button  icon="gtk-apply" name="make_invoice" string="Create Invoice" type="object"/>Or
+                            <!-- <button  icon="gtk-apply" name="view_report" string="View Report" type="object"/> -->
+                            <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
+
+                        </footer>
+                    </form>
+            </field>
+        </record>
+
+
+
+    <record id="action_report_wizard" model="ir.actions.act_window">
+        <field name="name">Rent Vehicle Report</field>
+        <field name="res_model">rent.vehicle.statement</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>        
+        <field name="view_id" ref="view_report_wizard_form"/>
+        <field name="target">new</field>        
+    </record>
+
+
+
+
+    <record model="ir.values" id="ir_values_vehicle_rent_statement">
+           <field name="key2" eval="'client_print_multi'"/>
+           <field name="model" eval="'rent.vehicle.statement'"/>
+           <field name="name">Open Form</field>
+           <field name="value" eval="'ir.actions.act_window,%d'%action_report_wizard"/>
+    </record>
+
+
+
+	</data>
+</openerp>

@@ -1,0 +1,2351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+
+		<record id="view_next_approver1" model="ir.ui.view">
+			<field name="name">form.approver.line</field>
+			<field name="model">approver.lines</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<field name="name" invisible="1" />
+						<field name="approver" string="Next Approver" options="{'no_create': True, 'no_create_edit':True}" />
+						<field name="tick" />
+					</group>
+
+					<footer>
+						<button name="next_approvers" string="Confirm" type="object" class="oe_highlight" /> Or
+						<button string="Cancel" class="btn-default" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_request_approve_line" model="ir.ui.view">
+			<field name="name">form.approver.line</field>
+			<field name="model">approver.lines</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<field name="name" invisible="1" />
+						<field name="approver" options="{'no_create': True, 'no_create_edit':True}" required="1"/>
+					</group>
+
+					<footer>
+						<button name="confirm_approvers" string="Confirm" type="object" class="oe_highlight" /> Or
+						<button string="Cancel" class="btn-default" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="form_partner_daily_statement" model="ir.ui.view">
+			<field name="name">form.partner.daily.statement</field>
+			<field name="model">partner.daily.statement</field>
+			<field name="arch" type="xml">
+				<form string="Daily Statement">
+					<header>
+						<button name="action_confirm" string="Confirm"
+								type="object" class="oe_highlight" states="draft" />
+
+
+						<button name="approve_entry" string="Approve" type="object" class="oe_highlight" states="confirmed" groups="base.group_erp_manager,account.group_account_user,account.group_account_manager" />
+
+						<button name="check_entry" string="Check" type="object" class="oe_highlight" states="approved" groups="base.group_erp_manager,account.group_account_user,account.group_account_manager"/>
+
+						<button name="set_draft" string="Set To Draft" type="object" class="oe_highlight" states="cancelled" />
+						<!-- <button name="request_approve" string="Request Approve" type="object" class="oe_highlight" states="confirmed" /> -->
+						<button name="cancel_entry" string="Cancel" type="object" class="oe_highlight" states="confirmed,approved,checked" style="margin-left:40em;"/>
+						<field name="state" widget="statusbar" />
+
+					</header>
+					<div>
+						<h1>
+							<!-- <label for="name" /> -->
+							<field name="name" readonly="1"/>
+						</h1>
+					</div>
+<!--					<div class="oe_left oe_button_box" name="buttons" >-->
+<!--						<button class="oe_inline oe_stat_button" type="object" name="cash_transfer" icon="fa-tasks" string="Cash Transfer"-->
+<!--								attrs="{'invisible':[('state','!=','draft')]}"/>-->
+<!--						<button class="oe_inline oe_stat_button" type="object" name="view_transfer" icon="fa-tasks" string="View Transfers"/>-->
+<!--						<button class="oe_inline oe_stat_button" type="object" name="view_receipt" icon="fa-tasks" string="View Reception"/>-->
+<!--					</div>-->
+
+					<group>
+						<group>
+
+							<field name="employee_id" required="True" string="Supervisor" domain="[('user_category','=','site_eng')]"
+								  />
+<!--							<field name="account_id" required="True" />-->
+							<field name="date" required="True" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" />
+
+                                <field name="project_id" required="1"/>
+							<field name="location_ids" required="True" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}"/>
+							<field name="project_task_id" string="Task"/>
+							<field name="reception" invisible="1" />
+							<field name="transfer" invisible="1" />
+						</group>
+					</group>
+						<group >
+							<newline />
+
+						</group>
+
+					<group string="Task Details">
+					<notebook>
+						<page>
+							<field name="project_task_line_ids" nolabel="1" no_create="1">
+								<tree editable="bottom">
+									<field name="date_assigned" string="Date Assigned"/>
+									<field name="estimate_plan_line" string="Work"/>
+									<field name="work_id" string="Description Of Work"/>
+									<!--								<field name="category_id"/>-->
+	<!--								<field name="employee_id" string="Superisor"/>-->
+									<field name="sqft"/>
+									<field name="no_labours"/>
+									<field name="veh_categ_id" options="{'no_create':1}" widget="many2many_tags"/>
+									<field name="material" options="{'no_create':1}" widget="many2many_tags"/>
+	<!--								<field name="qty_estimate"/>-->
+	<!--								<field name="unit"/>-->
+	<!--								<field name="rate"/>-->
+	<!--								<field name="estimate_cost"/>-->
+									<field name="start_date"/>
+									<field name="finish_date"/>
+									<field name="subcontractor"/>
+									<field name="remarks_new"/>
+							</tree>
+							</field>
+						</page>
+					</notebook>
+					</group>
+
+<!--<notebook>-->
+<!--    <page string="Today Tasks">-->
+<!--		<field name = "task_id"/>-->
+
+<!--&lt;!&ndash;		<field name="item_received_lines" >&ndash;&gt;-->
+<!--&lt;!&ndash;				<tree>&ndash;&gt;-->
+<!--&lt;!&ndash;					<field name="product_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;				</tree>&ndash;&gt;-->
+<!--&lt;!&ndash;		</field>&ndash;&gt;-->
+<!--    </page>-->
+<!--</notebook>-->
+					<group string="Supervisor Daily Work Details">
+					<notebook>
+						<page string="Supervisor Daily Work Details">
+							<field name="partner_line_ids" nolabel="1">
+								<tree editable="bottom">
+									<field name="date"/>
+									<field name="estimation_line_id" options="{'no_create':True, 'no_create_edit':True}" string="Item of work"/>
+									<field name="work_id"/>
+<!--									<field name="veh_categ_id" options="{'no_create':1}" widget="many2many_tags"/>-->
+									<field name="machines_used" widget="many2many_tags"/>
+									<field name="no_labours"/>
+									<field name="total_attendance"/>
+									<field name="total_absence"/>
+									<field name="sqft"/>
+									<field name="sqft_completed"/>
+									<field name="sqft_pending"/>
+									<field name="product_id" string="Items Used" options="{'no_create':1}" widget="many2many_tags"/>
+									<field name="unit"/>
+<!--									<field name="qty_estimate"/>-->
+									<field name="quantity"/>
+<!--									<field name="pre_qty"/>-->
+<!--									<field name="upto_date_qty"/>-->
+<!--									<field name="rate"/>-->
+<!--									<field name="estimate_cost"/>-->
+									<field name="estimated_hrs" string="Estimated hours"/>
+									<field name="remarks"/>
+
+							</tree>
+						</field>
+						</page>
+						<page string="Attendance Entry">
+<!--							<group >-->
+								<!-- <button name="add_lines" type="object" string="Add" /> -->
+								<newline />
+								<field name="labour_details_ids">
+									<tree>
+										<field name="supervisor_id" string="Supervisor"/>
+										<field name="mep" string="Work Category"/>
+										<field name="item_id" string="Work"/>
+										<field name="site_id"/>
+										<field name="remarks" invisible="1"/>
+									</tree>
+									<form>
+										<sheet>
+											<group>
+												<group>
+													<field name="supervisor_id" string="Supervisor"/>
+													<field name="mep" string="Work Category"/>
+													<field name="item_id" string="Work"/>
+												</group>
+												<group>
+													<field name="start_time" string="Start Time"/>
+													<field name="end_time" string="End Time"/>
+													<field name="project_id"/>
+													<field name="site_id"/>
+												</group>
+											</group>
+											<notebook>
+												<page string="Labours">
+													<field name="details_ids">
+														<tree editable="bottom">
+															<field name="labour_name"/>
+															<field name="project"/>
+															<field name="start_time"/>
+															<field name="end_time"/>
+															<field name="remarks"/>
+															<field name="date" invisible="1"/>
+														</tree>
+													</field>
+												</page>
+											</notebook>
+											<field name="remarks" invisible="1"/>
+										</sheet>
+
+									</form>
+								</field>
+
+
+<!--								<field name="line_ids" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" >-->
+<!--									<tree>-->
+<!--										<field name="account_id" required="True" string="Particulars"/>-->
+<!--										<field name="item_id" string="Work"/>-->
+<!--&lt;!&ndash;										<field name="qty_char"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="qty_no" sum="Total" widget="char"/>&ndash;&gt;-->
+<!--										<field name="rate_char" />-->
+<!--										<field name="payment_total" sum="Total" widget="char"/>-->
+<!--&lt;!&ndash;										<field name="vr_no" />&ndash;&gt;-->
+<!--										<field name="remarks" />-->
+
+<!--									</tree>-->
+<!--									<form>-->
+<!--										<sheet>-->
+<!--											<group>-->
+<!--												<group>-->
+<!--													<field name="account_id" string="Particulars" required="1" options="{'no_create': True, 'no_create_edit':True}" domain="['|',('labour_categ','=',True),('is_mason','=',True)]"/>-->
+<!--												</group>-->
+<!--												<group>-->
+<!--													<field name="item_id" required="1" string="Work" options="{'no_create': True, 'no_create_edit':True}" />-->
+<!--													<field name="category_id" invisible="1"/>-->
+<!--													<field name="line_bool" invisible="1" />-->
+<!--													<field name="quantity" attrs="{'invisible':['|',('line_bool','=',False),('mason_bool','=',True)],'required':[('line_bool','=',True),('mason_bool','=',False)]}" widget="char"/>-->
+<!--													&lt;!&ndash; <field name="qty_entered" attrs="{'invisible':[('line_bool','=',False)],'required':[('line_bool','=',True)]}"/> &ndash;&gt;-->
+<!--													<field name="rate" attrs="{'invisible':['|',('line_bool','=',False),('mason_bool','=',True)],'required':[('line_bool','=',True),('mason_bool','=',False)],'readonly':[('is_labour','=',True)]}" widget="char" />-->
+<!--													<field name="total" attrs="{'invisible':['|',('line_bool','=',False),('mason_bool','=',True)],'required':[('line_bool','=',True),('mason_bool','=',False)]}" widget="char" />-->
+
+<!--													<field name="line_bool" invisible="1"/>-->
+
+<!--													<field name="is_labour"  invisible="1"/>-->
+<!--													<field name="account_type"  invisible="1"/>-->
+<!--													<field name="mason_bool" invisible="1" />-->
+<!--													<field name="line_bool" invisible="1"/>-->
+
+<!--												</group>-->
+<!--											</group>-->
+<!--											<group attrs="{'invisible':[('line_bool','=',True)]}">-->
+<!--												<field name="particular_ids" nolabel="1">-->
+<!--													<tree editable="bottom">-->
+<!--														<field name="account_id" required="1" string="Labours"/>-->
+<!--														<field name="qty" sum="Total" widget="char"/>-->
+<!--														<field name="category_id" invisible="1"/>-->
+<!--														<field name="rate" sum="Total" widget="char"/>-->
+<!--														<field name="total" sum="Total"  widget="char"/>-->
+<!--														<field name="payment" sum="Total"  widget="char"/>-->
+
+
+<!--													</tree>-->
+<!--												</field>-->
+<!--											</group>-->
+
+<!--											<group attrs="{'invisible':[('mason_bool','=',False)]}">-->
+<!--												<field name="mason_lines" nolabel="1">-->
+<!--													<tree editable="bottom" create="false" >-->
+<!--														<field name="name" readonly="1" string="Category"/>-->
+<!--														<field name="rate" sum="Total" readonly="1"  widget="char"/>-->
+<!--														<field name="qty" sum="Total" widget="char"/>-->
+<!--														<field name="total" sum="Total" widget="char"/>-->
+
+
+<!--													</tree>-->
+<!--												</field>-->
+<!--											</group>-->
+<!--											<group>-->
+<!--												<group>-->
+<!--													<field name="vr_no" required="1" />-->
+<!--													<field name="payment"-->
+<!--														   attrs="{'invisible':[('line_bool','=',False),('mason_bool','=',False)]}" widget="char"/>-->
+<!--												</group>-->
+<!--												<group>-->
+<!--													<field name="remarks"/>-->
+<!--												</group>-->
+<!--											</group>-->
+<!--										</sheet>-->
+<!--									</form>-->
+
+
+<!--								</field>-->
+<!--							</group>-->
+						</page>
+<!--						<page string="Details Of Received Items">-->
+
+						<page string="Expenses">
+							<group>
+								<newline />
+								<field name="expense_line_ids" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" context="{'default_expense': True}">
+									<tree>
+										<field name="expense_char"/>
+										<!--<field name="account_id"  string="Expenses" attrs="{'required':[('expense_other','=',False)]}"/>-->
+										<field name="desc"/>
+
+
+										<field name="quantity" sum="Total" widget="char"/>
+										<field name="rate" widget="char"/>
+										<field name="total" sum="Total" widget="char"/>
+<!--										<field name="expense_payment" sum="Total" widget="char"/>-->
+<!--										<field name="vr_no" />-->
+
+										<field name="remarks" />
+									</tree>
+									<form>
+										<sheet>
+											<group>
+												<group>
+													<field name="account_id"  string="Expenses" attrs="{'required':[('expense_other','=',False)],'readonly':[('expense_other','=',True)]}" domain="[('is_overhead','=',True)]"/>
+
+													<field name="expense_other" />
+										<field name="expense_char" attrs="{'invisible':[('expense_other','=',False)]}"/>
+										<!--<field name="exp_account_id" attrs="{'invisible':[('expense_other','=',False)],'required':[('expense_other','=',True)]}" readonly="1"/>
+										--></group>
+												<group>
+													<field name="quantity" widget="char"/>
+													<field name="rate" widget="char"/>
+													<field name="total"  widget="char" />
+													<field name="expense_payment" widget="char" />
+
+												</group>
+											</group>
+											<group>
+												<field name="vr_no" />
+												<field name="desc"/>
+												<field name="remarks" />
+											</group>
+										</sheet>
+									</form>
+								</field>
+							</group>
+						</page>
+						<page string="Rent Vehicle Statements">
+							<group>
+								<field name="rent_vehicle_stmts" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" context="{'default_site_id': location_ids}">
+									<tree delete="false">
+										<field name="date" invisible="1" />
+										<field name="vehicle_owner" />
+										<field name="vehicle_no" />
+<!--										<field name="mou" required="1"/>-->
+<!--										<field name="crusher" />-->
+										<field name="supervisor" invisible="1" />
+										<field name="site_id"/>
+<!--										<field name="full_supply" />-->
+<!--										<field name="fullsupply_qty" widget="char" sum="Total" />-->
+<!--										<field name="fullsupply_rate" widget="char" />-->
+<!--										<field name="full_cost" widget="char" sum="Total"/>-->
+<!--										<field name="direct_crusher" />-->
+										<field name="item" />
+										<field name="qty" widget="char" sum="Total"/>
+<!--										<field name="rate" widget="char" />-->
+<!--										<field name="material_cost" widget="char" sum="Total"/>-->
+<!--										<field name="based_on" />-->
+										<field name="km" widget="char" sum="Total"/>
+<!--										<field name="trip" widget="char" invisible="1" />-->
+										<field name="rent" widget="char" sum="Total"/>
+<!--										<field name="diesel_pump" />-->
+<!--										<field name="diesel" widget="char" sum="Total"/>-->
+<!--										<field name="advance" widget="char" sum="Total"/>-->
+<!--										<field name="other_expenses" widget="char" sum="Total"/>-->
+										<field name="remarks" />
+<!--										<field name="bill_no" />-->
+<!--										<field name="state" />-->
+									</tree>
+									<form>
+										<group>
+											<group>
+												<field name="date" invisible="1" />
+												<field name="vehicle_owner" options="{'no_create': True, 'no_create_edit':True}" required="1" domain="[('is_rent_vehicle','=',True)]"/>
+												<field name="vehicle_no" required="1" domain="[('rent_vehicle','=',True)]" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly':[('vehicle_owner','=',False)]}" />
+												<field name="mou" required="1"/>
+												<field name="supervisor" invisible="1" />
+												<field name="site_id" required="1" options="{'no_create': True, 'no_create_edit':True}"/>
+												<field name="item" options="{'no_create': True, 'no_create_edit':True}" required="1" />
+												<field name="full_supply" />
+
+												<field name="fullsupply_qty" widget="char" attrs="{'invisible':[('full_supply','=',False)],'required':[('full_supply','=',True)]}" />
+												<field name="fullsupply_rate" widget="char" attrs="{'invisible':[('full_supply','=',False)],'required':[('full_supply','=',True)]}" />
+
+												<field name="full_cost" widget="char" attrs="{'invisible':[('full_supply','=',False)],'required':[('full_supply','=',True)]}" />
+												<field name="direct_crusher" />
+
+												<field name="contractor_id" options="{'no_create': True, 'no_create_edit':True}" />
+												<field name="bill_no" />
+												<field name="crusher" attrs="{'required':[('direct_crusher','=',True)],'invisible':[('direct_crusher','=',False)]}" options="{'no_create': True, 'no_create_edit':True}" domain="[('crusher_bool','=',True)]" />
+
+												<field name="qty" widget="char" attrs="{'invisible':[('direct_crusher','=',False)],'required':[('direct_crusher','=',True)]}" />
+												<field name="rate" widget="char" attrs="{'invisible':[('direct_crusher','=',False)],'required':[('direct_crusher','=',True)]}" />
+
+
+												<field name="material_cost" widget="char" />
+												<field name="tax_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit':True}" attrs="{'invisible':[('direct_crusher','=',False)]}" />
+												<field name="tax_amount" attrs="{'invisible':[('direct_crusher','=',False)]}" />
+												<field name="sub_total" attrs="{'invisible':[('direct_crusher','=',False)]}" />
+												<field name="total" attrs="{'invisible':[('direct_crusher','=',False)]}" />
+												<field name="round_off" attrs="{'invisible':[('direct_crusher','=',False)]}" />
+												<field name="invoice_value" attrs="{'invisible':[('direct_crusher','=',False)]}" />
+
+												<field name="based_on" attrs="{'invisible':[('full_supply','=',True)]}" />
+												<field name="km" attrs="{'invisible':['|',('based_on','=','per_day'),('full_supply','=',True)],'required':[('based_on','=','per_km')]}" widget="char" />
+												<!-- <field name="trip" attrs="{'invisible':[('based_on','=','per_day')],'required':[('based_on','=','per_km')]}" widget="char" /> -->
+												<field name="rent" widget="char" />
+												<field name="fuel_item"/>
+												<field name="diesel_pump" attrs="{'required':[('diesel','!=',False)]}" options="{'no_create': True, 'no_create_edit':True}" domain="[('diesel_pump_bool','=',True)]" />
+												<field name="diesel_litre" attrs="{'required':[('diesel_pump','!=',False)]}" widget="char"  />
+												<field name="diesel_rate" attrs="{'required':[('diesel_pump','!=',False)]}" widget="char"  />
+												<field name="diesel" attrs="{'required':[('diesel_pump','!=',False)]}" widget="char"  />
+												<field name="pump_bill_no"/>
+												<field name="advance" widget="char" />
+												<field name="other_expenses"/>
+												<field name="other_account_id"/>
+												<field name="remarks" />
+												<field name="state" invisible="1" />
+											</group>
+											<group></group>
+										</group>
+									</form>
+								</field>
+							</group>
+						</page>
+						<page string="Required Materials">
+							<field name="recieved_items_ids" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}">
+							 <tree>
+								 <field name="item_id"/>
+								 <field name="brand_name"/>
+								 <field name="model_name"/>
+								 <field name="desc"/>
+								 <field name="unit"/>
+								 <field name="quantity"/>
+							 </tree>
+							</field>
+						</page>
+						<page string="Required Materials">
+							<field name="details_rqrd_item" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" context="{'default_general_purchase':True,'default_date':date}">
+								 <tree>
+									 <field name="name" string="P.R NO"/>
+									 <field name="order_by"/>
+									 <field name="mode_of_order"/>
+									<field name="responsible" invisible="1"/>
+									<field name="order_date"/>
+									<field name="min_expected_date"/>
+									<field name="max_expected_date"/>
+									<field name="state"/>
+								  </tree>
+							</field>
+						</page>
+						<page string="Received Materials">
+							<button name ="load_material" type="object" class="oe_highlight" string="View Material"/>
+							<field name="products_received_lines" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}">
+								<tree editable="bottom">
+									<field name="stock_transfer_id" string="Stock Transfer Reference No"/>
+									<field name="type_of_good_transfer"/>
+									<field name="po_no" domain="[('state','not in',['draft','sent','bid'])]"/>
+									<field name="bill_no"/>
+									<field name="product_id" string="Product"/>
+									<field name="unit"/>
+									<field name="received_qty"/>
+									<field name="stock_qty" string="Total Stock Quantity"/>
+									<field name="vehicle_id" string="Vehicle No"/>
+								</tree>
+							</field>
+						</page>
+						<page string="Used Materials">
+							<field name="products_used_lines" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}">
+								<tree editable="bottom">
+									<field name="product_id" string="Product"/>
+									<field name="unit"/>
+									<field name="stock_qty" string="Stock Quantity"/>
+									<field name="used_qty" string="Used Quantity"/>
+									<field name="balance_qty" string="Balance Quantity"/>
+								</tree>
+							</field>
+						</page>
+						<page string="Site Stock Report">
+
+						</page>
+
+
+
+
+
+
+<!--					</notebook>-->
+
+<!--					<notebook>-->
+<!--						<page string="Expenses">-->
+<!--							<group>-->
+<!--								<newline />-->
+<!--								<field name="expense_line_ids" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" context="{'default_expense': True}">-->
+<!--									<tree>-->
+<!--										<field name="expense_char"/>-->
+<!--										&lt;!&ndash;<field name="account_id"  string="Expenses" attrs="{'required':[('expense_other','=',False)]}"/>&ndash;&gt;-->
+<!--										<field name="desc"/>-->
+
+
+<!--										<field name="quantity" sum="Total" widget="char"/>-->
+<!--										<field name="rate" widget="char"/>-->
+<!--										<field name="total" sum="Total" widget="char"/>-->
+<!--&lt;!&ndash;										<field name="expense_payment" sum="Total" widget="char"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="vr_no" />&ndash;&gt;-->
+
+<!--										<field name="remarks" />-->
+<!--									</tree>-->
+<!--									<form>-->
+<!--										<sheet>-->
+<!--											<group>-->
+<!--												<group>-->
+<!--													<field name="account_id"  string="Expenses" attrs="{'required':[('expense_other','=',False)],'readonly':[('expense_other','=',True)]}" domain="[('is_overhead','=',True)]"/>-->
+
+<!--													<field name="expense_other" />-->
+<!--										<field name="expense_char" attrs="{'invisible':[('expense_other','=',False)]}"/>-->
+<!--										&lt;!&ndash;<field name="exp_account_id" attrs="{'invisible':[('expense_other','=',False)],'required':[('expense_other','=',True)]}" readonly="1"/>-->
+<!--										&ndash;&gt;</group>-->
+<!--												<group>-->
+<!--													<field name="quantity" widget="char"/>-->
+<!--													<field name="rate" widget="char"/>-->
+<!--													<field name="total"  widget="char" />-->
+<!--													<field name="expense_payment" widget="char" />-->
+
+<!--												</group>-->
+<!--											</group>-->
+<!--											<group>-->
+<!--												<field name="vr_no" />-->
+<!--												<field name="desc"/>-->
+<!--												<field name="remarks" />-->
+<!--											</group>-->
+<!--										</sheet>-->
+<!--									</form>-->
+<!--								</field>-->
+<!--							</group>-->
+<!--						</page>-->
+<!--&lt;!&ndash;					</notebook>&ndash;&gt;-->
+
+<!--&lt;!&ndash;					<notebook>&ndash;&gt;-->
+<!--						<page string="MOU Expenses">-->
+<!--							<group >-->
+<!--								<newline />-->
+<!--								<field name="mou_expense_line_ids" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" context="{'location_id':location_ids}">-->
+<!--									<tree editable="bottom">-->
+<!--										<field name="partner_id" required="True" string="To"/>-->
+<!--										<field name="mou_id" required="True" string="MOU"/>-->
+<!--										<field name="amount" required="1" sum="Total"/>-->
+<!--										<field name="remarks"/>-->
+<!--									</tree>-->
+<!--								</field>-->
+<!--							</group>-->
+<!--						</page>-->
+<!--&lt;!&ndash;					</notebook>&ndash;&gt;-->
+
+<!--&lt;!&ndash;					<notebook>&ndash;&gt;-->
+<!--						<page string="Rent Vehicle Statements">-->
+<!--							<group>-->
+<!--								<field name="rent_vehicle_stmts" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" context="{'default_site_id': location_ids}">-->
+<!--									<tree delete="false">-->
+<!--										<field name="date" invisible="1" />-->
+<!--										<field name="vehicle_owner" />-->
+<!--										<field name="vehicle_no" />-->
+<!--&lt;!&ndash;										<field name="mou" required="1"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="crusher" />&ndash;&gt;-->
+<!--										<field name="supervisor" invisible="1" />-->
+<!--										<field name="site_id"/>-->
+<!--&lt;!&ndash;										<field name="full_supply" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="fullsupply_qty" widget="char" sum="Total" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="fullsupply_rate" widget="char" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="full_cost" widget="char" sum="Total"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="direct_crusher" />&ndash;&gt;-->
+<!--										<field name="item" />-->
+<!--										<field name="qty" widget="char" sum="Total"/>-->
+<!--&lt;!&ndash;										<field name="rate" widget="char" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="material_cost" widget="char" sum="Total"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="based_on" />&ndash;&gt;-->
+<!--										<field name="km" widget="char" sum="Total"/>-->
+<!--&lt;!&ndash;										<field name="trip" widget="char" invisible="1" />&ndash;&gt;-->
+<!--										<field name="rent" widget="char" sum="Total"/>-->
+<!--&lt;!&ndash;										<field name="diesel_pump" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="diesel" widget="char" sum="Total"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="advance" widget="char" sum="Total"/>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="other_expenses" widget="char" sum="Total"/>&ndash;&gt;-->
+<!--										<field name="remarks" />-->
+<!--&lt;!&ndash;										<field name="bill_no" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="state" />&ndash;&gt;-->
+<!--									</tree>-->
+<!--									<form>-->
+<!--										<group>-->
+<!--											<group>-->
+<!--												<field name="date" invisible="1" />-->
+<!--												<field name="vehicle_owner" options="{'no_create': True, 'no_create_edit':True}" required="1" domain="[('is_rent_vehicle','=',True)]"/>-->
+<!--												<field name="vehicle_no" required="1" domain="[('rent_vehicle','=',True)]" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly':[('vehicle_owner','=',False)]}" />-->
+<!--												<field name="mou" required="1"/>-->
+<!--												<field name="supervisor" invisible="1" />-->
+<!--												<field name="site_id" required="1" options="{'no_create': True, 'no_create_edit':True}"/>-->
+<!--												<field name="item" options="{'no_create': True, 'no_create_edit':True}" required="1" />-->
+<!--												<field name="full_supply" />-->
+
+<!--												<field name="fullsupply_qty" widget="char" attrs="{'invisible':[('full_supply','=',False)],'required':[('full_supply','=',True)]}" />-->
+<!--												<field name="fullsupply_rate" widget="char" attrs="{'invisible':[('full_supply','=',False)],'required':[('full_supply','=',True)]}" />-->
+
+<!--												<field name="full_cost" widget="char" attrs="{'invisible':[('full_supply','=',False)],'required':[('full_supply','=',True)]}" />-->
+<!--												<field name="direct_crusher" />-->
+
+<!--												<field name="contractor_id" options="{'no_create': True, 'no_create_edit':True}" />-->
+<!--												<field name="bill_no" />-->
+<!--												<field name="crusher" attrs="{'required':[('direct_crusher','=',True)],'invisible':[('direct_crusher','=',False)]}" options="{'no_create': True, 'no_create_edit':True}" domain="[('crusher_bool','=',True)]" />-->
+
+<!--												<field name="qty" widget="char" attrs="{'invisible':[('direct_crusher','=',False)],'required':[('direct_crusher','=',True)]}" />-->
+<!--												<field name="rate" widget="char" attrs="{'invisible':[('direct_crusher','=',False)],'required':[('direct_crusher','=',True)]}" />-->
+
+
+<!--												<field name="material_cost" widget="char" />-->
+<!--												<field name="tax_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit':True}" attrs="{'invisible':[('direct_crusher','=',False)]}" />-->
+<!--												<field name="tax_amount" attrs="{'invisible':[('direct_crusher','=',False)]}" />-->
+<!--												<field name="sub_total" attrs="{'invisible':[('direct_crusher','=',False)]}" />-->
+<!--												<field name="total" attrs="{'invisible':[('direct_crusher','=',False)]}" />-->
+<!--												<field name="round_off" attrs="{'invisible':[('direct_crusher','=',False)]}" />-->
+<!--												<field name="invoice_value" attrs="{'invisible':[('direct_crusher','=',False)]}" />-->
+
+<!--												<field name="based_on" attrs="{'invisible':[('full_supply','=',True)]}" />-->
+<!--												<field name="km" attrs="{'invisible':['|',('based_on','=','per_day'),('full_supply','=',True)],'required':[('based_on','=','per_km')]}" widget="char" />-->
+<!--												&lt;!&ndash; <field name="trip" attrs="{'invisible':[('based_on','=','per_day')],'required':[('based_on','=','per_km')]}" widget="char" /> &ndash;&gt;-->
+<!--												<field name="rent" widget="char" />-->
+<!--												<field name="fuel_item"/>-->
+<!--												<field name="diesel_pump" attrs="{'required':[('diesel','!=',False)]}" options="{'no_create': True, 'no_create_edit':True}" domain="[('diesel_pump_bool','=',True)]" />-->
+<!--												<field name="diesel_litre" attrs="{'required':[('diesel_pump','!=',False)]}" widget="char"  />-->
+<!--												<field name="diesel_rate" attrs="{'required':[('diesel_pump','!=',False)]}" widget="char"  />-->
+<!--												<field name="diesel" attrs="{'required':[('diesel_pump','!=',False)]}" widget="char"  />-->
+<!--												<field name="pump_bill_no"/>-->
+<!--												<field name="advance" widget="char" />-->
+<!--												<field name="other_expenses"/>-->
+<!--												<field name="other_account_id"/>-->
+<!--												<field name="remarks" />-->
+<!--												<field name="state" invisible="1" />-->
+<!--											</group>-->
+<!--											<group></group>-->
+<!--										</group>-->
+<!--									</form>-->
+<!--								</field>-->
+<!--							</group>-->
+<!--						</page>-->
+
+
+<!--					<page string="Details Of Reception">-->
+<!--						&lt;!&ndash; <label for="item_usage_lines" string="Details Of Item"/> &ndash;&gt;-->
+<!--						<field name="received_ids" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}">-->
+<!--							<tree editable="bottom" delete="false">-->
+<!--								<field name="vehicle_id" />-->
+<!--								<field name="from_id2" />-->
+<!--								<field name="item_expense2" />-->
+<!--								<field name="qty" sum="Total" readonly="1"/>-->
+<!--								<field name="rate" sum="Total" readonly="1"/>-->
+<!--								<field name="total" sum="Total" readonly="1"/>-->
+<!--								<field name="voucher_no" string="Bill No" readonly="1"/>-->
+<!--								<field name="rate" readonly="1"/>-->
+<!--								<field name="start_km" readonly="1"/>-->
+<!--								<field name="end_km" readonly="1"/>-->
+<!--								<field name="total_km" sum="Total" readonly="1"/>-->
+<!--								<field name="rent" sum="Total" readonly="1"/>-->
+<!--								<field name="contractor_id" readonly="1"/>-->
+<!--								<field name="remarks" />-->
+<!--								<field name="status" readonly="1" />-->
+<!--								<field name="driver_stmt_id" invisible="1" readonly="1" />-->
+<!--								<field name="recept_temp" invisible="1" readonly="1" />-->
+<!--								<field name="rejection_remarks" />-->
+<!--								<button name="approve_line" icon="gtk-apply" type="object" class="oe_highlight" help="Line Approve" attrs="{'invisible':[('status','=','accepted')]}"/>-->
+<!--								<button name="reject_line" icon="gtk-cancel" type="object" class="oe_highlight" help="Line Reject" attrs="{'invisible':[('status','=','rejected')]}"/>-->
+<!--							</tree>-->
+<!--						</field>-->
+<!--					</page>-->
+
+					<!-- <group>
+                        <group>
+
+
+                        </group>
+                        <group class="oe_subtotal_footer oe_right">
+                            <div class="oe_subtotal_footer_separator oe_inline">
+                                <label for="pre_balance" />
+                            </div>
+                            <field name="pre_balance" nolabel="1" class="oe_subtotal_footer_separator" readonly="1"/>
+                            <div class="oe_subtotal_footer_separator oe_inline">
+                                <button name="received_rs" type="object" class="oe_highlight" string="Received" attrs="{'invisible':[('reception','=',False)]}" />
+                                <label for="receipts" />
+                            </div>
+                            <field name="receipts" nolabel="1" class="oe_subtotal_footer_separator" />
+                            <div class="oe_subtotal_footer_separator oe_inline">
+                                <label for="total" />
+                            </div>
+                            <field name="total" nolabel="1" class="oe_subtotal_footer_separator" />
+
+                            <div> -->
+					<!-- <div class="oe_subtotal_footer_separator oe_inline"> -->
+					<!-- <label for="rent_vehicle" string="Rent Vehicle Advance" /> -->
+					<!--  </div>
+                     <field name="rent_vehicle" nolabel="1" class="oe_subtotal_footer_separator" readonly="1" invisible="1"/>
+                     <div class="oe_subtotal_footer_separator oe_inline">
+                         <label for="expense" />
+                     </div>
+                     <field name="expense" nolabel="1" class="oe_subtotal_footer_separator" />
+                     <div class="oe_subtotal_footer_separator oe_inline">
+                         <button name="transferred_rs" type="object" class="oe_highlight" string="Transferred" attrs="{'invisible':[('transfer','=',False)]}"/>
+                         <label for="transfer_amount" />
+                     </div>
+                     <field name="transfer_amount" nolabel="1" class="oe_subtotal_footer_separator" />
+                     <div class="oe_subtotal_footer_separator oe_inline">
+                         <label for="balance" />
+                     </div>
+                     <field name="balance" nolabel="1" class="oe_subtotal_footer_separator" />
+                     <div class="oe_subtotal_footer_separator oe_inline">
+                         <label for="theoretical_balance" />
+                     </div>
+                     <field name="theoretical_balance" nolabel="1" class="oe_subtotal_footer_separator" />
+
+                 </group>
+
+             </group> -->
+<!--					<group>-->
+
+<!--						<page string="Details Of Items">-->
+<!--							&lt;!&ndash; <label for="item_usage_lines" string="Details Of Item"/> &ndash;&gt;-->
+<!--							<field name="item_usage_lines" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" context="{'default_date':date}">-->
+<!--								<tree delete="false">-->
+<!--									<field name="date" />-->
+<!--									<field name="product_id" required="1" options="{'no_create': True, 'no_create_edit':True}" />-->
+<!--									<field name="pre_qty" widget="char" sum="Total"/>-->
+<!--									<field name="receipts" widget="char" />-->
+<!--									<field name="total" widget="char" sum="Total"/>-->
+<!--									<field name="usage" widget="char" />-->
+<!--									<field name="balance" widget="char" sum="Total"/>-->
+<!--								</tree>-->
+
+<!--&lt;!&ndash;								<form>&ndash;&gt;-->
+<!--&lt;!&ndash;									<group>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="date" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="product_id" required="1" options="{'no_create': True, 'no_create_edit':True}" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="pre_qty" widget="char" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="receipts" widget="char" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="total" widget="char" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="usage" widget="char" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="balance" widget="char" />&ndash;&gt;-->
+<!--&lt;!&ndash;									</group>&ndash;&gt;-->
+<!--&lt;!&ndash;								</form>&ndash;&gt;-->
+<!--							</field>-->
+<!--						</page>-->
+<!--						<page string="Details Of Required Items">-->
+<!--							<field name="details_rqrd_item" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" context="{'default_general_purchase':True,'default_date':date}">-->
+<!--								 <tree>-->
+<!--									<field name="name" />-->
+<!--									<field name="supervisor_id" />-->
+<!--							  	 	<field name="responsible" invisible="1"/>-->
+<!--									<field name="order_date" />-->
+<!--									<field name="min_expected_date" />-->
+<!--									<field name="max_expected_date" />-->
+<!--									<field name="received_date"   />-->
+<!--									 <field name="item_ids" widget="many2many_tags"/>-->
+<!--									<field name="estimated_amt"/>-->
+<!--									<field name="state"/>-->
+<!--								  </tree>-->
+<!--							</field>-->
+<!--						</page>-->
+
+<!--&lt;!&ndash;					</notebook>&ndash;&gt;-->
+
+<!--						&lt;!&ndash; <group string="Details Of Work Done At Site">-->
+<!--                            <field name="work_details" nolabel="1" attrs="{'readonly':[('state','in',('approved','checked','cancelled'))]}" />-->
+<!--                        </group> &ndash;&gt;-->
+
+<!--&lt;!&ndash;					</group>&ndash;&gt;-->
+<!--						<page string="Details Of Received Items">-->
+<!--							<field name="details_received_item_ids" nolabel="1" context="{'default_Date':date}">-->
+
+
+
+<!--							</field>-->
+<!--						</page>-->
+
+						</notebook>
+					</group>
+					<group string="Subcontractor Daily Work Report">
+					<notebook>
+						<page string="Subcontractor Daily Work">
+							<field name="project_task_ids" nolabel="1" no_create="0">
+								<tree editable="bottom">
+									<field name="estimate_plan_line" string="Work"/>
+									<field name="work_id" string="Description Of Work"/>
+									<!--								<field name="category_id"/>-->
+	<!--								<field name="employee_id" string="Superisor"/>-->
+									<field name="sqft"/>
+									<field name="no_labours"/>
+									<field name="veh_categ_id" options="{'no_create':1}" widget="many2many_tags"/>
+									<field name="material" options="{'no_create':1}" widget="many2many_tags"/>
+	<!--								<field name="qty_estimate"/>-->
+	<!--								<field name="unit"/>-->
+	<!--								<field name="rate"/>-->
+	<!--								<field name="estimate_cost"/>-->
+									<field name="start_date"/>
+									<field name="finish_date"/>
+									<field name="subcontractor"/>
+									<field name="remarks_new"/>
+							</tree>
+						</field>
+						</page>
+						<page string="Details Of Used Items">
+							<field name="subcontractor_products_used_lines" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}">
+								<tree editable="bottom">
+									<field name="product_id" string="Product"/>
+									<field name="unit"/>
+									<field name="stock_qty" string="Stock Quantity"/>
+									<field name="used_qty" string="Used Quantity"/>
+									<field name="balance_qty" string="Balance Quantity"/>
+								</tree>
+							</field>
+						</page>
+
+					</notebook>
+					</group>
+					<group string="Machineries">
+
+						<notebook>
+							<page string="Operators Statements">
+								<group>
+									<field name="operator_daily_stmts" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" context="{'default_date':date,'location_id':location_ids}">
+										<tree>
+											<field name="date" />
+											<field name="employee_id" />
+											<field name="machinery_id" />
+											<field name="running_km" widget="char"/>
+											<field name="start_reading" widget="char"/>
+											<field name="end_reading" widget="char"/>
+											<field name="working_hours" widget="char"/>
+											<field name="machinery_rent" widget="char" sum="Total" />
+											<field name="quantity" widget="char" sum="Total" />
+											<field name="operator_amt" widget="char" sum="Total"/>
+											<field name="expense" widget="char" sum="Total"/>
+											<field name="advance" widget="char" sum="Total"/>
+										</tree>
+										<form>
+											<group>
+												<field name="date" />
+												<field name="employee_id" required="1" options="{'no_create': True, 'no_create_edit':True}" />
+												<field name="machinery_id" required="1" options="{'no_create': True, 'no_create_edit':True}" />
+											</group>
+											<group col="4">
+												<group>
+													<field name="running_km" widget="char"/>
+													<field name="start_reading" required="1" widget="char"/>
+													<field name="end_reading" required="1" widget="char"/>
+													<field name="working_hours" widget="char"/>
+													<field name="machinery_rent" widget="char"/>
+													<field name="quantity" required="1" widget="char"/>
+													<field name="operator_amt" widget="char"/>
+													<field name="expense" widget="char"/>
+													<field name="advance" widget="char"/>
+												</group>
+												<group>
+												</group>
+											</group>
+											<group string="Expenses">
+												<field name="expense_line" nolabel="1">
+													<tree editable="bottom">
+														<field name="item_expense2"  required="1" options="{'no_create': True, 'no_create_edit':True}" />
+														<field name="qty" widget="char" sum="Total"/>
+														<field name="rate" widget="char"/>
+														<field name="total" widget="char" sum="Total"/>
+<!--														<field name="payment" widget="char"/>-->
+<!--														<field name="voucher_no"/>-->
+														<field name="remarks"/>
+													</tree>
+												</field>
+											</group>
+										</form>
+									</field>
+								</group>
+							</page>
+
+
+							<page string="Machinery Fuel Collection">
+								<group>
+									<field name="machinery_fuel_collection" nolabel="1" context="{'default_site_id': location_ids, 'default_supervisor_id': employee_id,'default_date':date}" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}">
+										<tree>
+											<field name="date"/>
+											<field name="pump_id"/>
+											<field name="uom_id"/>
+											<field name="quantity" sum="Total" widget="char"/>
+											<field name="amount_per_unit" widget="char"/>
+											<field name="total_amount" sum="Total" widget="char"/>
+											<field name="site_id"/>
+											<field name="supervisor_id"/>
+											<field name="product_id"/>
+										</tree>
+										<form>
+											<header>
+
+												<button name="button_reconcile" string="Reconcile" type="object" class="oe_highlight" states="approved"/>
+												<field name="state" widget="statusbar"/>
+											</header>
+											<group col="4">
+												<group>
+													<field name="date" required="1" attrs="{'readonly': [('state','=','reconcile')]}" />
+													<field name="pump_id" required="1" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly': [('state','=','reconcile')]}"/>
+													<field name="product_id" attrs="{'readonly': [('state','=','reconcile')]}" context="{'default_fuel_ok':True}" options="{'no_create': True, 'no_create_edit':True}" required="1"/>
+													<field name="uom_id" attrs="{'readonly': [('state','=','reconcile')]}" options="{'no_create': True, 'no_create_edit':True}" required="1"/>
+													<field name="quantity" attrs="{'readonly': [('state','=','reconcile')]}" required="1" widget="char"/>
+												</group>
+												<group>
+													<field name="site_id" attrs="{'readonly': [('state','=','reconcile')]}" options="{'no_create': True, 'no_create_edit':True}" required="1"/>
+													<field name="supervisor_id" readonly="1"/>
+													<field name="amount_per_unit"  widget="char"/>
+													<field name="total_amount" attrs="{'readonly': [('state','=','reconcile')]}"  widget="char"/>
+													<field name="stock_move_id" invisible="1"/>
+													<field name="account_move_id" invisible="1"/>
+													<button name="button_approve" string="Collect" type="object" class="oe_highlight" states="draft"
+							groups="hiworth_hr_attendance.group_supervisor,base.group_erp_manager"/>
+												</group>
+
+											</group>
+										</form>
+									</field>
+								</group>
+							</page>
+							<page string="Machinery Fuel Allocation">
+								<group>
+									<field name="machinery_fuel_allocation" nolabel="1"  context="{'default_site_id': location_ids, 'default_supervisor_id': employee_id,'default_date':date}" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}">
+										<tree>
+											<field name="date"/>
+											<field name="machinery_id"/>
+											<field name="available_quantity"/>
+											<field name="quantity" sum="Total" widget="char"/>
+											<field name="current_quantity"/>
+											<field name="uom_id"/>
+											<field name="amount_per_unit" widget="char"/>
+											<field name="total_amount" sum="Total" widget="char"/>
+											<field name="site_id"/>
+											<field name="supervisor_id"/>
+											<field name="product_id"/>
+										</tree>
+										<form>
+											<header>
+
+												<button name="button_reconcile" string="Reconcile" type="object" class="oe_highlight" states="confirm"/>
+												<field name="state" widget="statusbar"/>
+											</header>
+											<group col="4">
+												<group>
+													<field name="machinery_id" attrs="{'readonly': [('state','=','reconcile')]}" options="{'no_create': True, 'no_create_edit':True}" required="1" domain="[('machinery','=',True)]"/>
+													<field name="product_id" attrs="{'readonly': [('state','=','reconcile')]}" options="{'no_create': True, 'no_create_edit':True}" context="{'default_fuel_ok':True}" required="1"/>
+													<field name="uom_id"  readonly="1" options="{'no_create': True, 'no_create_edit':True}"/>
+													<field name="available_quantity" widget="char"/>
+													<field name="quantity" attrs="{'readonly': [('state','=','reconcile')]}" required="1" widget="char"/>
+													<field name="current_quantity" widget="char"/>
+
+												</group>
+												<group>
+
+													<field name="date" required="1"  attrs="{'readonly': [('state','=','reconcile')]}"/>
+													<field name="site_id" attrs="{'readonly': [('state','=','reconcile')]}" options="{'no_create': True, 'no_create_edit':True}" required="1"/>
+													<field name="supervisor_id"  readonly="1"/>
+													<field name="amount_per_unit" />
+													<field name="total_amount"/>
+													<field name="stock_move_id" invisible="1"/>
+													<field name="account_move_id" invisible="1"/>
+													<button name="button_approve" string="Allocate" type="object" class="oe_highlight" states="draft"
+							groups="hiworth_hr_attendance.group_supervisor,base.group_erp_manager"/>
+												</group>
+
+											</group>
+										</form>
+									</field>
+								</group>
+							</page>
+
+							<page string="Fuel Transfer">
+								<group>
+									<field name="fuel_transfer_ids" nolabel="1"  context="{'default_site_id': location_ids, 'default_supervisor_id': employee_id,'default_date':date}" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}">
+										<tree>
+											<field name="site_id"/>
+											<field name="machinery_id"/>
+											<field name="supervisor_id"/>
+											<field name="product_id"/>
+											<field name="uom_id"/>
+											<field name="available_quantity" widget="char"/>
+											<field name="transfer_quantity" widget="char"/>
+											<field name="current_quantity" widget="char"/>
+											<field name="amount_per_unit" widget="char"/>
+											<field name="total_amount" sum="Total" widget="char"/>
+											<field name="to_location_id"/>
+										</tree>
+
+
+										<form>
+
+											<group col="4">
+												<group>
+													<field name="machinery_id" domain="[('machinery','=',True)]" options="{'no_create': True, 'no_create_edit':True}"/>
+													<field name="product_id" options="{'no_create': True, 'no_create_edit':True}" required="1"/>
+													<field name="uom_id" readonly="1"/>
+													<field name="available_quantity" widget="char"/>
+													<field name="transfer_quantity" widget="char" required="1"/>
+													<field name="current_quantity" widget="char"/>
+
+												</group>
+												<group>
+													<field name="supervisor_id" options="{'no_create': True, 'no_create_edit':True}" required="1" />
+													<field name="site_id" options="{'no_create': True, 'no_create_edit':True}" required="1"/>
+													<field name="to_location_id" required="1"/>
+													<field name="amount_per_unit" widget="char"/>
+													<field name="total_amount" sum="Total" widget="char"/>
+
+													<field name="stock_move_id" invisible="1"/>
+													<field name="account_move_id" invisible="1"/>
+													<button name="button_approve" string="Transfer" type="object" class="oe_highlight"
+							groups="hiworth_hr_attendance.group_supervisor,base.group_erp_manager"/>
+												</group>
+
+											</group>
+										</form>
+									</field>
+								</group>
+							</page>
+<!--						</notebook>-->
+<!--					</group>-->
+<!--					<group string=" Rent Machineries">-->
+<!--						<notebook>-->
+								<page string="Rent Machineries Statements">
+								<group>
+									<field name="operator_daily_stmts_rent" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" context="{'default_date':date,'location_id':location_ids}">
+										<tree>
+											<field name="date" />
+<!--											<field name="mou" required="1"/>-->
+											<field name="employee_id" />
+											<field name="machinery_id" domain="[('is_rent_mach','=',True)]"/>
+											<field name="running_km" widget="char"/>
+											<field name="start_reading" widget="char"/>
+											<field name="end_reading" widget="char"/>
+											<field name="working_hours" widget="char"/>
+											<field name="machinery_rent" widget="char" sum="Total" />
+											<field name="quantity" widget="char" sum="Total" />
+											<field name="operator_amt" widget="char" sum="Total"/>
+<!--											<field name="expense" widget="char" sum="Total"/>-->
+<!--											<field name="advance" widget="char" sum="Total"/>-->
+											<!--<field name="other_expenses"/>
+											<field name="other_account_id"/>-->
+										</tree>
+										<form>
+											<group>
+												<field name="date" />
+												<field name="employee_id" required="1" options="{'no_create': True, 'no_create_edit':True}" />
+												<field name="machinery_id" required="1" domain="[('is_rent_mach','=',True)]" options="{'no_create': True, 'no_create_edit':True}" />
+												<field name="mou" required="1"/>
+											</group>
+											<group col="4">
+												<group>
+													<field name="running_km" widget="char"/>
+													<field name="start_reading" required="1" widget="char"/>
+													<field name="end_reading" required="1" widget="char"/>
+													<field name="working_hours" widget="char"/>
+													<field name="machinery_rent" widget="char"/>
+													<field name="quantity" required="1" widget="char"/>
+													<field name="operator_amt" widget="char"/>
+<!--													<field name="expense" widget="char"/>-->
+<!--													<field name="advance" widget="char"/>-->
+													<field name="other_expenses"/>
+<!--													<field name="other_account_id"/>-->
+												</group>
+											</group>
+											<group string="Expenses">
+												<field name="expense_line" nolabel="1">
+													<tree>
+														<field name="item_expense2"  required="1" options="{'no_create': True, 'no_create_edit':True}" />
+														<field name="qty" widget="char" sum="Total"/>
+														<field name="rate" widget="char"/>
+														<field name="total" widget="char" sum="Total"/>
+														<field name="payment" widget="char"/>
+														<field name="voucher_no"/>
+														<field name="remarks"/>
+													</tree>
+												</field>
+											</group>
+										</form>
+									</field>
+								</group>
+							</page>
+
+
+							<page string="Rent Machinery Fuel Allocation">
+								<group>
+									<field name="rent_machinery_fuel_allocation" nolabel="1"  context="{'default_site_id': location_ids, 'default_supervisor_id': employee_id,'default_date':date}" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}">
+										<tree>
+											<field name="date"/>
+											<field name="machinery_id"  domain="[('is_rent_mach','=',True)]"/>
+											<field name="available_quantity"/>
+											<field name="quantity" sum="Total" widget="char"/>
+											<field name="current_quantity"/>
+											<field name="uom_id"/>
+											<field name="amount_per_unit" widget="char"/>
+											<field name="total_amount" sum="Total" widget="char"/>
+											<field name="site_id"/>
+											<field name="supervisor_id"/>
+											<field name="product_id"/>
+										</tree>
+										<form>
+											<header>
+
+												<button name="button_reconcile" string="Reconcile" type="object" class="oe_highlight" states="confirm"/>
+												<field name="state" widget="statusbar"/>
+											</header>
+											<group col="4">
+												<group>
+													<field name="machinery_id" attrs="{'readonly': [('state','=','reconcile')]}" options="{'no_create': True, 'no_create_edit':True}" required="1" domain="[('is_rent_mach','=',True)]"/>
+													<field name="product_id" attrs="{'readonly': [('state','=','reconcile')]}" options="{'no_create': True, 'no_create_edit':True}" context="{'default_fuel_ok':True}" required="1"/>
+													<field name="uom_id"  readonly="1" options="{'no_create': True, 'no_create_edit':True}"/>
+													<field name="available_quantity" widget="char"/>
+													<field name="quantity" attrs="{'readonly': [('state','=','reconcile')]}" required="1" widget="char"/>
+													<field name="current_quantity" widget="char"/>
+
+												</group>
+												<group>
+
+													<field name="date" required="1"  attrs="{'readonly': [('state','=','reconcile')]}"/>
+													<field name="site_id" attrs="{'readonly': [('state','=','reconcile')]}" options="{'no_create': True, 'no_create_edit':True}" required="1"/>
+													<field name="supervisor_id"  readonly="1"/>
+													<field name="amount_per_unit" />
+													<field name="total_amount"/>
+													<field name="stock_move_id" invisible="1"/>
+													<field name="account_move_id" invisible="1"/>
+												</group>
+
+											</group>
+										</form>
+									</field>
+								</group>
+							</page>
+							<page string="Rent Machinery Fuel Transfer">
+								<group>
+									<field name="rent_fuel_transfer_ids" nolabel="1"  context="{'default_site_id': location_ids, 'default_supervisor_id': employee_id,'default_date':date}" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}">
+										<tree>
+											<field name="site_id"/>
+											<field name="machinery_id"/>
+											<field name="supervisor_id"/>
+											<field name="product_id"/>
+											<field name="uom_id"/>
+											<field name="available_quantity" widget="char"/>
+											<field name="transfer_quantity" widget="char"/>
+											<field name="current_quantity" widget="char"/>
+											<field name="amount_per_unit" widget="char"/>
+											<field name="total_amount" sum="Total" widget="char"/>
+											<field name="to_location_id"/>
+										</tree>
+
+
+										<form>
+
+											<group col="4">
+												<group>
+													<field name="machinery_id" domain="[('is_rent_mach','=',True)]" options="{'no_create': True, 'no_create_edit':True}"/>
+													<field name="product_id" options="{'no_create': True, 'no_create_edit':True}" required="1"/>
+													<field name="uom_id" readonly="1"/>
+													<field name="available_quantity" widget="char"/>
+													<field name="transfer_quantity" widget="char" required="1"/>
+													<field name="current_quantity" widget="char"/>
+
+												</group>
+												<group>
+													<field name="supervisor_id" options="{'no_create': True, 'no_create_edit':True}" required="1" />
+													<field name="site_id" options="{'no_create': True, 'no_create_edit':True}" required="1"/>
+													<field name="to_location_id" required="1"/>
+													<field name="amount_per_unit" widget="char"/>
+													<field name="total_amount" sum="Total" widget="char"/>
+
+													<field name="stock_move_id" invisible="1"/>
+													<field name="account_move_id" invisible="1"/>
+												</group>
+
+											</group>
+										</form>
+									</field>
+								</group>
+							</page>
+						</notebook>
+					</group>
+
+
+<!--					</notebook>-->
+					<!-- <notebook>
+                        <page string="Payment">
+                            <group>
+                                <field name="payment_line" nolabel="1" attrs="{'readonly':[('state','in',('approved','checked','cancelled'))]}">
+                                    <tree delete="false">
+                                        <field name="to_id" string="Account" />
+                                        <field name="amount" widget="char" sum="Total"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <group>
+                                                <field name="to_id" string="Account" options="{'no_create': True, 'no_create_edit':True}" />
+                                                <field name="amount" widget="char"  />
+                                            </group>
+                                            <group></group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </group>
+                        </page>-->
+<!--                    </notebook>-->
+<!--					<group string="Details Of Reception">-->
+<!--					<notebook>-->
+<!--					<page string="Details Of Reception">-->
+<!--						&lt;!&ndash; <label for="item_usage_lines" string="Details Of Item"/> &ndash;&gt;-->
+<!--						<field name="received_ids" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}">-->
+<!--							<tree editable="bottom" delete="false">-->
+<!--								<field name="vehicle_id" readonly="1"/>-->
+<!--								<field name="from_id2" readonly="1"/>-->
+<!--								<field name="item_expense2" readonly="1"/>-->
+<!--								<field name="qty" sum="Total" readonly="1"/>-->
+<!--								<field name="rate" sum="Total" readonly="1"/>-->
+<!--								<field name="total" sum="Total" readonly="1"/>-->
+<!--								<field name="voucher_no" string="Bill No" readonly="1"/>-->
+<!--								<field name="rate" readonly="1"/>-->
+<!--								<field name="start_km" readonly="1"/>-->
+<!--								<field name="end_km" readonly="1"/>-->
+<!--								<field name="total_km" sum="Total" readonly="1"/>-->
+<!--								<field name="rent" sum="Total" readonly="1"/>-->
+<!--								<field name="contractor_id" readonly="1"/>-->
+<!--								<field name="remarks" />-->
+<!--								<field name="status" readonly="1" />-->
+<!--								<field name="driver_stmt_id" invisible="1" readonly="1" />-->
+<!--								<field name="recept_temp" invisible="1" readonly="1" />-->
+<!--								<field name="rejection_remarks" />-->
+<!--								<button name="approve_line" icon="gtk-apply" type="object" class="oe_highlight" help="Line Approve" attrs="{'invisible':[('status','=','accepted')]}"/>-->
+<!--								<button name="reject_line" icon="gtk-cancel" type="object" class="oe_highlight" help="Line Reject" attrs="{'invisible':[('status','=','rejected')]}"/>-->
+<!--							</tree>-->
+<!--						</field>-->
+<!--					</page>-->
+
+<!--					&lt;!&ndash; <group>-->
+<!--                        <group>-->
+
+
+<!--                        </group>-->
+<!--                        <group class="oe_subtotal_footer oe_right">-->
+<!--                            <div class="oe_subtotal_footer_separator oe_inline">-->
+<!--                                <label for="pre_balance" />-->
+<!--                            </div>-->
+<!--                            <field name="pre_balance" nolabel="1" class="oe_subtotal_footer_separator" readonly="1"/>-->
+<!--                            <div class="oe_subtotal_footer_separator oe_inline">-->
+<!--                                <button name="received_rs" type="object" class="oe_highlight" string="Received" attrs="{'invisible':[('reception','=',False)]}" />-->
+<!--                                <label for="receipts" />-->
+<!--                            </div>-->
+<!--                            <field name="receipts" nolabel="1" class="oe_subtotal_footer_separator" />-->
+<!--                            <div class="oe_subtotal_footer_separator oe_inline">-->
+<!--                                <label for="total" />-->
+<!--                            </div>-->
+<!--                            <field name="total" nolabel="1" class="oe_subtotal_footer_separator" />-->
+
+<!--                            <div> &ndash;&gt;-->
+<!--					&lt;!&ndash; <div class="oe_subtotal_footer_separator oe_inline"> &ndash;&gt;-->
+<!--					&lt;!&ndash; <label for="rent_vehicle" string="Rent Vehicle Advance" /> &ndash;&gt;-->
+<!--					&lt;!&ndash;  </div>-->
+<!--                     <field name="rent_vehicle" nolabel="1" class="oe_subtotal_footer_separator" readonly="1" invisible="1"/>-->
+<!--                     <div class="oe_subtotal_footer_separator oe_inline">-->
+<!--                         <label for="expense" />-->
+<!--                     </div>-->
+<!--                     <field name="expense" nolabel="1" class="oe_subtotal_footer_separator" />-->
+<!--                     <div class="oe_subtotal_footer_separator oe_inline">-->
+<!--                         <button name="transferred_rs" type="object" class="oe_highlight" string="Transferred" attrs="{'invisible':[('transfer','=',False)]}"/>-->
+<!--                         <label for="transfer_amount" />-->
+<!--                     </div>-->
+<!--                     <field name="transfer_amount" nolabel="1" class="oe_subtotal_footer_separator" />-->
+<!--                     <div class="oe_subtotal_footer_separator oe_inline">-->
+<!--                         <label for="balance" />-->
+<!--                     </div>-->
+<!--                     <field name="balance" nolabel="1" class="oe_subtotal_footer_separator" />-->
+<!--                     <div class="oe_subtotal_footer_separator oe_inline">-->
+<!--                         <label for="theoretical_balance" />-->
+<!--                     </div>-->
+<!--                     <field name="theoretical_balance" nolabel="1" class="oe_subtotal_footer_separator" />-->
+
+<!--                 </group>-->
+
+<!--             </group> &ndash;&gt;-->
+<!--&lt;!&ndash;					<group>&ndash;&gt;-->
+
+<!--						<page string="Details Of Items">-->
+<!--							&lt;!&ndash; <label for="item_usage_lines" string="Details Of Item"/> &ndash;&gt;-->
+<!--							<field name="item_usage_lines" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" context="{'default_date':date}">-->
+<!--								<tree delete="false">-->
+<!--									<field name="date" />-->
+<!--									<field name="product_id" required="1" options="{'no_create': True, 'no_create_edit':True}" />-->
+<!--									<field name="pre_qty" widget="char" sum="Total"/>-->
+<!--									<field name="receipts" widget="char" />-->
+<!--									<field name="total" widget="char" sum="Total"/>-->
+<!--									<field name="usage" widget="char" />-->
+<!--									<field name="balance" widget="char" sum="Total"/>-->
+<!--								</tree>-->
+
+<!--&lt;!&ndash;								<form>&ndash;&gt;-->
+<!--&lt;!&ndash;									<group>&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="date" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="product_id" required="1" options="{'no_create': True, 'no_create_edit':True}" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="pre_qty" widget="char" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="receipts" widget="char" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="total" widget="char" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="usage" widget="char" />&ndash;&gt;-->
+<!--&lt;!&ndash;										<field name="balance" widget="char" />&ndash;&gt;-->
+<!--&lt;!&ndash;									</group>&ndash;&gt;-->
+<!--&lt;!&ndash;								</form>&ndash;&gt;-->
+<!--							</field>-->
+<!--						</page>-->
+<!--						<page string="Details Of Required Items">-->
+<!--							<field name="details_rqrd_item" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','approved','checked','cancelled'))]}" context="{'default_general_purchase':True,'default_date':date}">-->
+<!--								 <tree>-->
+<!--									<field name="name" />-->
+<!--									<field name="supervisor_id" />-->
+<!--							  	 	<field name="responsible" invisible="1"/>-->
+<!--									<field name="order_date" />-->
+<!--									<field name="min_expected_date" />-->
+<!--									<field name="max_expected_date" />-->
+<!--									<field name="received_date"   />-->
+<!--									 <field name="item_ids" widget="many2many_tags"/>-->
+<!--									<field name="estimated_amt"/>-->
+<!--									<field name="state"/>-->
+<!--								  </tree>-->
+<!--							</field>-->
+<!--						</page>-->
+
+<!--&lt;!&ndash;					</notebook>&ndash;&gt;-->
+
+<!--						&lt;!&ndash; <group string="Details Of Work Done At Site">-->
+<!--                            <field name="work_details" nolabel="1" attrs="{'readonly':[('state','in',('approved','checked','cancelled'))]}" />-->
+<!--                        </group> &ndash;&gt;-->
+
+<!--&lt;!&ndash;					</group>&ndash;&gt;-->
+<!--						<page string="Details Of Received Items">-->
+<!--							<field name="details_received_item_ids" nolabel="1" context="{'default_Date':date}">-->
+
+
+
+<!--							</field>-->
+<!--						</page>-->
+
+<!--						</notebook>-->
+<!--					</group>-->
+
+<!--							 <form>-->
+
+
+
+
+<!--                      <field name="state" widget="statusbar" />-->
+
+<!--                    <sheet>-->
+<!--                      &lt;!&ndash; <div class="oe_right oe_button_box" name="buttons" >-->
+<!--                        <button class="oe_inline oe_stat_button" type="object" name="view_invoices" icon="fa-tasks" string="View Invoices" attrs="{'invisible':[('state','!=','invoice')]}"/>-->
+<!--                      </div> &ndash;&gt;-->
+<!--                    <div class="oe_title">-->
+<!--                      <h1>-->
+<!--                        <field name="name" />-->
+<!--                      </h1>-->
+<!--                    </div>-->
+<!--                    <group>-->
+<!--                      <group>-->
+<!--                        <field name="supervisor_id" />-->
+
+<!--                        <field name="site" required="1" domain="[('usage','=','internal')]" />-->
+
+<!--                       &lt;!&ndash; <field name="expected_supplier" options="{'no_create':1}" domain="[('supplier','=',True)]"  />-->
+<!--                      &ndash;&gt;  <field name="general_purchase" invisible="1"  />-->
+<!--                          <field name="item_ids" widget="many2many_tags" invisible="1"/>-->
+<!--                          <field name="estimated_amt" invisible="1"/>-->
+<!--                      </group>-->
+<!--                      <group>-->
+<!--                        <field name="order_date" required="1" />-->
+<!--                        <field name="min_expected_date" />-->
+<!--                        <field name="max_expected_date" />-->
+<!--                      </group>-->
+
+
+<!--                    </group>-->
+<!--                    <group >-->
+<!--                      <group string="Item details">-->
+
+
+<!--                           <field name="site_purchase_item_line_ids" nolabel="1" >-->
+
+<!--							   <tree editable="bottom">-->
+<!--                                  <field name="item_id" required="1" />-->
+<!--                                    <field name="desc" required="1" />-->
+<!--                                <field name="unit" required="1" />-->
+<!--                                <field name="quantity" widget="char" required="1" sum="Total" />-->
+<!--                                 <field name="rate" widget="char" required="1" />-->
+<!--                                   <field name="estimated_amt"  widget="char" sum="Total"/>-->
+<!--								   <field name="received_qty" widget="char"/>-->
+<!--								   <field name="received_rate" widget="char"/>-->
+<!--								   <field name="received_bool"/>-->
+<!--								   <field name="invoiced_amount" widget="char"/>-->
+
+<!--                              </tree>-->
+
+
+
+
+<!--                          </field>-->
+
+
+<!--                      </group>-->
+
+<!--                    </group>-->
+
+
+<!--                </sheet>-->
+
+
+<!--                  </form>-->
+
+<!--							</field>-->
+<!--						</group>-->
+
+
+						<!-- <group string="Tomorrow's Work Arrangements">
+                            <field name="tmrw_work_arrangement" nolabel="1" attrs="{'readonly':[('state','in',('approved','checked','cancelled'))]}" />
+                        </group> -->
+
+
+					<group>
+						<group>
+							<field name="approved_by" readonly="1" attrs="{'invisible':[('state','not in',('checked','approved'))]}" />
+
+							<field name="approved_sign" readonly="1" widget="image" class="oe_avatar" attrs="{'invisible':[('state','not in',('checked','approved'))]}" />
+
+						</group>
+						<group>
+
+							<field name="checked_by" readonly="1" attrs="{'invisible':[('state','!=','checked')]}"  />
+
+							<field name="checked_sign" readonly="1" widget="image" class="oe_avatar" attrs="{'invisible':[('state','!=','checked')]}" />
+						</group>
+					</group>
+
+
+				</form>
+
+
+			</field>
+		</record>
+
+		<record id="tree_partner_daily_statement" model="ir.ui.view">
+			<field name="name">tree.partner.daily.statement</field>
+			<field name="model">partner.daily.statement</field>
+			<field name="arch" type="xml">
+				<tree string="Daily Statement">
+					<field name="date" />
+					<field name="name" />
+					<field name="employee_id" />
+
+					<field name="state" />
+				</tree>
+
+			</field>
+		</record>
+		<record id="search_partner_daily_statement" model="ir.ui.view">
+			<field name="name">search.partner.daily.statement</field>
+			<field name="model">partner.daily.statement</field>
+			<field name="arch" type="xml">
+				<search string="Daily Statement">
+					<field name="date" />
+					<field name="employee_id" />
+					<group expand="0" string="Group By">
+						<filter string="Supervisor" icon="terp-stock_effects-object-colorize"
+								domain="[]" name="group_partner" context="{'group_by':'employee_id'}" />
+						<filter string="Month" icon="terp-go-month" domain="[]"
+								name="group_month" context="{'group_by':'date'}" />
+					</group>
+				</search>
+
+			</field>
+		</record>
+
+		<record id="action_partner_daily_statement" model="ir.actions.act_window">
+			<field name="name">Supervisor Daily Statement</field>
+			<field name="res_model">partner.daily.statement</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="tree_partner_daily_statement" />
+		</record>
+		<record id="action_supervisor_tasks" model="ir.actions.act_window">
+			<field name="name">My Tasks</field>
+			<field name="res_model">project.task</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+<!--			<field name="view_id" ref="tree_partner_daily_statement" />-->
+		</record>
+<!--		TRIANGLE CUSTOM-->
+
+
+
+		<menuitem id="menu_partner_daily_statement_in_activity_report" parent="root_activity_reports_menu"
+				  name="Supervisor Daily Statement" sequence="20"
+				  groups="hiworth_hr_attendance.group_project_manager,base.group_erp_manager,hiworth_hr_attendance.group_supervisor,hiworth_hr_attendance.group_admin" />
+
+		<menuitem id="menu_partner_daily_statement" parent="menu_partner_daily_statement_in_activity_report"
+				  action="action_partner_daily_statement" name="Supervisor Daily Statement" sequence="10"
+				  groups="hiworth_hr_attendance.group_project_manager,base.group_erp_manager,hiworth_hr_attendance.group_supervisor,hiworth_hr_attendance.group_admin"/>
+
+		<menuitem id="menu_supervisor_daily_task_view" parent="menu_partner_daily_statement_in_activity_report"
+				  name="Tasks" sequence="8" action="action_supervisor_tasks"
+				  groups="hiworth_hr_attendance.group_project_manager,base.group_erp_manager,hiworth_hr_attendance.group_supervisor,hiworth_hr_attendance.group_admin" />
+
+		<record id="form_fuel_transfer" model="ir.ui.view">
+			<field name="name">form.fuel.transfer</field>
+			<field name="model">fuel.confirm.transfer</field>
+			<field name="arch" type="xml">
+				<form create="false">
+					<!--  <header>
+                         <button name="accept_cash" string="Accept" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','=','accepted'),('visibility2','=',False)]}"/>
+                         <field name="state" widget="statusbar"/>
+                     </header> -->
+					<sheet>
+
+						<group>
+
+							<field name="date" attrs="{'readonly':[('state','=','accepted')],'required':1}"/>
+							<field name="name"  attrs="{'readonly':[('state','=','accepted')],'required':1}" string="Sender" />
+							<field name="amount" attrs="{'readonly':[('state','=','accepted')]}"/>
+							<field name="user_id" string="Receiver" readonly="1"/>
+							<field name="admin" invisible="1"/>
+							<field name="transfer_to_user" invisible="1"/>
+							<field name="transfer_from_user" invisible="1" />
+							<field name="visibility2" invisible="1" />
+							<field name="driver_stmt_id" invisible="1" />
+						</group>
+					</sheet>
+
+
+
+				</form>
+			</field>
+		</record>
+
+		<record id="tree_fuel_confirm_transfer_view" model="ir.ui.view">
+			<field name="name">tree.fuel.transfer</field>
+			<field name="model">fuel.confirm.transfer</field>
+			<field name="arch" type="xml">
+				<tree create="false">
+					<field name="date" />
+					<field name="transfer_from_user"/>
+					<field name="transfer_to_user" />
+					<field name="amount" sum="Total"/>
+					<field name="admin" invisible="1"/>
+					<field name="state"/>
+					<button name="accept_cash" icon="gtk-apply" type="object" class="oe_highlight" />
+				</tree>
+
+			</field>
+		</record>
+
+		<record id="action_pending_fuel_new" model="ir.actions.act_window">
+			<field name="name">Fuel Transfer</field>
+			<field name="res_model">fuel.confirm.transfer</field>
+			<field name="view_type">form</field>
+			<field name="domain">['|',('admin','=',uid),('transfer_from_user','=',uid)]</field>
+			<field name="context">{'search_default_pending':1}</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="tree_fuel_confirm_transfer_view" />
+		</record>
+
+
+		<menuitem id="menu_pending_fuel_transfer"
+				  parent="menu_partner_daily_statement_in_activity_report"
+				  action="action_pending_fuel_new"
+				  name="Fuel Transfer" sequence="27" groups="hiworth_hr_attendance.group_supervisor,base.group_erp_manager" />
+
+		<menuitem id="menu_pending_cash_supervisor"
+				  parent="menu_partner_daily_statement_in_activity_report"
+				  action="action_pending_cash_new2"
+				  name="Cash Transfer" sequence="25" groups="hiworth_hr_attendance.group_supervisor,base.group_erp_manager" />
+
+
+		<menuitem id="menu_pending_cash_supervisor_reception"
+				  parent="menu_partner_daily_statement_in_activity_report"
+				  action="action_pending_cash_reception1"
+				  name="Cash Reception" sequence="26" groups="hiworth_hr_attendance.group_supervisor,base.group_erp_manager" />
+
+
+
+
+		<record id="view_account_form_labour" model="ir.ui.view">
+			<field name="name">account.account.form.labour</field>
+			<field name="model">account.account</field>
+			<field name="arch" type="xml">
+				<form string="Labour Accounts">
+					<sheet>
+						<div class="oe_right oe_button_box" name="buttons" >
+
+
+							<button class="oe_inline oe_stat_button" type="object" name="view_accounts" icon="fa-tasks" string="Statement" attrs="{'invisible':[('type','=','view')]}"/>
+						</div>
+						<group>
+							<group>
+								<field name="parent_id" domain="[('labour_categ','=',True)]" context="{'form_view_ref':'hiworth_construction.view_account_form_labour_categ','default_labour_categ':1}" />
+								<field name="type"/>
+								<field name="user_type"/>
+							</group>
+							<group>
+							</group>
+						</group>
+						<div>
+							<h1>
+								<label for="name" string="Name" />
+								<field name="name" />
+								<field name="code" invisible="1" />
+							</h1>
+							<h3>
+								<label for="rate" class="oe_inline"
+									   attrs="{'invisible':[('type','in', ['view','consolidation','closed'])]}"/>
+								<field name="rate"  class="oe_inline"
+									   attrs="{'invisible':[('type','in', ['view','consolidation','closed'])],'required':[('type','not in',['view','consolidation','closed'])]}" widget="char"/>
+							</h3>
+						</div>
+						<group>
+							<group>
+
+								<field name="category_id" attrs="{'invisible':[('type','in', ['view','consolidation','closed'])], 'required':[('type','not in', ['view','consolidation','closed']),('is_labour','=',True)]}"/>
+								<field name="credit_limit" invisible="1"/>
+								<field name="debit_limit" invisible="1"/>
+								<field name="is_labour" invisible="1"/>
+								<field name="active" invisible="1"/>
+							</group>
+							<group>
+								<field name="debit" readonly="1"/>
+								<field name="credit" readonly="1"/>
+								<label for="balance1" string="Balance"/>
+								<div class="oe_inline">
+
+									<field name="balance1" class="oe_inline"/>
+									<field name="bal_code" class="oe_inline"/>
+								</div>
+							</group>
+						</group>
+						<group>
+							<field name="note" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+
+		<record id="action_labour_accounts2" model="ir.actions.act_window">
+			<field name="name">Labour Accounts</field>
+			<field name="res_model">account.account</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="domain">[["is_labour", "=", True]]</field>
+			<field name="context">{'default_is_labour':True}</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<record id="action_labour_accounts2_view_tree" model="ir.actions.act_window.view">
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="hiworth_accounting.view_account_list_inherit" />
+			<field name="act_window_id" ref="action_labour_accounts2" />
+		</record>
+
+		<record id="action_labour_accounts2_view_form" model="ir.actions.act_window.view">
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_account_form_labour" />
+			<field name="act_window_id" ref="action_labour_accounts2" />
+		</record>
+
+
+		<menuitem id="menu_labour_accounts" parent="menu_partner_daily_statement_in_activity_report"
+				  action="action_labour_accounts2" name="Labour Accounts" sequence="20"
+				  groups="hiworth_hr_attendance.group_supervisor,base.group_erp_manager,hiworth_hr_attendance.group_admin"/>
+
+
+
+		<record id="view_account_form_mason" model="ir.ui.view">
+			<field name="name">account.account.form.labour</field>
+			<field name="model">account.account</field>
+			<field name="arch" type="xml">
+				<form string="Mason Accounts">
+					<sheet>
+						<div class="oe_right oe_button_box" name="buttons" >
+
+
+							<button class="oe_inline oe_stat_button" type="object" name="view_accounts" icon="fa-tasks" string="Statement" />
+						</div>
+
+						<div class="oe_title">
+							<h1>
+
+								<field name="name" />
+								<field name="code" invisible="1" />
+							</h1>
+						</div>
+						<group>
+							<group>
+								<field name="parent_id"/>
+								<field name="type"/>
+								<field name="user_type"/>
+								<field name="is_mason" invisible="1" />
+								<!-- <field name="category_id" attrs="{'invisible':[('type','in', ['view','consolidation','closed'])], 'required':[('type','not in', ['view','consolidation','closed']),('is_labour','=',True)]}"/>
+								<field name="credit_limit" invisible="1"/> -->
+							</group>
+							<group>
+								<field name="debit" readonly="1"/>
+								<field name="credit" readonly="1"/>
+								<label for="balance1" string="Balance"/>
+								<div class="oe_inline">
+
+									<field name="balance1" class="oe_inline"/>
+									<field name="bal_code" class="oe_inline"/>
+								</div>
+							</group>
+						</group>
+						<group>
+
+							<group>
+								<field name="mason_line" nolabel="1">
+									<tree editable="bottom">
+										<field name="name" string="Category" required="1" />
+										<field name="rate" widget="char" required="1" />
+									</tree>
+								</field>
+							</group>
+							<group></group>
+						</group>
+
+						<group>
+							<group>
+
+
+								<field name="debit_limit" invisible="1"/>
+								<field name="is_labour" invisible="1"/>
+								<field name="active" invisible="1"/>
+							</group>
+							<group>
+
+
+							</group>
+						</group>
+						<group>
+							<field name="note" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+
+
+		<record id="action_mason_account_new88" model="ir.actions.act_window">
+			<field name="name">Mason Accounts</field>
+			<field name="res_model">account.account</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="domain">[["is_mason", "=", True]]</field>
+			<field name="context">{'default_is_mason':True}</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<record id="action_mason_account_new882_view_tree1" model="ir.actions.act_window.view">
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="hiworth_accounting.view_account_list_inherit" />
+			<field name="act_window_id" ref="action_mason_account_new88" />
+		</record>
+
+		<record id="action_mason_account_new882_view_form1" model="ir.actions.act_window.view">
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_account_form_mason" />
+			<field name="act_window_id" ref="action_mason_account_new88" />
+		</record>
+
+
+		<menuitem id="menu_mason_accounts1" parent="menu_partner_daily_statement_in_activity_report"
+				  action="action_mason_account_new88" name="Mason Accounts" sequence="22"
+				  groups="hiworth_hr_attendance.group_supervisor,base.group_erp_manager,hiworth_hr_attendance.group_admin"/>\
+
+
+		<record id="view_account_form_overhead" model="ir.ui.view">
+			<field name="name">account.account.form.overhead</field>
+			<field name="model">account.account</field>
+			<field name="arch" type="xml">
+				<form string="Overhead Accounts">
+					<sheet>
+						<div class="oe_right oe_button_box" name="buttons" >
+							<button class="oe_inline oe_stat_button" type="object" name="view_accounts" icon="fa-tasks" string="Statement" />
+						</div>
+
+						<div class="oe_title">
+							<h1>
+
+								<field name="name" />
+								<field name="code" invisible="1" />
+							</h1>
+						</div>
+						<group>
+							<group>
+								<field name="parent_id"/>
+								<field name="type"/>
+								<field name="user_type"/>
+								<field name="is_overhead" invisible="1" />
+							</group>
+							<group>
+								<field name="debit" readonly="1"/>
+								<field name="credit" readonly="1"/>
+								<label for="balance1" string="Balance"/>
+								<div class="oe_inline">
+									<field name="balance1" class="oe_inline"/>
+									<field name="bal_code" class="oe_inline"/>
+								</div>
+							</group>
+						</group>
+
+
+						<group>
+							<group>
+
+
+								<field name="debit_limit" invisible="1"/>
+								<field name="is_labour" invisible="1"/>
+								<field name="active" invisible="1"/>
+							</group>
+							<group>
+
+
+							</group>
+						</group>
+						<group>
+							<field name="note" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+
+
+		<record id="action_overhead_account" model="ir.actions.act_window">
+			<field name="name">Overhead Accounts</field>
+			<field name="res_model">account.account</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="domain">[["is_overhead", "=", True]]</field>
+			<field name="context">{'default_is_overhead':True}</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<record id="action_overhead_account_view_tree" model="ir.actions.act_window.view">
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="hiworth_accounting.view_account_list_inherit" />
+			<field name="act_window_id" ref="action_overhead_account" />
+		</record>
+
+		<record id="action_overhead_account_view_form" model="ir.actions.act_window.view">
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_account_form_overhead" />
+			<field name="act_window_id" ref="action_overhead_account" />
+		</record>
+
+
+		<menuitem id="menu_overhead_account" parent="menu_partner_daily_statement_in_activity_report"
+				  action="action_overhead_account" name="Overhead Accounts" sequence="23"
+				  groups="hiworth_hr_attendance.group_supervisor,base.group_erp_manager,hiworth_hr_attendance.group_admin"/>
+
+
+
+
+		<record id="view_account_form_labour_categ" model="ir.ui.view">
+			<field name="name">account.account.form.labour</field>
+			<field name="model">account.account</field>
+			<field name="arch" type="xml">
+				<form string="Maosn Accounts">
+					<sheet>
+
+						<div class="oe_title">
+							<h1>
+
+								<field name="name" />
+								<field name="code" invisible="1" />
+							</h1>
+						</div>
+						<group>
+							<group>
+								<field name="parent_id"/>
+								<field name="type"/>
+								<field name="user_type"/>
+								<field name="labour_categ" invisible="1" />
+
+							</group>
+							<group>
+								<field name="debit" readonly="1"/>
+								<field name="credit" readonly="1"/>
+								<label for="balance1" string="Balance"/>
+								<div class="oe_inline">
+
+									<field name="balance1" class="oe_inline"/>
+									<field name="bal_code" class="oe_inline"/>
+								</div>
+							</group>
+						</group>
+
+
+						<group>
+							<group>
+
+
+								<field name="debit_limit" invisible="1"/>
+								<field name="is_labour" invisible="1"/>
+								<field name="active" invisible="1"/>
+							</group>
+							<group>
+
+
+							</group>
+						</group>
+						<group>
+							<field name="note" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+
+
+		<record id="action_labour_categ_acnt_new88" model="ir.actions.act_window">
+			<field name="name">Labour Account Category</field>
+			<field name="res_model">account.account</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="domain">[["labour_categ", "=", True]]</field>
+			<field name="context">{'default_labour_categ':True}</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<record id="action_labour_categ_new882_view_tree1" model="ir.actions.act_window.view">
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="hiworth_accounting.view_account_list_inherit" />
+			<field name="act_window_id" ref="action_labour_categ_acnt_new88" />
+		</record>
+
+		<record id="action_labour_categ_new882_view_form1" model="ir.actions.act_window.view">
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_account_form_labour_categ" />
+			<field name="act_window_id" ref="action_labour_categ_acnt_new88" />
+		</record>
+
+
+		<menuitem id="menu_labour_categ1" parent="menu_partner_daily_statement_in_activity_report"
+				  action="action_labour_categ_acnt_new88" name="Labour Account Category" sequence="21"
+				  groups="hiworth_hr_attendance.group_supervisor,base.group_erp_manager,hiworth_hr_attendance.group_admin"/>
+
+
+
+
+
+		<record id="form_labour_category" model="ir.ui.view">
+			<field name="name">form.labour.category</field>
+			<field name="model">labour.category</field>
+			<field name="arch" type="xml">
+				<form string="Labour Category">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" required="1"/>
+							</group>
+							<group>
+								<field name="code" required="1"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="tree_labour_category" model="ir.ui.view">
+			<field name="name">tree.labour.category</field>
+			<field name="model">labour.category</field>
+			<field name="arch" type="xml">
+				<tree string="Labour Category">
+					<field name="name" />
+					<field name="code" />
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="action_labour_category" model="ir.actions.act_window">
+			<field name="name">Labour Category</field>
+			<field name="res_model">labour.category</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="manu_labour_category" parent="menu_partner_daily_statement_in_activity_report"
+				  action="action_labour_category" name="Labour Category" sequence="30" />
+
+
+
+
+		<!-- __export__.ir_partner_daily_stmt,PartnerDailyStmt,hiworth_construction.model_partner_daily_statement,"['|',('employee_id','=',user.employee_id.id),('next_approver','=',user.id)]",True,True,True,False -->
+
+
+
+
+
+
+		<record id="partner_daily_statement_cancel" model="ir.ui.view">
+			<field name="name">Cancel Supervisor Statements</field>
+			<field name="model">partner.daily.statement.cancel</field>
+			<field name="arch" type="xml">
+				<form string="Cancel Supervisor Statements">
+					<group>
+						<separator string="Are you sure you want to cancel these statements?"/>
+						<label string="
+								Please note that: &#10; &#10;
+								Statements will only be cancelled if: &#10;
+									* Supervisor Statements are in Confirmed, Approved, or Checked &#10;" colspan="4"/>
+					</group>
+
+					<footer>
+						<button name="cancel_statements" string="Cancel Statements" type="object" class="oe_highlight"/>
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<act_window name="Cancel Statements"
+					context="{}"
+					res_model="partner.daily.statement.cancel"
+					src_model="partner.daily.statement"
+					view_mode="form"
+					target="new"
+					multi="True"
+					key2="client_action_multi"
+					id="action_partner_daily_statement_cancel"/>
+
+
+		<record id="view_general_fuel_configuration_tree" model="ir.ui.view">
+			<field name="name">general.fuel.configuration.wizard.tree</field>
+			<field name="model">general.fuel.configuration.wizard</field>
+			<field name="arch" type="xml">
+				<form string="General Fuel Configurations">
+					<header>
+						<button string="Apply" type="object" name="excecute" class="oe_highlight"/>
+						or
+						<button string="Cancel" type="object" name="cancel" class="oe_link"/>
+					</header>
+
+					<group string="General Fuel">
+						<group>
+							<field name="product_id" />
+						</group>
+						<group>
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="action_cateen_fuel_configuration_tree5" model="ir.actions.act_window">
+			<field name="name">General Settings</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">general.fuel.configuration.wizard</field>
+			<field name="target">inline</field>
+			<field name="view_mode">form</field>
+		</record>
+
+		<menuitem name="General Settings" id="menu_cateen_configuration_tree2" parent="fleet.fleet_configuration"
+				  action="action_cateen_fuel_configuration_tree5" groups="base.group_erp_manager" sequence="50"/>
+
+
+		<record id="action_product_fuel_configuration" model="ir.actions.act_window">
+			<field name="name">Fuel Product</field>
+			<field name="res_model">product.product</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_type">form</field>
+			<field name="domain">[('fuel_ok','=','True')]</field>
+			<field name="context">{'default_fuel_ok': 1}</field>
+		</record>
+
+
+		<menuitem name=" Fuel Products" id="menu_product_fuel_configuration" parent="fleet.fleet_configuration" action="action_product_fuel_configuration" sequence="60"/>
+
+
+		<record id="view_general_items1" model="ir.ui.view">
+			<field name="name">general.product.configuration.form</field>
+			<field name="model">general.product.configuration</field>
+			<field name="arch" type="xml">
+				<form string="General Product Configurations">
+					<!-- <header>
+                      <button string="Apply" type="object" name="excecute" class="oe_highlight"/>
+                      or
+                      <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header> -->
+
+					<group>
+						<group string="General Product">
+							<field name="product_ids" nolabel="1" >
+								<tree editable="bottom">
+									<field name="product_id" />
+								</tree>
+							</field>
+						</group>
+						<group>
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="action_general_items1" model="ir.actions.act_window">
+			<field name="name">General Settings</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">general.product.configuration</field>
+			<!-- <field name="target">inline</field> -->
+			<field name="view_mode">form,tree</field>
+			<field name="view_type">form</field>
+			<field name="domain">[('id', '=', 1)]</field>
+		</record>
+
+		<menuitem name="General Items" id="menu_general_items1" parent="menu_diesel_pump" action="action_general_items1" sequence="50"/>
+
+
+		<!-- <record model="ir.actions.server" id="serveraction_general_items1">
+             <field name="name">General Settings Server Action</field>
+             <field name="model_id" ref="view_general_items1"/>
+             <field name="state">code</field>
+             <field name="code">
+         ids = self.search(cr, user.id, [], order='create_date desc', limit=1, context=context)
+         action = {
+             "name": "General Settings(From Server Action)",
+             "type": "ir.actions.act_window",
+             "view_type": "form",
+             "view_mode": "form,tree",
+             "res_model": self._name,
+             "res_id": ids and ids[0] or None,
+         }
+             </field>
+         </record>
+
+         <menuitem id="menu_serveraction_general_items1" name="General Items"
+                   parent="menu_diesel_pump" action="serveraction_general_items1"/> -->
+
+
+
+
+		<!-- <record id="view_location_tree_product_quant" model="ir.ui.view">
+			<field name="name">location.product.quant.tree</field>
+			<field name="model">location.product.quant</field>
+			<field name="arch" type="xml">
+			   <tree string="Stock Quant">
+					<field name="location_id"/>
+					<field name="product_id"/>
+					<field name="uom_id"/>
+					<field name="qty"/>
+			   </tree>
+			</field>
+		</record>
+
+	   <record id="view_location_form_product_quant" model="ir.ui.view">
+			<field name="name">location.product.quant.form</field>
+			<field name="model">location.product.quant</field>
+			<field name="arch" type="xml">
+		    	<form string="Stock Quant">
+		    		<sheet>
+				  		<group>
+					  		<group>
+								<field name="location_id"/>
+								<field name="product_id"/>
+								<field name="uom_id"/>
+								<field name="qty"/>
+				  			</group>
+					  		<group>
+					  		</group>
+					  	</group>
+					 </sheet>
+		    	</form>
+			</field>
+	    </record>
+
+
+	    <record id="action_location_product_quant" model="ir.actions.act_window">
+			<field name="name">Stock Quant</field>
+			<field name="res_model">location.product.quant</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+	    </record>
+
+
+
+	   <menuitem id="menu_location_product_quant" action="action_location_product_quant" parent="menu_hiworth_finance_config" name="Stock Quant" sequence="2"/> -->
+
+		<record id="view_labour_attendance" model="ir.ui.view">
+			<field name="name">tree.labour.daily.statement</field>
+			<field name="model">labours.details.custom</field>
+			<field name="arch" type="xml">
+				<tree string="Onsite Daily Statement">
+					<field name="date" />
+					<field name="labour_name" />
+					<field name="position" />
+					<field name="project" />
+					<field name="site_id" />
+					<field name="start_time" />
+					<field name="end_time" />
+					<field name="remarks" />
+				</tree>
+
+			</field>
+		</record>
+
+
+
+		<record id="view_employee_search_attendance" model="ir.ui.view">
+            <field name="name">hr.employee.attendance.search</field>
+            <field name="model">labours.details.custom</field>
+            <field name="arch" type="xml">
+                <search string="Attendance">
+                    <field name="project" />
+                    <field name="date" />
+                    <group expand="0" string="group by">
+                        <filter name="group_by_project" string="Project" context="{'group_by':'project'}"/>
+                        <filter name="group_by_date" string="Date" context="{'group_by':'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+
+        <record id="open_view_onsite_employee_list_attendance" model="ir.actions.act_window">
+            <field name="name">Onsite Employee - Attendance</field>
+            <field name="res_model">labours.details.custom</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+<!--            <field name="view_id" ref="view_labour_attendance"></field>-->
+<!--            <field name="domain">[('status1','!=','resign')]</field>-->
+            <field name="search_view_id" ref="view_employee_search_attendance"/>
+            <field name="context">{"search_default_group_by_date":True, "search_default_group_by_project":True}</field>
+        </record>
+
+		<menuitem id="menu_site_employee" parent="hiworth_hr_attendance.menu_attendance" name="Onsite Employee - Attendance" sequence="1" action="open_view_onsite_employee_list_attendance"/>
+
+					<record id="hiworth_attendance_entry_new" model="ir.ui.view">
+				<field name="name">employee.attendance.entry.new</field>
+				<field name="model">attendance.entry.wizard</field>
+				<field name="arch" type="xml">
+					<form string="Attendance Entry">
+						<sheet>
+							<group>
+								<group>
+									<field name="date" required="1"/>
+								</group>
+								<group>
+									<field name="user_id" required="1"/>
+								</group>
+							</group>
+							<group>
+								<field name="line_ids" nolabel="1">
+									<tree editable="bottom">
+										<field name="employee_id" required="1"/>
+										<field name="attendance"/>
+									</tree>
+								</field>
+							</group>
+							<footer>
+									<button type="object" name="do_mass_update"
+											string="Submit" class="oe_highlight" />
+									<button special="cancel" string="Cancel"/>
+							</footer>
+						</sheet>
+					</form>
+				</field>
+			</record>
+
+
+	<act_window id="hiworth_hr_attendance_new_entry"
+					name="Attendance Entry" res_model="attendance.entry.wizard.new"
+					view_mode="form" target="new" multi="True"
+					view_id="hiworth_attendance_entry_new"
+					src_model="labours.details.custom"
+					context="{'employee_ids': active_ids}"/>
+
+
+		<record id="view_partner_form" model="ir.ui.view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field eval="1" name="priority" />
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//sheet/group/group[2]/field[@name='phone']"
+					position="replace">
+					<field name="owner_name" string="Owner Name"/>
+				</xpath>
+				<xpath expr="//sheet/group/group[2]/field[@name='email']"
+					position="after">
+					<field name="responsible_name" />
+					<field name="responsible_mobile"/>
+					<field name="responsible_email"/>
+<!--					<field name="vat_no"/>-->
+					<field name="trn_no" string="TRN NO"/>
+				</xpath>
+<!--				<xpath expr="//sheet/group/group[2]/field[@name='email2']" position="attributes">-->
+<!--					<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+<!--				<xpath expr="//sheet/group/group[2]/field[@name='co_tax_no']" position="attributes">-->
+<!--					<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+<!--				<xpath expr="//sheet/group/group[2]/field[@name='phone2']" position="attributes">-->
+<!--					<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+<!--				<xpath expr="//sheet/group/group[2]/field[@name='fax2']" position="attributes">-->
+<!--					<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+<!--				<xpath expr="//sheet/group/group[2]/field[@name='fax1']" position="attributes">-->
+<!--					<attribute name="invisible">1</attribute>-->
+<!--				</xpath>-->
+
+
+			</field>
+		</record>
+
+
+
+	</data>
+
+
+
+
+</openerp>

@@ -1,0 +1,17 @@
+<openerp>
+    <data noupdate="1">
+
+        <record id="daily_statement_type" model="ir.sequence.type">
+            <field name="name">Daily Statment Code</field>
+            <field name="code">partner.daily.statement</field>
+        </record>
+    
+        <record id="daily_statement_seq" model="ir.sequence">
+            <field name="name">Daily Statment Code</field>
+            <field name="code">partner.daily.statement</field>
+            <field name="padding">4</field>
+        </record>
+
+        
+    </data>
+</openerp>
