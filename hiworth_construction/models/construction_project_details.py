@@ -1809,17 +1809,17 @@ class purchase_order(models.Model):
         if self.date_order:
             self.minimum_planned_date = datetime.strptime(self.date_order,"%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d")
 
-    @api.model
-    def create(self,vals):
-        if vals.get('supplier_ids'):
-            vals['name'] =self.env['ir.sequence'].next_by_code('rfq.code')
-
-        if vals.get('partner_id'):
-            vals.update({'state':'confirmed'})
-        if vals.get('merged_po',False):
-            vals.update({'state': 'approved'})
-        res = super(purchase_order, self).create(vals)
-        return res
+    # @api.model
+    # def create(self,vals):
+    #     if vals.get('supplier_ids'):
+    #         vals['name'] =self.env['ir.sequence'].next_by_code('rfq.code')
+    #
+    #     if vals.get('partner_id'):
+    #         vals.update({'state':'confirmed'})
+    #     if vals.get('merged_po',False):
+    #         vals.update({'state': 'approved'})
+    #     res = super(purchase_order, self).create(vals)
+    #     return res
 
     @api.multi
     def purchase_confirm(self):
