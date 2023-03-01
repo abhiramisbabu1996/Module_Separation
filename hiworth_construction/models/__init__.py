@@ -1,5 +1,4 @@
 import construction_project_details
-# import project_product
 import hiworth_accounting
 # import activity
 import hiworth_invoice

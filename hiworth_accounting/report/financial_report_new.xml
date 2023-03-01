@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="hiworth_financial_wizard">
+			<field name="name">hiworth.financial.report.wizard</field>
+			<field name="model">hiworth.financial.report.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Financial Report">
+					<group col="4">
+						<field name="company_id" />
+						<field name="account_report_id" />
+						<field name="fiscalyear" />
+						<field name="target_move" />
+						<field name="date_from" />
+						<field name="date_to" />
+						<field name="visible_details" />
+					</group>
+					<footer>
+						<button name="action_open_window1" type="object" string="Print"
+							class="oe_highlight" />
+						<button name="action_view_window" type="object" string="View"
+							class="oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_hiworth_financial_wizard" model="ir.actions.act_window">
+			<field name="name">Financial Report</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hiworth.financial.report.wizard</field>
+			<field name="target">new</field>
+			<field name="context">{'default_account_report_id': 'balance_sheet'}
+			</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+		</record>
+
+
+		<menuitem icon="STOCK_PRINT" name="Balance Sheet"
+			action="action_hiworth_financial_wizard" id="account.menu_account_report_bs"
+			parent="account.final_accounting_reports" />
+
+
+		<record id="action_hiworth_financial_wizard_pl" model="ir.actions.act_window">
+			<field name="name">Financial Report</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hiworth.financial.report.wizard</field>
+			<field name="target">new</field>
+			<field name="context">{'default_account_report_id': 'profit_loss'}
+			</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+		</record>
+
+
+		<menuitem icon="STOCK_PRINT" name="Profit And Loss"
+			action="action_hiworth_financial_wizard_pl" id="account.menu_account_report_pl"
+			parent="account.final_accounting_reports" />
+
+
+		<report id="report_hiworth_financial" string="Balance Sheet"
+			model="hiworth.financial.report.wizard" report_type="qweb-html"
+			name="hiworth_accounting.report_hiworth_financial_template" />
+
+		<record id="paper_format_report_financial" model="report.paperformat">
+			<field name="name">European A4 low margin</field>
+			<field name="default" eval="True" />
+			<field name="format">A4</field>
+			<field name="page_height">0</field>
+			<field name="page_width">0</field>
+			<field name="orientation">Landscape</field>
+			<field name="margin_top">30</field>
+			<field name="margin_bottom">5</field>
+			<field name="margin_left">7</field>
+			<field name="margin_right">7</field>
+			<field name="header_line" eval="False" />
+			<field name="header_spacing">20</field>
+			<field name="dpi">90</field>
+		</record>
+
+		<record id="hiworth_accounting.report_hiworth_financial" model="ir.actions.report.xml">
+			<field name="paperformat_id" ref="hiworth_accounting.paper_format_report_financial" />
+		</record>
+
+		<template id="report_hiworth_financial_template">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="report.internal_layout">
+						<div class="page">
+
+							<div class="row">
+								<h2 class="text-center">
+									<span t-field="o.account_report_id" />
+								</h2>
+							</div>
+
+							<div class="row">
+								<h3 class="text-center">
+									Company:
+									<span t-field="o.company_id.name" />
+								</h3>
+							</div>
+
+							<table style="width: 100%; font-size:16px;margin-top:10px;">
+								<thead>
+									<tr style="height: 30px;">
+										<td style="width: 50%;">
+											<b>Fiscal Year:</b>
+											<span t-field="o.fiscalyear" />
+										</td>
+										<td style="width: 50%;text-align: right;">
+											<b>Target Moves:</b>
+											<span t-field="o.target_move" />
+										</td>
+									</tr>
+									<tr style="height: 30px;">
+										<td style="width: 50%;">
+											<b>Date From:</b>
+											<span t-field="o.date_from" />
+										</td>
+										<td style="width: 50%;text-align: right;">
+											<b>Date To:</b>
+											<span t-field="o.date_to" />
+										</td>
+									</tr>
+								</thead>
+							</table>
+
+							<t t-set="sum_income" t-value="0" />
+							<t t-set="sum_expense" t-value="0" />
+							<t t-set="sum_asset" t-value="0" />
+							<t t-set="sum_liability" t-value="0" />
+							<t t-set="profit_loss" t-value="0" />
+							<t t-set="sum_liability_new" t-value="0" />
+
+							<span t-if="o.account_report_id == 'profit_loss'">
+
+								<table
+									style="font-size:16px;width: 100%;border-bottom: outset;border-top: outset;border-right: outset;border-left: outset;">
+									<!-- <thead> -->
+									<tr>
+										<td style="border-bottom: outset;border-right: outset;"
+											align="center">
+											<h4>
+												<b>Expense</b>
+											</h4>
+										</td>
+										<td style="border-bottom: outset;" align="center">
+											<h4>
+												<b>Income</b>
+											</h4>
+										</td>
+									</tr>
+									<!-- </thead> -->
+									<!-- <tbody> -->
+									<tr>
+										<td style="width: 50%;">
+											<table style="font-size:16px;width: 100%;">
+
+												<t t-foreach="docs.get_opening_stock()" t-as="line">
+													<t t-if="line['amount'] != 0">
+													<tr>
+
+														<td style="width: 50%;padding-left:1%;" align="left">
+															<b>
+																<span t-esc="line['parent']" />
+															</b>
+														</td>
+														<td style="width: 25%;"></td>
+														<td style="width: 25%; padding-right:1%;" align="right">
+															<span t-esc="'{0:,.2f}'.format(line['amount'])" />
+															<t t-set="sum_expense" t-value="sum_expense + line['amount']" />
+														</td>
+													</tr>
+												</t>
+													<t t-if="docs.visible_details == True">
+														<t t-foreach="line['account_list']" t-as="account_list">
+															<t t-if="account_list['amount'] != 0">
+																<tr>
+																	<td style="width: 50%; padding-left: 3%;" align="left">
+																		<span t-esc="account_list['account']" />
+																	</td>
+																	<td style="width: 25%; " align="right">
+																		<span t-esc="'{0:,.2f}'.format(account_list['amount'])" />
+																	</td>
+																	<td style="width: 25%; "></td>
+																</tr>
+															</t>
+														</t>
+													</t>
+												</t>
+
+												<t t-foreach="docs.get_expense_lines()" t-as="line">
+													<t t-if="line['amount'] != 0">
+													<tr>
+
+														<td style="width: 50%; padding-left:1%;" align="left">
+															<b>
+																<span t-esc="line['parent']" />
+															</b>
+														</td>
+														<td style="width: 25%; "></td>
+														<td style="width: 25%; padding-right:1%;" align="right">
+															<span t-esc="'{0:,.2f}'.format(line['amount'])" />
+															<t t-set="sum_expense" t-value="sum_expense + line['amount']" />
+														</td>
+													</tr>
+												</t>
+													<t t-if="docs.visible_details == True">
+														<t t-foreach="line['account_list']" t-as="account_list">
+															<t t-if="account_list['amount'] != 0">
+																<tr>
+																	<td style="width: 50%; padding-left: 3%;" align="left">
+																		<span t-esc="account_list['account']" />
+																	</td>
+																	<td style="width: 25%; " align="right">
+																		<span t-esc="'{0:,.2f}'.format(account_list['amount'])" />
+																	</td>
+																	<td style="width: 25%; "></td>
+																</tr>
+															</t>
+														</t>
+													</t>
+												</t>
+
+											</table>
+										</td>
+										<td style="width: 50%; border-left: outset;border-right: outset;">
+											<table style="font-size:16px;width: 100%;">
+
+												<t t-foreach="docs.get_income_lines()" t-as="line">
+													<t t-if="line['amount'] != 0">
+													<tr>
+
+														<td style="width: 50%;padding-left:1%;" align="left">
+															<b>
+																<span t-esc="line['parent']" />
+															</b>
+														</td>
+														<td style="width: 25%;"></td>
+														<td style="width: 25%; padding-right:1%;" align="right">
+															<span t-esc="'{0:,.2f}'.format(line['amount'])" />
+															<t t-set="sum_income" t-value="sum_income + line['amount']" />
+														</td>
+													</tr>
+												</t>
+													<t t-if="docs.visible_details == True">
+														<t t-foreach="line['account_list']" t-as="account_list">
+															<t t-if="account_list['amount'] != 0">
+																<tr>
+																	<td style="width: 50%; padding-left: 3%;" align="left">
+																		<span t-esc="account_list['account']" />
+																	</td>
+																	<td style="width: 25%; " align="right">
+																		<span t-esc="'{0:,.2f}'.format(account_list['amount'])" />
+																	</td>
+																	<td style="width: 25%; "></td>
+																</tr>
+															</t>
+														</t>
+													</t>
+												</t>
+
+												<t t-foreach="docs.get_stock_lines()" t-as="line">
+													<t t-if="line['amount'] != 0">
+													<tr>
+
+														<td style="width: 50%;padding-left:1%;" align="left">
+															<b>
+																<span t-esc="line['parent']" />
+															</b>
+														</td>
+														<td style="width: 25%;"></td>
+														<td style="width: 25%; padding-right:1%;" align="right">
+															<span t-esc="'{0:,.2f}'.format(line['amount'])" />
+															<t t-set="sum_income" t-value="sum_income + line['amount']" />
+														</td>
+													</tr>
+												</t>
+													<t t-if="docs.visible_details == True">
+														<t t-foreach="line['account_list']" t-as="account_list">
+															<t t-if="account_list['amount'] != 0">
+																<tr>
+																	<td style="width: 50%; padding-left: 3%;" align="left">
+																		<span t-esc="account_list['account']" />
+																	</td>
+																	<td style="width: 25%; " align="right">
+																		<span t-esc="'{0:,.2f}'.format(account_list['amount'])" />
+																	</td>
+																	<td style="width: 25%; "></td>
+																</tr>
+															</t>
+														</t>
+													</t>
+												</t>
+
+											</table>
+										</td>
+
+
+									</tr>
+									<t t-set="profit_loss" t-value="sum_expense - sum_income" />
+
+									<t t-set="profit" t-value="sum_income - sum_expense" />
+									<t t-set="gross_loss" t-value="0" />
+									<t t-set="gross_profit" t-value="0" />
+									<t t-if="profit &lt; 0">
+										<t t-set="gross_loss" t-value="sum_expense - sum_income" />
+									</t>
+									<t t-if="profit &gt; 0">
+										<t t-set="gross_profit" t-value="sum_income - sum_expense" />
+									</t>
+
+
+									<tr >
+										<td style="width:50%;">
+											<table style="width:100%;">
+												<tr>
+													<t t-if="gross_profit != 0">
+														<td style="width:50%;padding-left:1%;"><b>Gross Profit</b>
+														</td>
+														<td style="width:25%;">
+														</td>
+														<td style="width:25%;padding-right:1%;" align="right">
+															<t t-esc="'{0:,.2f}'.format(gross_profit)" />
+															<t t-set="sum_expense" t-value="sum_expense + gross_profit" />
+														</td>
+													</t>
+												</tr>
+											</table>
+										</td>
+										<td style="width:50%;border-left: outset;">
+											<table style="width:100%;">
+												<tr>
+													<t t-if="gross_loss != 0">
+														<td style="width:50%;padding-left:1%;"><b>Gross Loss</b>
+														</td>
+														<td style="width:25%;">
+														</td>
+														<td style="width:25%;padding-right:1%;" align="right">
+															<t t-esc="'{0:,.2f}'.format(gross_loss)" />
+															<t t-set="sum_income" t-value="sum_income + gross_loss" />
+														</td>
+													</t>
+												</tr>
+											</table>
+										</td>
+
+									</tr>
+									<footer>
+											<tr>
+												
+												<td
+													style="border-right: outset;border-top: outset; padding-right: 4px;"
+													align="right">
+													<t t-esc="'{0:,.2f}'.format(sum_expense)" />
+													<!-- <t t-set="profit_loss" t-value="sum_expense - sum_income" /> -->
+												</td>
+												<td
+													style="border-right: outset;border-top: outset; padding-right: 4px;"
+													align="right">
+													<t t-esc="'{0:,.2f}'.format(sum_income)" />
+												</td>
+											</tr>
+										</footer>
+									<!-- </tbody> -->
+								</table>
+							</span>
+
+
+							<span t-if="o.account_report_id == 'balance_sheet'">
+
+								<table
+									style="font-size:16px;width: 100%;border-bottom: outset;border-top: outset;border-right: outset;border-left: outset;">
+									<thead>
+										<tr>
+											<td style="border-bottom: outset;border-right: outset;"
+												align="center">
+												<h4>
+													<b>Liability</b>
+												</h4>
+											</td>
+											<td style="border-bottom: outset;" align="center">
+												<h4>
+													<b>Asset</b>
+												</h4>
+											</td>
+										</tr>
+									</thead>
+									<tr>
+										<!-- <tbody> -->
+										<td>
+											<table style="width: 50%; font-size:16px;width: 100%;">
+												<tr>
+													<td style="padding-left:1%;">
+														<b>Profit and Loss A/c</b>
+													</td>
+													<td></td>
+													<td align="right" style="padding-right:1%;">
+														<t t-set="profit_loss" t-value="docs.get_profit_loss()" />
+														<!-- <t t-esc="profit_loss" /> -->
+														<span t-esc="'{0:,.2f}'.format(profit_loss)" />
+													</td>
+												</tr>
+
+												<t t-foreach="docs.get_liability1_lines()" t-as="line">
+													<t t-if="line['amount'] != 0">
+													<tr>
+														<td style="width: 50%; padding-left:1%;" align="left">
+															<b>
+																<span t-esc="line['parent']" />
+															</b>
+														</td>
+														<td style="width: 25%;"></td>
+														<td style="width: 25%; padding-right:1%;" align="right">
+															<span t-esc="'{0:,.2f}'.format(line['amount'])" />
+															<t t-set="sum_liability" t-value="sum_liability + line['amount']" />
+														</td>
+													</tr>
+												</t>
+													<t t-if="docs.visible_details == True">
+														<t t-foreach="line['account_list']" t-as="account_list">
+															<t t-if="account_list['amount'] != 0">
+																<tr>
+																	<td style="width: 50%; padding-left: 3%;" align="left">
+																		<span t-esc="account_list['account']" />
+																	</td>
+																	<td style="width: 25%; " align="right">
+																		<span t-esc="'{0:,.2f}'.format(account_list['amount'])" />
+																	</td>
+																	<td style="width: 25%; "></td>
+																</tr>
+															</t>
+														</t>
+													</t>
+												</t>
+												<t t-set="opening_balance" t-value="docs.get_opening_balance()" />
+												<t t-if="opening_balance != 0">
+													<tr>
+														<td style="width: 50%; padding-left:1%;" align="left">
+															<b>Opening Balance</b>
+														</td>
+														<td style="width: 25%;" align="right">
+														</td>
+														<td style="width: 25%; padding-right:1%;">
+															<span t-esc="opening_balance" />
+															<t t-set="sum_liability" t-value="sum_liability+opening_balance" />
+														</td>
+													</tr>
+												</t>
+
+											</table>
+										</td>
+										<td style="width: 50%; border-bottom: outset;border-right: outset;border-left: outset;">
+											<table style="font-size:16px;width: 100%;">
+
+
+												<t t-foreach="docs.get_asset_lines()" t-as="line">
+													<t t-if="line['amount'] != 0">
+													<tr>
+
+														<td style="width: 50%; padding-left:1%;" align="left">
+															<b>
+																<span t-esc="line['parent']" />
+															</b>
+														</td>
+														<td style="width: 25%;"></td>
+														<td style="width: 25%; padding-right:1%;" align="right">
+															<span t-esc="'{0:,.2f}'.format(line['amount'])" />
+															<t t-set="sum_asset" t-value="sum_asset + line['amount']" />
+														</td>
+													</tr>
+												</t>
+													<t t-if="docs.visible_details == True">
+														<t t-foreach="line['account_list']" t-as="account_list">
+															<t t-if="account_list['amount'] != 0">
+																<tr>
+																	<td style="width: 50%; padding-left: 3%;" align="left">
+																		<span t-esc="account_list['account']" />
+																	</td>
+																	<td style="width: 25%; " align="right">
+																		<span t-esc="'{0:,.2f}'.format(account_list['amount'])" />
+																	</td>
+																	<td style="width: 25%; "></td>
+																</tr>
+															</t>
+														</t>
+													</t>
+												</t>
+
+											</table>
+										</td>
+
+
+										<footer>
+											<tr>
+												<td style="border-right: outset;border-top: outset;"
+													align="right">
+													<t t-set="sum_liability_new" t-value="sum_liability + profit_loss" />
+													<t t-esc="'{0:,.2f}'.format(sum_liability_new)" />
+												</td>
+												<td style="border-right: outset;border-top: outset;"
+													align="right">
+													<t t-esc="'{0:,.2f}'.format(sum_asset)" />
+												</td>
+											</tr>
+										</footer>
+									</tr>
+									<!-- </tbody> -->
+								</table>
+							</span>
+
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>

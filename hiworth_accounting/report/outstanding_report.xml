@@ -1,0 +1,272 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Material request report wizard -->
+        <record id="form_report_outstanding" model="ir.ui.view">
+            <field name="name">Outstanding</field>
+            <field name="model">outstanding.report</field>
+            <field name="arch" type="xml">
+                <form>
+
+                    <group col="4">
+                        <field name="company_id" colspan="2" readonly="1"/>
+                        <field name="account_id" colspan="2" string="Account" />
+                        <newline />
+                    </group>
+                    <!-- <group>
+                        <field name="from_date" />
+                        <field name="to_date" />
+                    </group> -->
+
+                    <footer>
+                       <button type="object" name="view_outstanding_report" string="View"
+                            class="oe_highlight" />
+                        <button type="object" name="print_outstanding_report" string="Print"
+                            class="oe_highlight" />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!-- Material request wizard action -->
+        <record id="action_report_outstanding" model="ir.actions.act_window">
+            <field name="name">Outstanding Report</field>
+            <field name="res_model">outstanding.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem
+            parent="account.final_accounting_reports"
+            id="menu_outstanding_book" action="action_report_outstanding"
+            name="Outstanding Report" sequence="110" />
+
+        <report id="report_outstanding" model="outstanding.report"
+            string="Outstanding Report" report_type="qweb-pdf"
+            name="hiworth_accounting.outstanding_report" file="hiworth_accounting.outstanding_report"
+            menu="False" />
+
+
+        <!-- Material request report -->
+        <template id="outstanding_report">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <h3 class="text-center">
+                                <t t-esc="docs.account_id.name"></t>
+                                From
+                                 <span t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.from_date,'%Y-%m-%d'))"/>
+                            <!--    <t t-esc="docs._context['start_date']"></t> -->
+                                <span>To</span>
+                                 <span t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.to_date,'%Y-%m-%d'))"/>
+                            <!--    <t t-esc="docs._context['end_date']"></t> -->
+                            </h3>
+                        </div>
+                        <t t-set="sl_no" t-value="1" />
+                        <t t-set="debit_total" t-value="0" />
+                        <t t-set="credit_total" t-value="0" />
+                        <t t-set="balance_total" t-value="0" />
+                        <div class="row">
+                            <table class="table table-bordered" style="width: 100%">
+                                <thead>
+                                        <tr>
+                                        <th style="width: 10%" >Sl.No</th>
+                                        <th style="width: 25%" >Invoice No</th>
+                                     <!--    <th>Account</th> -->
+                                        <th style="width: 25%">Credit</th>
+                                        <th style="width: 25%">Debit</th>
+                                        <th class="text-right" style="width: 15%">Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                 <tr t-foreach="docs.get_invoice_nos()" t-as="invoice">
+                                            <td>
+                                                <t t-esc="sl_no" />
+                                                <t t-set="sl_no" t-value="sl_no+1" />
+                                            </td>
+
+                                            <td>
+                                                <t t-esc="invoice.name" />
+                                            </td>
+                                            <td>
+                                                <t t-esc="invoice.debit" />
+                                                 <t t-set="debit_total" t-value="debit_total+invoice.debit" />
+                                            </td>
+                                            <td>
+                                                <t t-esc="invoice.credit" />
+                                                <t t-set="credit_total" t-value="credit_total+invoice.credit" />
+                                            </td>
+                                            <td class="text-right" >
+                                                <t t-esc="invoice.balance" />
+                                                <t t-set="balance_total" t-value="balance_total+invoice.balance" />
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>
+                                                    <strong>Total</strong>
+                                                </span>
+                                            </td>
+                                            <td />
+                                            <td>
+                                                <strong>
+                                                    <t t-esc="debit_total" />
+                                                </strong>
+                                            </td>
+                                            <td>
+                                                <strong>
+                                                    <t t-esc="credit_total" />
+                                                </strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <strong>
+                                                    <t t-esc="balance_total" />
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+
+
+       <!--  <report id="report_report_hiworth_ledger_view" model="report.ledger.hiworth"
+            string="Ledger" report_type="qweb-html"
+            name="hiworth_accounting.report_hiworth_ledger_view"  />
+
+
+        Material request report
+        <template id="report_hiworth_ledger_view">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <h3 class="text-center">
+                                <t t-esc="docs.account_id.name"></t>
+                                From
+                                 <span t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.from_date,'%Y-%m-%d'))"/>
+                               <t t-esc="docs._context['start_date']"></t>
+                                <span>To</span>
+                                 <span t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.to_date,'%Y-%m-%d'))"/>
+                               <t t-esc="docs._context['end_date']"></t>
+                            </h3>
+                        </div>
+                        <t t-set="debit_total" t-value="0" />
+                        <t t-set="credit_total" t-value="0" />
+                        <t t-set="balance_total" t-value="0" />
+                        <div class="row">
+                            <table class="table table-bordered" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 11%" >Date</th>
+                                        <th>Account</th>
+                                        <th style="width: 33%">Description</th>
+                                        <th style="width: 20%">Account</th>
+                                        <th>Journal</th>
+                                        <th class="text-right" style="width: 11%">Debit</th>
+                                        <th class="text-right" style="width: 11%">Credit</th>
+                                        <th class="text-right" style="width: 11%">Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th class="text-left"></th>
+                                        <th class="text-right">
+                                        </th>
+                                        <th class="text-left">
+                                        <t t-esc="docs.narration"></t>
+
+                                        </th>
+                                        <th class="text-right">
+
+                                        </th>
+                                        <th class="text-right">
+                                        </th>
+                                        <th class="text-right">
+                                            <t t-esc="docs.opening_debit"></t>
+                                            <t t-set="debit_total" t-value="debit_total+docs.opening_debit" />
+                                        </th>
+                                        <th class="text-right">
+                                            <t t-esc="docs.opening_credit"></t>
+                                            <t t-set="credit_total" t-value="credit_total+docs.opening_credit" />
+                                        </th>
+                                        <th class="text-right">
+                                            <t t-esc="docs.total_balance"></t>
+                                            <t t-set="balance_total" t-value="balance_total+docs.total_balance" />
+                                        </th>
+                                    </tr>
+                                    <tr t-foreach="docs.get_account_move_lines()" t-as="l">
+                                        <td>
+                                            <t t-esc="o.date" />
+                                            <span t-esc="time.strftime('%d-%m-%Y',time.strptime(l.date,'%Y-%m-%d'))"/>
+
+                                        </td>
+                                        <td>
+                                            <t t-esc="l.account_id.name" />
+                                        </td>
+                                        <td>
+                                            <t t-esc="l.name" />
+                                        </td>
+                                        <td>
+                                            <t t-esc="l.opp_acc" />
+                                        </td>
+                                        <td>
+                                            <t t-esc="l.journal_id.name" />
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="l.debit" />
+                                            <t t-set="debit_total" t-value="debit_total+l.debit" />
+                                            <t t-set="balance_total" t-value="balance_total+l.debit" />
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="l.credit" />
+                                            <t t-set="credit_total" t-value="credit_total+l.credit" />
+                                            <t t-set="balance_total" t-value="balance_total-l.credit" />
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="balance_total" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-left">Grand Total</th>
+                                        <th class="text-right">
+                                        </th>
+                                        <th class="text-right">
+
+                                        </th>
+                                        <th class="text-right">
+
+                                        </th>
+                                        <th class="text-right">
+                                        </th>
+                                        <th class="text-right">
+                                            <t t-esc="debit_total" />
+                                        </th>
+                                        <th class="text-right">
+                                            <t t-esc="credit_total" />
+                                        </th>
+                                        <th class="text-right">
+                                            <t t-esc="balance_total" />
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+         -->
+
+
+
+
+    </data>
+</openerp>

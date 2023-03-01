@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<!-- Material request report wizard -->
+		<record id="form_report_day_book" model="ir.ui.view">
+			<field name="name">Day Book</field>
+			<field name="model">report.day.book</field>
+			<field name="arch" type="xml">
+				<form>
+
+					<group col="4">
+						<field name="company_id" colspan="2" readonly="1"/>
+						<newline />
+						<field name="from_date" colspan="2" />
+						<field name="to_date" colspan="2" />
+
+					</group>
+
+					<footer>
+						<button type="object" name="view_report_day_book" string="View"
+							class="oe_highlight" />
+						<button type="object" name="print_report_day_book" string="Print"
+							class="oe_highlight" />
+						<button special="cancel" string="Cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+		<!-- Material request wizard action -->
+		<record id="action_report_day_book" model="ir.actions.act_window">
+			<field name="name">Day Book</field>
+			<field name="res_model">report.day.book</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<report id="report_report_day_book" model="account.move.line"
+			string="Day Book" report_type="qweb-pdf" name="hiworth_accounting.report_day_book"
+			file="hiworth_accounting.report_day_book" menu="False" />
+
+		<record id="paper_format_report_day_book" model="report.paperformat">
+			<field name="name">European A4 low margin</field>
+			<field name="default" eval="True" />
+			<field name="format">A4</field>
+			<field name="page_height">0</field>
+			<field name="page_width">0</field>
+			<field name="orientation">Portrait</field>
+			<field name="margin_top">40</field>
+			<field name="margin_bottom">23</field>
+			<field name="margin_left">7</field>
+			<field name="margin_right">7</field>
+			<field name="header_line" eval="False" />
+			<field name="header_spacing">35</field>
+			<field name="dpi">90</field>
+		</record>
+
+		<record id="hiworth_accounting.report_report_day_book" model="ir.actions.report.xml">
+			<field name="paperformat_id" ref="hiworth_accounting.paper_format_report_day_book" />
+		</record>
+
+
+		<!-- Material request report -->
+		<template id="report_day_book">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+
+						<div class="row">
+							<h2 class="text-center">
+								Day Book - From
+								<span
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs._context['start_date'],'%Y-%m-%d'))" />
+								<!-- <t t-esc="docs._context['start_date']"></t> -->
+								<span>To</span>
+								<span
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs._context['end_date'],'%Y-%m-%d'))" />
+							</h2>
+						</div>
+						<t t-set="debit_total" t-value="0" />
+						<t t-set="credit_total" t-value="0" />
+						<t t-set="move_id" t-value="0" />
+						<t t-set="narration" t-value="''" />
+						<div class="row">
+							<table class="table table-bordered" style="width: 100%">
+								<thead>
+									<tr>
+										<th style="width: 12%">Date</th>
+										<th style="width: 15%">Account</th>
+										<th style="width: 43%">Description</th>
+										<th style="width: 10%">Journal</th>
+										<th style="width: 10%" class="text-right">Debit</th>
+										<th style="width: 10%" class="text-right">Credit</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr t-foreach="docs" t-as="o">
+										<td>
+											<t t-if="move_id!=o.move_id.id">
+												<t
+													t-esc="time.strftime('%d-%m-%Y',time.strptime(o.date,'%Y-%m-%d'))" />
+											</t>
+										</td>
+										<td>
+											<t t-esc="o.account_id.name" />
+										</td>
+										<td>
+										 <!-- <t t-if="move_id!=o.move_id.id">  -->
+											<t t-if="narration!=o.name or move_id!=o.move_id.id">
+												<t t-esc="o.name" />
+                                                <t t-set="narration" t-value="o.name" />
+											</t>
+										</td>
+										<td>
+											<t t-if="move_id!=o.move_id.id">
+												<t t-esc="o.journal_id.name" />
+												<t t-set="move_id" t-value="o.move_id.id" />
+											</t>
+										</td>
+										<td class="text-right">
+											<t t-esc="o.debit" />
+											<t t-set="debit_total" t-value="debit_total+o.debit" />
+										</td>
+										<td class="text-right">
+											<t t-esc="o.credit" />
+											<t t-set="credit_total" t-value="credit_total+o.credit" />
+										</td>
+									</tr>
+									<tr>
+										<th class="text-left">Grand Total</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+											<t t-esc="debit_total" />
+										</th>
+										<th class="text-right">
+											<t t-esc="credit_total" />
+										</th>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- <div class="col-xs-12"> <div class="pull-right">Total inventory
+							value: <strong><span t-field="o.inventory_value" /></strong></div> </div> -->
+						<!-- </div> -->
+						<!-- </t> -->
+
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+
+		<report id="report_report_day_book_view" model="report.day.book"
+			string="Day Book" report_type="qweb-html"
+			name="hiworth_accounting.report_day_book_view" />
+
+
+
+		<template id="report_day_book_view">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+
+						<div class="row">
+							<h2 class="text-center">
+								Day Book - From
+								<span
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.from_date,'%Y-%m-%d'))" />
+								<span>To</span>
+								<span
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.to_date,'%Y-%m-%d'))" />
+							</h2>
+						</div>
+						<t t-set="debit_total" t-value="0" />
+						<t t-set="credit_total" t-value="0" />
+						<t t-set="move_id" t-value="0" />
+						<t t-set="narration" t-value="''" />
+
+						<div class="row">
+							<table class="table table-bordered" style="width: 100%">
+								<thead>
+									<tr>
+										<th style="width: 8%">Date</th>
+										<th style="width: 15%">Account</th>
+										<th style="width: 47%">Description</th>
+										<th style="width: 10%">Journal</th>
+										<th style="width: 10%" class="text-right">Debit</th>
+										<th style="width: 10%" class="text-right">Credit</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr t-foreach="docs.get_account_move_lines()" t-as="l">
+										<td>
+											<t t-if="move_id!=l.move_id.id">
+												<t
+													t-esc="time.strftime('%d-%m-%Y',time.strptime(l.date,'%Y-%m-%d'))" />
+											</t>
+										</td>
+										<td>
+											<t t-esc="l.account_id.name" />
+										</td>
+
+										<td>
+											<!-- <t t-if="move_id!=l.move_id.id"> -->
+											<t t-if="narration!=l.name or move_id!=l.move_id.id">
+												<t t-esc="l.name" />
+												<t t-set="narration" t-value="l.name" />
+											</t>
+											<!-- </t> -->
+										</td>
+										<td>
+											<t t-if="move_id!=l.move_id.id">
+												<t t-esc="l.journal_id.name" />
+												<t t-set="move_id" t-value="l.move_id.id" />
+											</t>
+										</td>
+
+
+										<td class="text-right">
+											<t t-esc="l.debit" />
+											<t t-set="debit_total" t-value="debit_total+l.debit" />
+										</td>
+										<td class="text-right">
+											<t t-esc="l.credit" />
+											<t t-set="credit_total" t-value="credit_total+l.credit" />
+										</td>
+									</tr>
+									<tr>
+										<th class="text-left">Grand Total</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+
+										</th>
+										<th class="text-right">
+										</th>
+										<th class="text-right">
+											<t t-esc="debit_total" />
+										</th>
+										<th class="text-right">
+											<t t-esc="credit_total" />
+										</th>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+
+
+
+
+
+
+
+	</data>
+</openerp>

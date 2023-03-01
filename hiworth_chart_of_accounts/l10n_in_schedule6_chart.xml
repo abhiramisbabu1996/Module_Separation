@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- India - Standard Accounting Chart -->
+
+		<record model="account.account.template" id="c0">
+			<field name="name">Indian Chart of Accounts - Schedule VI</field>
+			<field name="code">0</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.data_account_type_view" />
+			<field name="reconcile" eval="False" />
+		</record>
+
+		<record model="account.account.template" id="c1">
+			<field name="name">Balance Sheet</field>
+			<field name="code">1</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.data_account_type_view" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c0" />
+		</record>
+
+		<!-- Assets -->
+		<record model="account.account.template" id="c11">
+			<field name="name">Assets</field>
+			<field name="code">11</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_asset_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c1" />
+		</record>
+
+		<record model="account.account.template" id="c1100">
+			<field name="name">Bank Current Account</field>
+			<field name="code">1100</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_asset_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c11" />
+		</record>
+
+		<record model="account.account.template" id="c1110">
+			<field name="name">Inventory</field>
+			<field name="code">1110</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_asset_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c11" />
+		</record>
+
+		<record model="account.account.template" id="c1120">
+			<field name="name">Sundry Debtors</field>
+			<field name="code">1120</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_asset_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c11" />
+		</record>
+
+		<record model="account.account.template" id="c1120000">
+			<field name="name">Debtors</field>
+			<field name="code">1120000</field>
+			<field name="type">receivable</field>
+			<field name="user_type" ref="account.data_account_type_receivable" />
+			<field name="reconcile" eval="True" />
+			<field name="parent_id" ref="c1120" />
+		</record>
+
+
+		<record model="account.account.template" id="c1130">
+			<field name="name">Duties And Taxes Receivable</field>
+			<field name="code">1130</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_asset_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c11" />
+		</record>
+
+
+
+		<!-- ===================Liabilities==================== -->
+
+		<record model="account.account.template" id="c12">
+			<field name="name">Liabilities</field>
+			<field name="code">12</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_liability_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c1" />
+		</record>
+		<!-- Shareholder's Funds -->
+		<record model="account.account.template" id="c1200">
+			<field name="name">Sundry Creditors</field>
+			<field name="code">1200</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_liability_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c12" />
+		</record>
+
+		<record model="account.account.template" id="c1200000">
+			<field name="name">Creditors</field>
+			<field name="code">1200000</field>
+			<field name="type">payable</field>
+			<field name="user_type" ref="account.data_account_type_payable" />
+			<field name="reconcile" eval="True" />
+			<field name="parent_id" ref="c1200" />
+		</record>
+
+		<record model="account.account.template" id="c1210">
+			<field name="name">Duties And Taxes Payable</field>
+			<field name="code">1210</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_liability_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c12" />
+		</record>
+		
+		<record model="account.account.template" id="c1210000">
+            <field name="name">GST 5% Payable</field>
+            <field name="code">1210000</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability" />
+            <field name="reconcile" eval="False" />
+            <field name="parent_id" ref="c1210" />
+        </record>
+        
+        <record model="account.account.template" id="c1210001">
+            <field name="name">GST 12% Payable</field>
+            <field name="code">1210001</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability" />
+            <field name="reconcile" eval="False" />
+            <field name="parent_id" ref="c1210" />
+        </record>
+        
+        <record model="account.account.template" id="c1210002">
+            <field name="name">GST 18% Payable</field>
+            <field name="code">1210002</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability" />
+            <field name="reconcile" eval="False" />
+            <field name="parent_id" ref="c1210" />
+        </record>
+        
+        <record model="account.account.template" id="c1210003">
+            <field name="name">GST 28% Payable</field>
+            <field name="code">1210003</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability" />
+            <field name="reconcile" eval="False" />
+            <field name="parent_id" ref="c1210" />
+        </record>
+
+
+        <record model="account.account.template" id="c1220">
+			<field name="name">Opening Balance</field>
+			<field name="code">1220</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_liability_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c12" />
+		</record>
+
+
+		<record model="account.account.template" id="c1220001">
+			<field name="name">Difference In Opening Balance</field>
+			<field name="code">1220001</field>
+			<field name="type">other</field>
+			<field name="user_type" ref="account.data_account_type_liability" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c1220" />
+		</record>
+
+
+
+
+
+		<!-- Profit And Loss Account -->
+		<record model="account.account.template" id="c2">
+			<field name="name">Profit And Loss</field>
+			<field name="code">2</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.data_account_type_view" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c0" />
+		</record>
+
+		<!-- ===============Income================ -->
+		<record model="account.account.template" id="c21">
+			<field name="name">Income</field>
+			<field name="code">21</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_income_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c2" />
+		</record>
+
+		<record model="account.account.template" id="c2100">
+			<field name="name">Revenue</field>
+			<field name="code">2100</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_income_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c21" />
+		</record>
+
+		<record model="account.account.template" id="c2110">
+			<field name="name">Sale Accounts</field>
+			<field name="code">2110</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_income_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c21" />
+		</record>
+
+		<record model="account.account.template" id="c2110000">
+			<field name="name">Sales</field>
+			<field name="code">2110000</field>
+			<field name="type">other</field>
+			<field name="user_type" ref="account.data_account_type_income" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c2110" />
+		</record>
+
+
+		<record model="account.account.template" id="c22">
+			<field name="name">Expense</field>
+			<field name="code">22</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_expense_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c2" />
+		</record>
+
+
+		<record model="account.account.template" id="c2200">
+			<field name="name">Purchase Accounts</field>
+			<field name="code">2200</field>
+			<field name="type">view</field>
+			<field name="user_type" ref="account.account_type_expense_view1" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c22" />
+		</record>
+
+		<record model="account.account.template" id="c2200000">
+			<field name="name">Purchase</field>
+			<field name="code">2200000</field>
+			<field name="type">other</field>
+			<field name="user_type" ref="account.data_account_type_expense" />
+			<field name="reconcile" eval="False" />
+			<field name="parent_id" ref="c2200" />
+		</record>
+
+
+		<record id="indian_chart_template_schedule6" model="account.chart.template">
+			<field name="name">Indian Chart of Accounts - Hiworth</field>
+			<field name="account_root_id" ref="c0" />
+			<!-- <field name="tax_code_root_id" ref="vat_code_tax" /> -->
+			<field name="bank_account_view_id" ref="c1100" />
+			<field name="property_account_receivable" ref="c1120000" />
+			<field name="property_account_payable" ref="c1200000" />
+			<field name="property_account_expense_categ" ref="c2200000" />
+			<field name="property_account_income_categ" ref="c2110000" />
+			<field name="property_account_income_opening" ref="c1220001"/>
+            <field name="property_account_expense_opening" ref="c1220001"/>
+			<field name="currency_id" ref="base.INR" />
+		</record>
+
+
+		<!-- Expense -->
+
+       <!--  <record model="account.account.template" id="c2201">
+            <field name="name">Direct Expenses</field>
+            <field name="code">2201</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_expense_view1" />
+            <field name="reconcile" eval="False" />
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c22" />
+        </record>
+
+        <record model="account.account.template" id="c2202">
+            <field name="name">Indirect Expenses</field>
+            <field name="code">2202</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_expense_view1" />
+            <field name="reconcile" eval="False" />
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c22" />
+        </record> -->
+
+        <!-- Income
+
+        <record model="account.account.template" id="c2101">
+            <field name="name">Direct Income</field>
+            <field name="code">2101</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_income_view1" />
+            <field name="reconcile" eval="False" />
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c21" />
+        </record>
+
+        <record model="account.account.template" id="c2102">
+            <field name="name">Indirect Income</field>
+            <field name="code">2102</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_income_view1" />
+            <field name="reconcile" eval="False" />
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c21" />
+        </record> -->
+
+
+
+
+        <!-- Asset -->
+
+<!--         <record model="account.account.template" id="c1101">
+            <field name="name">Cash Account</field>
+            <field name="code">1101</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_asset_view1"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c11"/>
+        </record>
+
+        <record model="account.account.template" id="c1102">
+            <field name="name">Bank Accounts</field>
+            <field name="code">1102</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_asset_view1"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c11"/>
+        </record>
+
+        <record model="account.account.template" id="c1103">
+            <field name="name">Deposit Accounts</field>
+            <field name="code">1103</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_asset_view1"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c11"/>
+        </record>
+
+         <record model="account.account.template" id="c1104">
+            <field name="name">Current Assets</field>
+            <field name="code">1104</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_asset_view1"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c11"/>
+        </record>
+
+        <record model="account.account.template" id="c1105">
+            <field name="name">Loan And Advances</field>
+            <field name="code">1105</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_asset_view1"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c11"/>
+        </record>
+
+        <record model="account.account.template" id="c1106">
+            <field name="name">Fixed Assets</field>
+            <field name="code">1106</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_asset_view1"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c11"/>
+        </record>
+
+        <record model="account.account.template" id="c1107">
+            <field name="name">Investments</field>
+            <field name="code">1107</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_asset_view1"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c11"/>
+        </record>
+ -->
+        <!-- Liability -->
+
+       <!--  <record model="account.account.template" id="c1201">
+            <field name="name">Bank OCC</field>
+            <field name="code">1201</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_liability_view1" />
+            <field name="reconcile" eval="False" />
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c12" />
+        </record>
+
+        <record model="account.account.template" id="c1202">
+            <field name="name">Bank OD</field>
+            <field name="code">1202</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_liability_view1" />
+            <field name="reconcile" eval="False" />
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c12" />
+        </record>
+
+        <record model="account.account.template" id="c1203">
+            <field name="name">Capital Accounts</field>
+            <field name="code">1203</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_liability_view1" />
+            <field name="reconcile" eval="False" />
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c12" />
+        </record>
+
+        <record model="account.account.template" id="c1204">
+            <field name="name">Loans (Liability)</field>
+            <field name="code">1204</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_liability_view1" />
+            <field name="reconcile" eval="False" />
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c12" />
+        </record>
+
+
+        <record model="account.account.template" id="c1205">
+            <field name="name">Current Liabilities</field>
+            <field name="code">1205</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.account_type_liability_view1" />
+            <field name="reconcile" eval="False" />
+            <field name="parent_id" ref="hiworth_chart_of_accounts.c12" />
+        </record> -->
+	</data>
+</openerp>

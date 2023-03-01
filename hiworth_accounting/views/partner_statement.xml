@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<menuitem name="Vouchers"  id="menu_vouchers_root" parent="account.menu_finance" sequence="1"  />
+
+
+		<record id="view_partner_statement_form" model="ir.ui.view">
+			<field name="name">view.partner.statement.form</field>
+			<field name="model">partner.statement</field>
+			<field name="arch" type="xml">
+				<form string="Partner Statement">
+					<sheet>
+						<group col="4">
+							<!-- <group> -->
+								<field name="name" string="Description"/>
+								<field name="partner_id" required="True"/>
+								<!-- <field name="name" /> -->
+							<!-- </group>
+							<group> -->
+								<field name="account_id" required="True"/>
+								<!-- <field name="name" /> -->
+						 </group>
+						 <group>
+							<notebook>
+								<page string="Statements">
+									<field name="statement_ids" nolabel="1" >
+										<tree editable="bottom">
+										    <!--  <field name="line_no" /> -->
+											<field name="date" />
+											<field name="name" string="Description"/>
+											<field name="amount" sum="Total"/>
+											<!-- <field name="credit" /> -->
+											<!-- <field name="total" sum="Total"/> -->
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</group>
+					</sheet>
+				</form>
+
+			</field>
+		</record>
+
+		<record id="view_partner_statement_tree" model="ir.ui.view">
+			<field name="name">view.partner.statement.tree</field>
+			<field name="model">partner.statement</field>
+			<field name="arch" type="xml">
+				<tree string="Partner Statement">
+                    <field name="name" />
+                    <field name="partner_id" />
+                    <field name="account_id" />
+                    <field style="text-align: right;" name="total" />
+                  <!--   <field name="total" /> -->
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_partner_statement_tree" model="ir.actions.act_window">
+            <field name="name">Partner Statement</field>
+            <field name="res_model">partner.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_partner_statement_tree" />
+        </record>
+
+        <menuitem name="Partner Statement" action="action_partner_statement_tree" id="menu_partner_statement_tree"
+            parent="account.menu_finance_entries" sequence="65"  />
+
+        <!-- <record id="view_partner_statement_form_with_payment" model="ir.ui.view">
+            <field name="name">view.partner.statement.form.with.payment</field>
+            <field name="model">partner.statement</field>
+            <field name="arch" type="xml">
+                <form string="Partner Statement">
+                    <group>
+                        <group col="2">
+                            <group>
+                                <field name="name" />
+                                <field name="partner_id" required="True"/>
+                                <field name="name" />
+                            </group>
+                            <group>
+                                <field name="account_id" required="True"/>
+                                <field name="name" />
+                                <notebook colspan="2">
+                                <page string="Statements">
+                                    <field name="statement_ids" nolabel="1" >
+                                        <tree editable="bottom">
+                                             <field name="line_no" />
+                                            <field name="date" />
+                                            <field name="name" string="Description"/>
+                                            <field name="amount" sum="Total"/>
+                                            <field name="credit" />
+                                            <field name="total" sum="Total"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                         </group>
+                         <group col="2">
+                            <notebook>
+                                <page string="Payments">
+                                    <field name="move_lines" nolabel="1" >
+                                        <tree editable="bottom">
+                                             <field name="line_no" />
+                                            <field name="date" string="Date"/>
+                                            <field name="name" string="Description"/>
+                                            <field name="debit" sum="Total"/>
+                                            <field name="credit" sum="Total"/>
+                                            <field name="credit" />
+                                            <field name="total" sum="Total"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </group>
+                   </group>
+                </form>
+
+            </field>
+        </record>
+
+
+        <record id="action_partner_statement_tree_with_payment" model="ir.actions.act_window">
+            <field name="name">Partner Statement</field>
+            <field name="res_model">partner.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_partner_statement_form_with_payment" />
+        </record>
+
+        <menuitem name="Partner Statement" action="action_partner_statement_tree_with_payment" id="menu_partner_statement_tree_with_payment"
+            parent="account.menu_finance_entries" sequence="110"  /> -->
+
+
+
+
+        <record id="view_vouchers_receipts_form" model="ir.ui.view">
+            <field name="name">payment.vouchers.receipts.form</field>
+            <field name="model">payment.vouchers</field>
+            <field name="arch" type="xml">
+                <form string="Payment Vouchers">
+					<header>
+                        <button name="action_confirm" type="object" class="oe_highlight" states="draft" string="Confirm"/>
+						<button name="action_post" type="object" class="oe_highlight" states="confirm" string="Post"/>
+						<button name="action_cancel" type="object" class="oe_highlight" states="confirm,post" string="Cancel"/>
+						<button name="action_setto_draft" type="object" class="oe_highlight" states="cancel" string="Set to Draft"/>
+						<button name="action_print_receipt" type="object" class="oe_highlight" states="draft,post" string="Print"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,post"/>
+					</header>
+                        <sheet>
+							<h1>
+								<center>
+									<field name="journal_type1" readonly="1"/>  Receipt Voucher
+								</center>
+							</h1>
+							<h2>
+								<label for="number" string="No"/>
+								<field name="number" readonly="1"/>
+							</h2>
+							<group>
+				                <group >
+                                    <field name="date" required="1"/>
+                                </group>
+                                <group>
+                                    <field name="user_id" readonly="1"/>
+                                    <field name="company_id" readonly="1"/>
+                                </group>
+                             </group>
+                            <group>
+                                    <group >
+                                        <field name="journal_id" required="1" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                        <field name="account_id" required="1" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                        <field name="acc_balance"/>
+                                    </group>
+                                    <group>
+									 	<field name="partner_id" />
+									 	<field name="opp_account_id" required="1" options="{'no_quick_create':True,'no_create_edit':True}"/>
+										<field name="types" invisible="1"/>
+                                    </group>
+							 </group>
+							 <group>
+								 <group >
+									 <!-- <field name="journal_type1" invisible="1"/> -->
+									 <field name="cheque_dd" attrs="{'invisible':[('journal_type1','!=', 'bank')], 'required':[('journal_type1','=', 'bank')]}" />
+									 <field name="branch" attrs="{'invisible':[('journal_type1','!=', 'bank')], 'required':[('journal_type1','=', 'bank')]}"/> </group>
+								 <group>
+									 <field name="dd_date" string="Dated" attrs="{'invisible':[('journal_type1','!=', 'bank')], 'required':[('journal_type1','=', 'bank')]}"/>
+								 </group>
+								 </group>
+			                <group string="Amount">
+									<h2>
+										<field name="cash_amt" required="1" class="oe_inline" nolabel="1"/>
+										<field name="amount_to_text" nolabel="1" class="oe_inline"/>
+									</h2>
+                            </group>
+							 <group>
+							 <field name="narration" required="1" string="Narration"/>
+						 </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_vouchers_receipts_tree" model="ir.ui.view">
+            <field name="name">view.payment.vouchers.receipts.tree</field>
+            <field name="model">payment.vouchers</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Vouchers">
+                    <field name="date" />
+										<field name="number" />
+                    <field name="partner_id" />
+                    <field name="cash_amt" />
+                    <field name="narration" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        
+
+        <menuitem name="Receipt Vouchers" id="menu_vouchers_receipts_tree" parent="menu_vouchers_root" sequence="65"  />
+
+
+        <record id="action_cash_vouchers_receipts" model="ir.actions.act_window">
+            <field name="name">Receipt Vouchers</field>
+            <field name="res_model">payment.vouchers</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!-- <field name="view_id" ref="view_vouchers_receipts_tree" /> -->
+            <field name="domain">[('types','=', 'received'),('journal_type1','=', 'cash')]</field>
+            <field name="context">{'default_types': 'received','default_journal_type1': 'cash'}</field>
+            <field eval="False" name="view_id" />
+        </record>
+
+        <record id="action_cash_vouchers_receipts_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_vouchers_receipts_tree" />
+            <field name="act_window_id" ref="action_cash_vouchers_receipts" />
+        </record>
+
+        <record id="action_cash_vouchers_receipts_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_vouchers_receipts_form" />
+            <field name="act_window_id" ref="action_cash_vouchers_receipts" />
+        </record>
+
+
+        <menuitem name="Cash Receipt" action="action_cash_vouchers_receipts" id="menu_cash_receipts__vouchers" parent="menu_vouchers_receipts_tree" sequence="10"  />
+
+
+         <record id="action_bank_vouchers_receipts" model="ir.actions.act_window">
+            <field name="name">Receipt Vouchers</field>
+            <field name="res_model">payment.vouchers</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!-- <field name="view_id" ref="view_vouchers_receipts_tree" /> -->
+            <field name="domain">[('types','=', 'received'),('journal_type1','=', 'bank')]</field>
+            <field name="context">{'default_types': 'received','default_journal_type1': 'bank'}</field>
+            <field eval="False" name="view_id" />
+        </record>
+
+        <record id="action_bank_vouchers_receipts_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_vouchers_receipts_tree" />
+            <field name="act_window_id" ref="action_bank_vouchers_receipts" />
+        </record>
+
+        <record id="action_bank_vouchers_receipts_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_vouchers_receipts_form" />
+            <field name="act_window_id" ref="action_bank_vouchers_receipts" />
+        </record>
+
+        <menuitem name="Bank Receipt" action="action_bank_vouchers_receipts" id="menu_bank_receipts__vouchers" parent="menu_vouchers_receipts_tree" sequence="20" />
+
+
+        <record id="view_payment_vouchers_form" model="ir.ui.view">
+            <field name="name">view.payment.vouchers.form</field>
+            <field name="model">payment.vouchers</field>
+            <field name="arch" type="xml">
+                <form string="Payment Vouchers">
+				<header>
+                    <button name="action_confirm" type="object" class="oe_highlight" states="draft" string="Confirm"/>
+					<button name="action_post" type="object" class="oe_highlight" states="confirm" string="Post"/>
+					<button name="action_cancel" type="object" class="oe_highlight" states="confirm,post" string="Cancel"/>
+					<button name="action_setto_draft" type="object" class="oe_highlight" states="cancel" string="Set to Draft"/>
+					<button name="action_print_bank_payment" type="object" class="oe_highlight" string="Print" attrs="{'invisible':['|',('journal_type1','!=', 'bank'),('state','=', 'cancel')]}"/>
+					<button name="action_print_cash_payment" type="object" class="oe_highlight" string="Print" attrs="{'invisible':['|',('journal_type1','!=', 'cash'),('state','=', 'cancel')]}"/>
+					<field name="state" widget="statusbar" statusbar_visible="draft,post"/>
+				</header>
+                    <!-- <sheet> -->
+						<h1>
+							<center>
+								<field name="journal_type1" readonly="1"/> Payment Voucher
+							</center>
+						</h1>
+						<h2>
+							<label for="number" string="No :" class="oe_inline"/>
+							<field name="number" readonly="1" class="oe_inline"/>
+						</h2>
+                        <group >
+                        	<group >
+                                <field name="date" required="1"/>
+                                <field name="reference"/>
+								<field name="purchase_id" attrs="{'invisible':['|',('mode','=','supplier'),('types','=','received')]}"/>
+                                <field name="mode" invisible="1"/>
+                            </group >
+                            <group >
+                                <field name="company_id" readonly="1"/>
+                                <field name="user_id" readonly="1"/>
+                                 <field name="receiver_id" required="1"/>
+                                <!-- <field name="journal_type1" invisible="1"/> -->
+                        	</group >
+                        </group >
+						  <group >
+                                <group >
+                                    <field name="types" invisible="1"/>
+                                    <field name="journal_id" required="1" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="account_id" string="Payment Account" required="1" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="acc_balance"/>
+                                    <field name="cheque_dd" attrs="{'invisible':[('journal_type1','!=', 'bank')], 'required':[('journal_type1','=', 'bank')]}" />
+                                 </group>
+                         <group>
+						 <newline/>
+
+                            <!-- <field name="journal_type1" invisible="1"/> -->
+                            <field name="partner_id" 
+                                attrs="{'invisible':[('mode','=','general')], 'required':[('mode','=','supplier')]}"
+                                string="Paid To" />
+                            <field name="opp_account_id" options="{'no_quick_create':True,'no_create_edit':True}" required="1"/>
+                            <!-- <field name="select_bills" invisible="1"/> -->
+                         </group>
+                         </group>
+                         <field name="payment_invoice_ids" attrs="{'invisible':[('partner_id','=', False)], 'required':[('partner_id','!=', False)]}" >
+    						 <tree editable="bottom">
+    							 <field name="bill_no" required="1" options="{'no_quick_create':True,'no_create_edit':True}"
+                                    context="{'type2': 'out'}"/>
+    							 <field name="date" />
+    							 <field name="name" required="1"/>
+                                 <field name="balace" sum="Total" string="Bill Amount"/>
+                                 <field name="tds" />
+                                 <field name="tds_amount" sum="Total"/>
+                                 <field name="amount_to_pay" sum="Total"/>
+                                 <field name="amount" sum="Total" required="1"/>
+                             </tree>
+                         </field>
+                         <group>
+                             <group></group>
+                             <group>
+    							 <field name="tds_amount" invisible="1" />
+                                 <field name="tds_account_id" attrs="{'required':[('tds_amount','!=', 0)]}"/>
+                             </group>
+                          </group>
+
+						 <group string="Amount">
+							<h2>
+								<field name="cash_amt" required="1" class="oe_inline" nolabel="1"/>
+								<field name="amount_to_text" nolabel="1" class="oe_inline"/>
+							</h2>
+                         </group>
+						 <group>
+						 <field name="narration" required="1" string="Narration"/>
+					 </group>
+					<!-- </sheet> -->
+                </form>
+            </field>
+        </record>
+
+        <record id="view_payment_vouchers_tree" model="ir.ui.view">
+            <field name="name">view.payment.vouchers.tree</field>
+            <field name="model">payment.vouchers</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Vouchers">
+                    <field name="date" />
+					<field name="number" />
+					<field name="partner_id" />
+					<field name="cash_amt" />
+					<field name="narration" />
+					<field name="state" />
+
+                </tree>
+            </field>
+        </record>
+
+
+        <menuitem name="Payment Vouchers"  id="menu_payment_vouchers_tree" parent="menu_vouchers_root" sequence="65"  />
+
+
+        <menuitem name="Cash Payment"  id="menu_cash_payment_vouchers_tree" parent="menu_payment_vouchers_tree" sequence="10"  /> 
+
+
+        <record id="action_cash_general_payment_vouchers" model="ir.actions.act_window">
+            <field name="name">Payment Vouchers</field>
+            <field name="res_model">payment.vouchers</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!-- <field name="view_id" ref="view_payment_vouchers_tree" /> -->
+            <field name="domain">[('types','=', 'payment'),('mode','=', 'general'),('journal_type1','=', 'cash')]</field>
+            <field name="context">{'default_types': 'payment','default_mode': 'general','default_journal_type1': 'cash'}</field>
+        </record>
+
+        <record id="action_cash_general_payment_vouchers_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_payment_vouchers_tree" />
+            <field name="act_window_id" ref="action_cash_general_payment_vouchers" />
+        </record>
+
+        <record id="action_cash_general_payment_vouchers_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_payment_vouchers_form" />
+            <field name="act_window_id" ref="action_cash_general_payment_vouchers" />
+        </record>
+
+        <menuitem name="General Payment" action="action_cash_general_payment_vouchers" id="menu_cash_general_payment_vouchers_tree" parent="menu_cash_payment_vouchers_tree" sequence="10"  /> 
+
+
+        <record id="action_cash_supplier_payment_vouchers" model="ir.actions.act_window">
+            <field name="name">Payment Vouchers</field>
+            <field name="res_model">payment.vouchers</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!-- <field name="view_id" ref="view_payment_vouchers_tree" /> -->
+            <field name="domain">[('types','=', 'payment'),('mode','=', 'supplier'),('journal_type1','=', 'cash')]</field>
+            <field name="context">{'default_types': 'payment','default_mode': 'supplier','default_journal_type1': 'cash'}</field>
+        </record>
+
+        <record id="action_cash_supplier_payment_vouchers_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_payment_vouchers_tree" />
+            <field name="act_window_id" ref="action_cash_supplier_payment_vouchers" />
+        </record>
+
+        <record id="action_cash_supplier_payment_vouchers_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_payment_vouchers_form" />
+            <field name="act_window_id" ref="action_cash_supplier_payment_vouchers" />
+        </record>
+        
+
+        <menuitem name="Supplier Payment" action="action_cash_supplier_payment_vouchers" id="menu_cash_supplier_payment_vouchers_tree" parent="menu_cash_payment_vouchers_tree" sequence="20"  /> 
+
+
+         <menuitem name="Bank Payment"  id="menu_bank_payment_vouchers_tree" parent="menu_payment_vouchers_tree" sequence="20"  /> 
+
+          <record id="action_bank_general_payment_vouchers" model="ir.actions.act_window">
+            <field name="name">Payment Vouchers</field>
+            <field name="res_model">payment.vouchers</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!-- <field name="view_id" ref="view_payment_vouchers_tree" /> -->
+            <field name="domain">[('types','=', 'payment'),('mode','=', 'general'),('journal_type1','=', 'bank')]</field>
+            <field name="context">{'default_types': 'payment','default_mode': 'general','default_journal_type1': 'bank'}</field>
+        </record>
+
+        <record id="action_bank_general_payment_vouchers_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_payment_vouchers_tree" />
+            <field name="act_window_id" ref="action_bank_general_payment_vouchers" />
+        </record>
+
+        <record id="action_bank_general_payment_vouchers_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_payment_vouchers_form" />
+            <field name="act_window_id" ref="action_bank_general_payment_vouchers" />
+        </record>
+
+
+        <menuitem name="General Payment" action="action_bank_general_payment_vouchers" id="menu_bank_general_payment_vouchers_tree" parent="menu_bank_payment_vouchers_tree" sequence="10"  /> 
+
+        <record id="action_bank_supplier_payment_vouchers2" model="ir.actions.act_window">
+            <field name="name">Payment Vouchers</field>
+            <field name="res_model">payment.vouchers</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('types','=', 'payment'),('mode','=', 'supplier'),('journal_type1','=', 'bank')]</field>
+            <field name="context">{'default_types': 'payment','default_mode': 'supplier','default_journal_type1': 'bank'}</field>
+        </record>
+
+        <record id="action_bank_supplier_payment_vouchers2_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_payment_vouchers_tree" />
+            <field name="act_window_id" ref="action_bank_supplier_payment_vouchers2" />
+        </record>
+
+        <record id="action_bank_supplier_payment_vouchers2_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_payment_vouchers_form" />
+            <field name="act_window_id" ref="action_bank_supplier_payment_vouchers2" />
+        </record>
+
+
+        <menuitem name="Supplier Payment" action="action_bank_supplier_payment_vouchers2" id="menu_bank_supplier_payment_vouchers_tree" parent="menu_bank_payment_vouchers_tree" sequence="20"  /> 
+
+
+
+        <record model="ir.ui.view" id="view_company_inherit_form_accounting">
+            <field name="name">res.company.form.inherit</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page/group/group/field[@name='company_registry']" position="after">
+                <field name="tds_account_id" invisible="1" />
+            </xpath>
+            </field>
+        </record>
+
+
+
+
+	</data>
+</openerp>

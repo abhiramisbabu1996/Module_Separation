@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="opening_entry_form" model="ir.ui.view">
+			<field name="name">opening.entry.form</field>
+			<field name="model">opening.entry</field>
+			<field name="arch" type="xml">
+				<form string="Opening Entry" create="false">
+					<sheet>
+						<header>
+							<button name="make_entry" string="Make Entry"
+								attrs="{'invisible':[('done','=', True)]}" type="object"
+								class="oe_highlight oe_right" />
+							<button name="edit_entry" string="Edit Entry" type="object" attrs="{'invisible':[('done','!=', True)]}"
+								class="oe_highlight oe_right" />
+						</header>
+						<group>
+							<group>
+								<field name="done" invisible="1" />
+								<field name="account_id" />
+								<!-- <field name="journal" /> -->
+							</group>
+							<group>
+								<field name="debit" />
+								<field name="credit" />
+							</group>
+							<group>
+								<field name="remarks" />
+							</group>
+						</group>
+
+					</sheet>
+				</form>
+
+			</field>
+		</record>
+
+
+		<record id="action_opening_entry_form" model="ir.actions.act_window">
+			<field name="name">Opening Entry</field>
+			<field name="res_model">opening.entry</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="opening_entry_form" />
+			<!-- <field name="context">{'periods_special': False, 'all_fiscalyear': 
+				True} </field> -->
+		</record>
+
+
+	</data>
+</openerp>

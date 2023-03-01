@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="1">
+	
+	   <record id="gst_5" model="account.tax.template">
+            <field name="name">GST 5%</field>
+            <field name="description">5%</field>
+            <field name="type_tax_use">all</field>
+            <field name="type">percent</field>
+            <field name="amount">0.05</field>
+            <field name="sequence">10</field>
+            <field name="price_include">False</field>
+            <field name="account_collected_id" ref="c1210000" />
+            <field name="base_sign" eval="-1" />
+            <field name="tax_sign" eval="-1" />
+            <field name="chart_template_id" ref="indian_chart_template_schedule6" />
+        </record>
+	
+		<record id="gst_12" model="account.tax.template">
+			<field name="name">GST 12%</field>
+			<field name="description">12%</field>
+			<field name="type_tax_use">all</field>
+			<field name="type">percent</field>
+			<field name="amount">0.12</field>
+			<field name="sequence">10</field>
+			<field name="price_include">False</field>
+			<field name="account_collected_id" ref="c1210001" />
+			<field name="base_sign" eval="-1" />
+			<field name="tax_sign" eval="-1" />
+			<field name="chart_template_id" ref="indian_chart_template_schedule6" />
+		</record>
+		
+		
+		<record id="gst_18" model="account.tax.template">
+            <field name="name">GST 18%</field>
+            <field name="description">18%</field>
+            <field name="type_tax_use">all</field>
+            <field name="type">percent</field>
+            <field name="amount">0.18</field>
+            <field name="sequence">10</field>
+            <field name="price_include">False</field>
+            <field name="account_collected_id" ref="c1210002" />
+            <field name="base_sign" eval="-1" />
+            <field name="tax_sign" eval="-1" />
+            <field name="chart_template_id" ref="indian_chart_template_schedule6" />
+        </record>
+        
+        <record id="gst_28" model="account.tax.template">
+            <field name="name">GST 28%</field>
+            <field name="description">28%</field>
+            <field name="type_tax_use">all</field>
+            <field name="type">percent</field>
+            <field name="amount">0.28</field>
+            <field name="sequence">10</field>
+            <field name="price_include">False</field>
+            <field name="account_collected_id" ref="c1210003" />
+            <field name="base_sign" eval="-1" />
+            <field name="tax_sign" eval="-1" />
+            <field name="chart_template_id" ref="indian_chart_template_schedule6" />
+        </record>
+
+
+
+	</data>
+</openerp>

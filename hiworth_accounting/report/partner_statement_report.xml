@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<!-- Material request report wizard -->
+		<record id="form_report_partner_statement" model="ir.ui.view">
+			<field name="name">Statement</field>
+			<field name="model">partner.statement.report</field>
+			<field name="arch" type="xml">
+				<form>
+
+					<group col="4">
+						<field name="company_id" colspan="2" />
+						<field name="account_id" colspan="2" string="Account" />
+						<newline />
+					</group>
+					<group>
+						<field name="from_date" />
+						<field name="to_date" />
+					</group>
+
+					<footer>
+						<button type="object" name="view_partner_statement" string="View"
+							class="oe_highlight" />
+						<button type="object" name="print_partner_statement"
+							string="Print" class="oe_highlight" />
+						<button special="cancel" string="Cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+		<!-- Material request wizard action -->
+		<record id="action_report_partner_statement" model="ir.actions.act_window">
+			<field name="name">Partner Statement Report</field>
+			<field name="res_model">partner.statement.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+		<menuitem parent="account.final_accounting_reports" id="menu_report_partner_statement"
+			action="action_report_partner_statement" name="Customer Statement"
+			sequence="120" />
+
+		<report id="report_partner_statement" model="partner.statement.report"
+			string="Customer Statement" report_type="qweb-pdf"
+			name="hiworth_accounting.partner_statement_report" />
+
+
+		<!-- Material request report -->
+		<template id="partner_statement_report">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<div class="row">
+							<h3 class="text-center">
+								<t t-esc="docs.account_id.name"></t>
+								From
+								<span
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.from_date,'%Y-%m-%d'))" />
+								<!-- <t t-esc="docs._context['start_date']"></t> -->
+								<span>To</span>
+								<span
+									t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.to_date,'%Y-%m-%d'))" />
+								<!-- <t t-esc="docs._context['end_date']"></t> -->
+							</h3>
+						</div>
+                        
+						<div class="row" style="margin: -24px;margin-top: 10px;">
+						<t t-set="total" t-value="0.0"/>
+							<table class="table table-bordered" style="width: 100%">
+								<thead>
+									<tr>
+										<th style="width: 50%">Statements</th>
+										<th style="width: 50%">Payments</th>
+									</tr>
+								</thead>
+								<tr>
+									<td>
+										<t t-set="sl_no" t-value="1" />
+										<t t-set="amount_total" t-value="0" />
+										<table class="table table-bordered" style="width: 100%">
+											<thead>
+												<tr>
+													<th style="width: 8%">Sl.No</th>
+													<th style="width: 20%">Date</th>
+													<!-- <th>Account</th> -->
+													<th style="width: 52%">Description</th>
+													<th style="width: 20%">Amount</th>
+													<!-- <th class="text-right" style="width: 15%">Balance</th> -->
+												</tr>
+											</thead>
+											<tbody>
+												<tr t-foreach="docs.get_statement_entries()" t-as="statement">
+													<td>
+														<t t-esc="sl_no" />
+														<t t-set="sl_no" t-value="sl_no+1" />
+													</td>
+													<td>
+														<t t-esc="time.strftime('%d-%m-%y',time.strptime(statement.date,'%Y-%m-%d'))"  />
+													</td>
+													<td>
+														<t t-esc="statement.name" />
+													</td>
+													<td class="text-right">
+														<t t-esc="statement.amount" />
+														<t t-set="amount_total" t-value="amount_total+statement.amount" />
+													</td>
+
+												</tr>
+												<tr>
+													<td>
+														<span>
+															<strong>Total</strong>
+														</span>
+													</td>
+													<td />
+													<td>
+													</td>
+													<td class="text-right">
+														<strong>
+															<t t-esc="amount_total" />
+														</strong>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+
+									</td>
+									<td>
+										<t t-set="sl_no2" t-value="1" />
+										<t t-set="credit_total" t-value="0" />
+										<table class="table table-bordered" style="width: 100%">
+											<thead>
+												<tr>
+													<th style="width: 8%">Sl.No</th>
+                                                    <th style="width: 20%">Date</th>
+                                                    <!-- <th>Account</th> -->
+                                                    <th style="width: 52%">Description</th>
+                                                    <th style="width: 20%">Amount</th>  
+													<!-- <th class="text-right" style="width: 15%">Balance</th> -->
+												</tr>
+											</thead>
+											<tbody>
+												<tr t-foreach="docs.get_account_move_lines()" t-as="line">
+													<td>
+														<t t-esc="sl_no2" />
+														<t t-set="sl_no2" t-value="sl_no2+1" />
+													</td>
+													<td>
+														<t t-esc="time.strftime('%d-%m-%y',time.strptime(line.date,'%Y-%m-%d'))"  />
+													</td>
+													<td>
+														<t t-esc="line.name" />
+													</td>
+													<td class="text-right">
+														<t t-esc="line.credit" />
+														<t t-set="credit_total" t-value="credit_total+line.credit" />
+													</td>
+
+												</tr>
+												<tr>
+													<td>
+														<span>
+															<strong>Total</strong>
+														</span>
+													</td>
+													<td />
+													<td>
+													</td>
+													<td class="text-right">
+														<strong>
+															<t t-esc="credit_total" />
+														</strong>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+
+							</table>
+
+						</div >
+						
+						<div>
+                            <span style="font-size: 25px;float: right;font-weight: bold;margin-top: 10px;">
+                            Balance :
+                            <t t-set="total" t-value="amount_total-credit_total"/>
+                            <t t-esc="total" />
+                        </span>
+						</div>
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+
+
+
+
+
+
+	</data>
+</openerp>

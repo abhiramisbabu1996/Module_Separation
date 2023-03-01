@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_accounts_invoice,Access accounts invoice,model_account_invoice_no,accounts_user,1,1,1,0
+access_accounts_partner_statement,Access accounts Partner Statement,model_partner_statement,accounts_user,1,1,1,0
+access_accounts_partner_statement_line,Access accounts Partner Statement Line,model_partner_statement_line,accounts_user,1,1,1,0
+access_accounts_opening_entry,Access accounts Opening Entry,model_opening_entry,accounts_user,1,1,1,0
+access_accounts_payment_voucher,Access accounts payment Voucher,model_payment_vouchers,accounts_user,1,1,1,0
+access_accounts_payment_voucher_bill,Access accounts payment Voucher Bill,model_payment_vouchers_bill,accounts_user,1,1,1,1

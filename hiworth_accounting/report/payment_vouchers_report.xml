@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+		<report id="report_payment_voucher_receipt" string="Vouchers"
+			model="payment.vouchers" report_type="qweb-pdf"
+			name="hiworth_accounting.report_payment_voucher_receipt_template" menu="False"/>
+
+
+			<record id="paper_format_report_voucher" model="report.paperformat">
+				<field name="name">A4 half</field>
+				<field name="default" eval="True" />
+				<field name="format">A4</field>
+				<field name="orientation">Portrait</field>
+				<field name="margin_top">10</field>
+				<field name="margin_bottom">10</field>
+				<field name="margin_left">7</field>
+				<field name="margin_right">7</field>
+				<field name="header_line" eval="False" />
+				<field name="header_spacing">35</field>
+				<field name="dpi">90</field>
+			</record>
+
+			<record id="hiworth_accounting.report_payment_voucher_receipt" model="ir.actions.report.xml">
+				<field name="paperformat_id" ref="hiworth_accounting.paper_format_report_voucher" />
+			</record>
+
+
+		<template id="report_payment_voucher_receipt_template">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+
+						<div class="page" style="border: solid;height: 560px; width: 100%;">
+							<!-- <t t-call="report.external_layout"> -->
+							<center><b>
+								<h2>PAUL ANTONY BUILDERS &amp; DEVELEPORS PVT. LTD.
+								</h2>
+						  <h3>
+									ALANGAD
+							</h3>
+							</b>
+							</center>
+
+							<center><b><h2><u>
+							<t t-if="docs.journal_type == 'cash'">	CASH RECEIPT</t>
+							<t t-if="docs.journal_type == 'bank'">	BANK RECEIPT</t>
+							</u></h2></b></center>
+							<div>
+								<center>
+
+									<table style="width: 100%; font-size:16px;margin-top:50px;">
+			                            <thead>
+			                                <tr style="height: 50px;">
+			                                    <td style="width: 50%;padding-left: 3%;font-size: 20px;">
+			                                        No:<span t-field="o.number"/>
+			                                    </td>
+			                                    <td style="width: 50%;text-align: right;padding-right: 3%;font-size: 20px;">
+			                                        Date:<span t-field="o.date"/>
+			                                    </td>
+			                                </tr>
+			                            </thead>
+			                        </table>
+
+			                    </center>
+			                </div>
+
+
+			                <div>
+
+								<table style="font-size:18px;width: 100%;">
+
+										<tr style="height: 50px;">
+											<td style="width: 20%; padding-left: 3%;" align="left">
+												Received From:</td>
+											<td style="width: 80%; padding-right: 10%" align="left">
+												<span t-field="o.partner_id.name"/>
+											</td>
+										</tr>
+									</table>
+<style>
+
+.td1 {
+    vertical-align: center;
+}
+</style>
+									<table style="font-size:18px;width: 90%; margin-left: 3%; margin-right: 3%;">
+										<tr style="height: 50px;" >
+											<td style="width: 25%; font-size:20px; border: solid; vertical-align: bottom;" align="left">
+												Rs:<b> <span t-field="o.cash_amt"/></b></td>
+											<td style="width: 75%; font-size:20px; padding-left: 3%;" align="left">
+												 Rupees  <span t-field="o.amount_to_text"/> 
+											</td>
+										</tr>
+									</table>
+
+								<t t-if="docs.journal_type == 'bank'">
+								<div style="font-size:20px;width: 90%; margin-left: 3%; margin-right: 3%; margin-top: 3%;">
+									<p>
+										as cheque/dd/transfer No. <span t-field="o.cheque_dd"/> Dated <span t-field="o.dd_date"/>
+										of <span t-field="o.branch"/> Branch
+									</p>
+								</div>
+									</t>
+								<table style="font-size:20px;width: 90%; margin-left: 3%; margin-right: 3%; margin-top: 3%;">
+										<tr style="height: 50px;" >
+											<td style="width: 20%;" align="left">
+												Towards:</td>
+											<td style="width: 80%;" align="left">
+												<span t-field="o.narration"/>
+											</td>
+										</tr>
+								</table>
+							</div>
+							<div style="float: right; padding-right: 5%; font-size:20px;">
+								<span> For PAUL ANTONY BUILDERS  &amp; DEVELOPERS PVT. LTD.
+								<br />
+								<p style="float: right; margin-right: 10%; margin-top: 3%;">
+								Received By : <span  t-field="o.user_id.name" />
+							</p>
+									
+							</span>
+						</div>
+
+						<!-- </t> -->
+						</div>
+				</t>
+			</t>
+		</template>
+
+
+		<!-- ======================= BANK PAYMENT VOUCHER ======================== -->
+
+
+		<report id="report_bank_payment_voucher_payment" string="Vouchers"
+			model="payment.vouchers" report_type="qweb-html"
+			name="hiworth_accounting.report_bank_payment_voucher_payment_template" menu="False"/>
+
+
+			<record id="paper_format_bank_payment_voucher" model="report.paperformat">
+				<field name="name">A4 half</field>
+				<field name="default" eval="True" />
+				<field name="format">A4</field>
+				<field name="orientation">Portrait</field>
+				<field name="margin_top">10</field>
+				<field name="margin_bottom">10</field>
+				<field name="margin_left">7</field>
+				<field name="margin_right">7</field>
+				<field name="header_line" eval="False" />
+				<field name="header_spacing">35</field>
+				<field name="dpi">90</field>
+			</record>
+
+			<record id="hiworth_accounting.report_bank_payment_voucher_payment" model="ir.actions.report.xml">
+				<field name="paperformat_id" ref="hiworth_accounting.paper_format_bank_payment_voucher" />
+			</record>
+
+
+		<template id="report_bank_payment_voucher_payment_template">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+
+						<div class="page" style="border: solid;">
+							<!-- <t t-call="report.external_layout"> -->
+							<center><b>
+									<h3>PAUL ANTONY BUILDERS &amp; DEVELEPORS PVT. LTD.
+									</h3>
+							  <h4>
+										ALANGAD
+								</h4>
+								</b>
+								</center>
+
+							<center><b><h3><u>
+								BANK PAYMENT VOUCHER
+							</u></h3></b></center>
+							<div>
+								<center>
+
+									<table style="width: 100%; font-size:16px;">
+			                            <thead>
+			                                <tr style="height: 30px;">
+			                                    <td style="width: 50%;padding-left: 3%;font-size: 20px;">
+			                                        No:<span t-field="o.number"/>
+			                                    </td>
+			                                    <td style="width: 50%;text-align: right;padding-right: 3%;font-size: 20px;">
+			                                        Date:<span t-field="o.date"/>
+			                                    </td>
+			                                </tr>
+			                            </thead>
+			                        </table>
+
+			                    </center>
+			                </div>
+
+
+			                <!-- <div> -->
+
+								<table style="font-size:18px;width: 100%;">
+
+										<tr style="height: 30px;">
+											<td style="width: 20%; padding-left: 3%;" align="left">
+												Paid To:</td>
+											<td style="width: 80%; padding-right: 10%" align="left">
+												<span t-field="o.partner_id.name"/>
+											</td>
+										</tr>
+									</table>
+
+								<table style="font-size:18px;width: 100%;">
+
+										<tr style="height: 30px;">
+											<td style="width: 20%; padding-left: 3%;" align="left">
+												<b>Bank:</b></td>
+											<td style="width: 80%; padding-right: 10%" align="left">
+												<span t-field="o.journal_id.name"/>
+											</td>
+										</tr>
+									</table>
+
+
+									<t t-if="docs.select_bills == True">
+										
+									<table border="1" style="font-size:18px;width: 94%; margin-left: 3%; margin-right: 3%;">
+											<tr>
+												<th style="text-align: center; border:solid; border-width: thin;">Bill No
+												</th>
+												<th style="text-align: center; border:solid; border-width: thin;">Date
+												</th>
+												<th style="text-align: center; border:solid; border-width: thin;">Invoice Detail
+												</th>
+												<th style="text-align: center; border:solid; border-width: thin;">Amount
+												</th>
+											</tr>
+											<t t-set="total" t-value="0" />
+											<t t-foreach="o.payment_invoice_ids" t-as="inv">
+											<tr >
+												<td style="width: 20%; padding-left: 1%; border:solid; border-width: thin;" align="left">
+													<span t-field="inv.bill_no.name"/>
+												</td>
+												<td style="width: 10%; padding-left: 1%; border:solid; border-width: thin;" align="left">
+													<span t-field="inv.date"/>
+												</td>
+												<td style="width: 54%; padding-left: 1%; border:solid; border-width: thin;" align="left">
+													<span t-field="inv.name"/>
+												</td>
+												<td style="width: 10%; padding-right: 1%; text-align: right; border:solid; border-width: thin;" align="left">
+													<span t-field="inv.amount"/>
+													<t t-set="total" t-value="total+inv.amount" />
+												</td>
+											</tr>
+										</t>
+										<tr>
+											<td style="border:solid; border-width: thin;"></td>
+											<td style="border:solid; border-width: thin;"></td>
+											<td style="text-align: center; border:solid; border-width: thin;" ><b>Total</b></td>
+											<td style="padding-right: 1%; text-align: right; border:solid; border-width: thin;">
+											<b><span t-esc="total"/></b>
+											</td>
+										</tr>
+										</table>
+
+									<div style="font-size:18px;width: 90%; margin-left: 3%; margin-right: 3%;">
+										<center>
+											
+										(<span t-field="o.amount_to_text"/> only.)
+									
+										</center>
+									</div>
+										
+									</t>
+									<t t-if="docs.select_bills == False">
+										<table style="font-size:18px;width: 90%; margin-left: 3%; margin-right: 3%;">
+										<tr style="height: 50px;" >
+											<td style="width: 25%; font-size:20px; border: solid; vertical-align: bottom;" align="left">
+												Rs:<b> <span t-field="o.cash_amt"/></b></td>
+											<td style="width: 75%; font-size:20px; padding-left: 3%;" align="left">
+												 The sum of <span t-field="o.amount_to_text"/>  only.
+											</td>
+										</tr>
+									</table>
+
+
+										<div style="font-size:18px;width: 94%; margin-left: 3%; margin-right: 3%; margin-top: 3%;">
+												<p> Being the 
+											<span t-field="o.narration"/></p>
+										</div>
+
+									</t>
+
+
+								<table style="font-size:18px;width: 94%; margin-left: 3%; margin-right: 3%; margin-top: 3%;">
+										<tr style="height: 30px;" >
+											<td style="width: 54%;" align="left">
+											</td>
+											<td style="width: 50%;" align="left">
+											 Cheque No.	:<span t-field="o.cheque_dd"/>
+											</td>
+										</tr>
+										<tr style="height: 20px;" >
+											<td style="width: 54%;" align="left">
+											</td>
+										</tr>
+
+								</table>
+
+								<table style="font-size:18px;width: 94%; margin-left: 3%; margin-right: 3%;">
+									<tr>
+										<td></td>
+										<td align="center">
+											Receiver Name: <span t-field="o.receiver_id.name"/>
+										</td>
+										<td></td>
+									</tr>
+										<tr style="height: 60px;" >
+											<!-- <td style="width: 40%; font-size:16px; padding-left: 3%;" align="left">
+											</td> -->
+											<td style="width: 44%;" align="left">
+												Paid By	:<span t-field="o.user_id.name"/>
+											</td>
+											<td style="width: 30%; vertical-align: bottom;" align="center">
+												Receiver Signature / Thumb
+											</td>
+												<td align="left">
+											</td>
+										</tr>
+									</table>
+
+						</div>
+				</t>
+			</t>
+		</template>
+
+
+    <!-- ======================= CASH PAYMENT VOUCHER ======================== -->
+
+		<report id="report_cash_payment_voucher_payment" string="Vouchers"
+			model="payment.vouchers" report_type="qweb-pdf"
+			name="hiworth_accounting.report_cash_payment_voucher_payment_template" menu="False"/>
+
+
+			<record id="paper_format_cash_payment_voucher" model="report.paperformat">
+				<field name="name">A4 half</field>
+				<field name="default" eval="True" />
+				<field name="format">A4</field>
+				<field name="orientation">Portrait</field>
+				<field name="margin_top">10</field>
+				<field name="margin_bottom">10</field>
+				<field name="margin_left">7</field>
+				<field name="margin_right">7</field>
+				<field name="header_line" eval="False" />
+				<field name="header_spacing">35</field>
+				<field name="dpi">90</field>
+			</record>
+
+			<record id="hiworth_accounting.report_cash_payment_voucher_payment" model="ir.actions.report.xml">
+				<field name="paperformat_id" ref="hiworth_accounting.paper_format_cash_payment_voucher" />
+			</record>
+
+
+			<template id="report_cash_payment_voucher_payment_template">
+				<t t-call="report.html_container">
+					<t t-foreach="docs" t-as="o">
+
+							<div class="page" style="border: solid;">
+								<!-- <t t-call="report.external_layout"> -->
+								<center><b>
+									<h3>PAUL ANTONY BUILDERS &amp; DEVELEPORS PVT. LTD.
+									</h3>
+							  <h4>
+										ALANGAD
+								</h4>
+								</b>
+								</center>
+
+								<center><b><h3><u>
+								CASH PAYMENT VOUCHER
+							</u></h3></b></center>
+								<div>
+									<center>
+
+										<table style="width: 100%; font-size:16px; margin-top: 50px;">
+				                            <thead>
+				                                <tr style="height: 50px;">
+				                                    <td style="width: 50%;padding-left: 3%;font-size: 20px;">
+				                                        No:<span t-field="o.number"/>
+				                                    </td>
+				                                    <td style="width: 50%;text-align: right;padding-right: 3%;font-size: 20px;">
+				                                        Date:<span t-field="o.date"/>
+				                                    </td>
+				                                </tr>
+				                            </thead>
+				                        </table>
+
+				                    </center>
+				                </div>
+
+
+				                <!-- <div> -->
+
+									<table style="font-size:18px;width: 100%;">
+
+											<tr style="height: 50px;">
+												<td style="width: 60%; padding-left: 3%;" align="left">
+													A/C :<span t-field="o.opp_account_id.name"/></td>
+												<td style="width: 40%; padding-right: 10%" align="right">
+													
+												</td>
+											</tr>
+											<!-- <tr style="height: 50px;">
+												<td style="width: 60%; padding-left: 3%;" align="left">
+													Rs. <span t-field="o.cash_amt"/></td>
+												<td style="width: 40%; padding-right: 10%" align="right">
+												</td>
+											</tr> -->
+										</table>
+
+									<t t-if="docs.select_bills == True">
+										
+									<table border="1" style="font-size:18px;width: 94%; margin-left: 3%; margin-right: 3%;">
+											<tr>
+												<th style="text-align: center; border:solid; border-width: thin;">Bill No
+												</th>
+												<th style="text-align: center; border:solid; border-width: thin;">Date
+												</th>
+												<th style="text-align: center; border:solid; border-width: thin;">Invoice Detail
+												</th>
+												<th style="text-align: center; border:solid; border-width: thin;">Amount
+												</th>
+											</tr>
+											<t t-set="total" t-value="0" />
+											<t t-foreach="o.payment_invoice_ids" t-as="inv">
+											<tr >
+												<td style="width: 20%; padding-left: 1%; border:solid; border-width: thin;" align="left">
+													<span t-field="inv.bill_no.name"/>
+												</td>
+												<td style="width: 10%; padding-left: 1%; border:solid; border-width: thin;" align="left">
+													<span t-field="inv.date"/>
+												</td>
+												<td style="width: 54%; padding-left: 1%; border:solid; border-width: thin;" align="left">
+													<span t-field="inv.name"/>
+												</td>
+												<td style="width: 10%; padding-right: 1%; text-align: right; border:solid; border-width: thin;" align="left">
+													<span t-field="inv.amount"/>
+													<t t-set="total" t-value="total+inv.amount" />
+												</td>
+											</tr>
+										</t>
+										<tr>
+											<td style="border:solid; border-width: thin;"></td>
+											<td style="border:solid; border-width: thin;"></td>
+											<td style="text-align: center; border:solid; border-width: thin;" ><b>Total</b></td>
+											<td style="padding-right: 1%; text-align: right; border:solid; border-width: thin;">
+											<b><span t-esc="total"/></b>
+											</td>
+										</tr>
+										</table>
+
+										<div style="font-size:18px;width: 90%; margin-left: 3%; margin-right: 3%;">
+											<center>
+												
+											(<span t-field="o.amount_to_text"/> only.)
+										
+											</center>
+										</div>
+									</t>
+
+									<t t-if="docs.select_bills == False">
+
+										<table style="font-size:18px;width: 90%; margin-left: 3%; margin-right: 3%;">
+										<tr style="height: 50px;" >
+											<td style="width: 25%; font-size:20px; border: solid; vertical-align: bottom;" align="left">
+												Rs:<b> <span t-field="o.cash_amt"/></b></td>
+											<td style="width: 75%; font-size:20px; padding-left: 3%;" align="left">
+												 The sum of <span t-field="o.amount_to_text"/>  only.
+											</td>
+										</tr>
+									</table>
+
+
+										<div style="font-size:18px;width: 94%; margin-left: 3%; margin-right: 3%; margin-top: 3%;">
+												<p> Being the 
+											<span t-field="o.narration"/></p>
+										</div>
+									</t>
+
+									<table style="font-size:18px;width: 94%; margin-left: 3%; margin-right: 3%;">
+									<tr>
+										<td></td>
+										<td align="center">
+											Receiver Name: <span t-field="o.receiver_id.name"/>
+										</td>
+										<td></td>
+									</tr>
+										<tr style="height: 60px;" >
+											<!-- <td style="width: 40%; font-size:16px; padding-left: 3%;" align="left">
+											</td> -->
+											<td style="width: 44%;" align="left">
+												Paid By	:<span t-field="o.user_id.name"/>
+											</td>
+											<td style="width: 30%; vertical-align: bottom;" align="center">
+												Receiver Signature / Thumb
+											</td>
+												<td align="left">
+											</td>
+										</tr>
+									</table>
+
+							</div>
+					</t>
+				</t>
+			</template>
+
+
+	</data>
+</openerp>

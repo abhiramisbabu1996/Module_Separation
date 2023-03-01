@@ -1,0 +1,17 @@
+<openerp>
+    <data>
+
+        <record id="voucher_receipt_seq_type" model="ir.sequence.type">
+            <field name="name">Voucher Receipt Code</field>
+            <field name="code">voucher.receipt</field>
+        </record>
+    
+        <record id="voucher_receipt_seq" model="ir.sequence">
+            <field name="name">Voucher Receipt Code</field>
+            <field name="code">voucher.receipt</field>
+            <field name="padding">4</field>
+        </record>
+
+        
+    </data>
+</openerp>

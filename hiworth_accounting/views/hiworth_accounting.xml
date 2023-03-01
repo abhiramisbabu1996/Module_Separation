@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+
+		<record id="view_account_form_changed" model="ir.ui.view">
+			<field name="name">account.account.form.changed</field>
+			<field name="model">account.account</field>
+			<field name="inherit_id" ref="account.view_account_form" />
+			<field name="arch" type="xml">
+
+
+				<xpath expr="//group/group[2]" position="after">
+					<group>
+						<field name="credit_limit" invisible="1" />
+						<field name="debit_limit" invisible="1" />
+					</group>
+				</xpath>
+
+				<xpath expr="//group/group/field[@name='parent_id']" position="replace">
+				</xpath>
+
+				<xpath expr="//label[@for='code']" position="attributes">
+					<attribute name="invisible">True</attribute>
+				</xpath>
+				<xpath expr="//h1[1]" position="replace">
+					<h1>
+                        <field name="code" class="oe_inline" placeholder="Account code" style="width: 6em" invisible="1"/>
+                        <field name="name" class="oe_inline" placeholder="Account name"/>
+                    </h1>
+				</xpath>
+				<xpath expr="//label[@for='code']" position="before">
+					<group>
+						<group>
+							<field name="parent_id" style="width: 20em" />
+						</group>
+					</group>
+				</xpath>
+
+				<xpath expr="//group/group/field[@name='balance']" position="after">
+					<field name="theoretical_balance" invisible="1"/>
+				</xpath>
+
+				<xpath expr="//group[1]" position="inside">
+					<button class="oe_right" type="object" string="Opeing Entry"
+						name="action_opening_entry_form" context="{'default_account_id': id}" />
+					<!-- context="{'search_default_partner_id': active_id, 'default_partner_id': 
+						active_id}" <field string="Opening Entry" name="opening_entry" widget="statinfo"/> -->
+				</xpath>
+
+				<xpath expr="//label[@for='note']" position="before">
+					<field name="is_child" invisible="True" />
+					<!-- <field name="parent_type" invisible="True" /> -->
+					<field name="child_id" attrs="{'invisible':[('is_child','!=', True)]}">
+						<tree
+							colors="blue:type == 'view';black:type in ('other','receivable','payable','consolidation');gray:type == 'closed'"
+							string="Chart of accounts" toolbar="1">
+							<field name="code" />
+							<field name="name" />
+							<button name="open_selected_accounts" type="object"
+								string="Go to Account" icon="STOCK_CANCEL" class="oe_inline" />
+							<field name="debit" sum="Total" />
+							<field name="credit" sum="Total" />
+							<field name="balance" sum="Total" />
+
+						</tree>
+						<form string="Account">
+							<label for="code" class="oe_edit_only" string="Account Code and Name" />
+							<h1>
+								<field name="code" class="oe_inline" placeholder="Account code"
+									style="width: 6em" />
+								-
+								<field name="name" class="oe_inline" placeholder="Account name" />
+							</h1>
+							<group>
+								<group>
+									<field name="type" invisible="True" />
+									<field name="debit" attrs="{'readonly':[('type','=','view')]}" />
+									<field name="credit" attrs="{'readonly':[('type','=','view')]}" />
+									<field name="balance" />
+									
+								</group>
+							</group>
+							<field name="is_child" invisible="True" />
+							<field name="child_id" attrs="{'invisible':[('is_child','!=', True)]}"
+								string="Child Accounts">
+								<tree
+									colors="blue:type == 'view';black:type in ('other','receivable','payable','consolidation');gray:type == 'closed'"
+									string="Chart of accounts">
+									<field name="code" />
+									<field name="name" />
+									<field name="debit" sum="Total" />
+									<field name="credit" sum="Total" />
+									<field name="balance" sum="Total" />
+								</tree>
+							</field>
+							<field name="move_lines" attrs="{'invisible':[('is_child','=', True)]}" />
+
+						</form>
+
+					</field>
+
+				</xpath>
+
+			</field>
+		</record>
+
+		<record id="view_account_list_inherit" model="ir.ui.view">
+            <field name="name">account.account.list</field>
+            <field name="model">account.account</field>
+            <field name="field_parent">child_id</field>
+            <field name="inherit_id" ref="account.view_account_list" />
+            <field name="arch" type="xml">
+            	<field name="code" position="attributes">
+            		<attribute name="invisible">True</attribute>
+            	</field>
+            	<field name="balance" position="attributes">
+            		<attribute name="invisible">True</attribute>
+            	</field>
+            	<field name="balance" position="after">
+            		<field name="balance1" />
+            		<field name="bal_code" />
+            	</field>
+            </field>
+        </record>
+
+
+
+		<record id="view_account_list_hiworth" model="ir.ui.view">
+			<field name="name">account.account.list.hiworth</field>
+			<field name="model">account.account</field>
+			<field name="field_parent">child_id</field>
+			<field name="arch" type="xml">
+				<tree create="false" edit="false"
+					colors="blue:type == 'view';black:type in ('other','receivable','payable','consolidation');gray:type == 'closed'"
+					string="Chart of accounts" toolbar="1">
+					<field name="code" invisible="1"/>
+					<field name="name" />
+					<field name="parent_id" invisible="1" />
+					<field name="user_type" invisible="1" />
+					<field name="debit" />
+					<field name="credit" />
+					<field name="balance" invisible="1"/>
+					<field name="balance1" />
+					<field name="bal_code" />
+					<field name="theoretical_balance" invisible="1"/>
+					<field name="type" />
+					<field name="company_id" groups="base.group_multi_company" />
+					<field name="company_currency_id" />
+				</tree>
+			</field>
+		</record>
+		<record id="view_account_form_hiworth" model="ir.ui.view">
+			<field name="name">account.account.form.hiworth</field>
+			<field name="model">account.account</field>
+			<field name="arch" type="xml">
+				<form string="Account" create="false">
+					<label for="code" class="oe_edit_only" string="Account Code and Name" invisible="1"/>
+					<h1>
+						<field name="code" class="oe_inline" placeholder="Account code"
+							style="width: 6em" readonly="1" invisible="1"/>
+						
+						<field name="name" class="oe_inline" placeholder="Account name"
+							readonly="1" />
+					</h1>
+					<group>
+						<group>
+							<field name="type" invisible="True" />
+							<field name="debit" attrs="{'readonly':[('type','=','view')]}"
+								invisible="True" />
+							<field name="credit" attrs="{'readonly':[('type','=','view')]}"
+								invisible="True" />
+							<!-- <field name="balance" /> -->
+						</group>
+					</group>
+					<!-- <label for="note"/> <field name="note"/> -->
+					<field name="is_child" invisible="True" />
+					<field name="child_id" attrs="{'invisible':[('is_child','!=', True)]}">
+						<tree
+							colors="blue:type == 'view';black:type in ('other','receivable','payable','consolidation');gray:type == 'closed'"
+							string="Chart of accounts" toolbar="1">
+							<field name="code" />
+							<field name="name" />
+							<button name="open_selected_accounts2" type="object"
+								string="Go to Account" icon="gtk-go-forward" class="oe_inline" />
+							<field name="debit" sum="Total" />
+							<field name="credit" sum="Total" />
+							<field name="balance" sum="Total" />
+						</tree>
+					</field>
+					<field name="move_lines" attrs="{'invisible':[('is_child','=', True)]}">
+						<tree editable="bottom">
+							<field name="date" string="Date" readonly="1" />
+							<field name="name" string="Narration" readonly="1" />
+							<!-- <field name="ref" /> -->
+							<!-- <field name="partner_id" /> -->
+							<field name="move_id" readonly="1" />
+							<button name="open_journal_entries" type="object" string="Journal Entry"
+								icon="gtk-go-forward" class="oe_inline" />
+							<field name="debit" sum="Total" readonly="1" />
+							<field name="credit" sum="Total" readonly="1" />
+						</tree>
+					</field>
+					<group colspan="4">
+						<group class="oe_subtotal_footer oe_right">
+							<field name="balance" class="oe_subtotal_footer_separator"
+								widget="monetary" />
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_account_search_hiworth" model="ir.ui.view">
+			<field name="name">account.account.search.hiworth</field>
+			<field name="model">account.account</field>
+			<field name="inherit_id" ref="account.view_account_search" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="parent_id" string="Parent Account" />
+				</xpath>
+			</field>
+		</record>
+
+
+		<record id="account.accounting_report_view" model="ir.ui.view">
+			<field name="name">Accounting Report</field>
+			<field name="model">accounting.report</field>
+			<field name="inherit_id" ref="account.account_common_report_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='target_move']" position="after">
+					<field name="account_report_id" domain="[('parent_id','=',False)]" />
+					<field name="enable_filter" />
+					<field name="debit_credit" attrs="{'invisible': [('enable_filter','=',True)]}"
+						invisible="True" />
+				</xpath>
+				<xpath expr="//notebook/page[@string='Filters']" position="after">
+					<page string="Comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
+						<group>
+							<field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}" />
+							<field name="fiscalyear_id_cmp" />
+							<newline />
+							<field name="filter_cmp" />
+						</group>
+						<group string="Dates"
+							attrs="{'invisible':[('filter_cmp', '!=', 'filter_date')]}">
+							<field name="date_from_cmp"
+								attrs="{'required':[('filter_cmp', '=', 'filter_date')]}" />
+							<field name="date_to_cmp"
+								attrs="{'required':[('filter_cmp', '=', 'filter_date')]}" />
+						</group>
+						<group string="Periods"
+							attrs="{'invisible':[('filter_cmp', '!=', 'filter_period')]}">
+							<field name="period_from_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]"
+								attrs="{'required':[('filter_cmp', '=', 'filter_period')]}" />
+							<field name="period_to_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]"
+								attrs="{'required':[('filter_cmp', '=', 'filter_period')]}" />
+						</group>
+					</page>
+				</xpath>
+				<xpath expr="//notebook/page[@string='Journals']" position="replace">
+				</xpath>
+
+				<xpath expr="//button[@string='Print']" position="replace">
+					<button name="check_report" string="Print" type="object"
+						default_focus="1" class="oe_highlight" context="{'tp': 'print'}" />
+					or
+				</xpath>
+				<!-- <xpath expr="//button[@string='Print']" position="before"> <button 
+					name="check_report" string="View" type="object" class="oe_highlight" context="{'tp': 
+					'view'}" /> or </xpath> -->
+
+			</field>
+		</record>
+
+
+		<record id="invoice_form_hiworth" model="ir.ui.view">
+			<field name="name">account.invoice.form.hiworth</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//notebook/page[@string='Payments']" position="replace">
+				</xpath>
+
+				<xpath expr="//notebook/page/group/field[@name='residual']"
+					position="replace">
+				</xpath>
+
+				<xpath expr="//notebook/page/group[1]" position="after">
+					<group string="Payments">
+						<field name="payment_ids" nolabel="1">
+							<tree string="Payments">
+								<field name="date" string="Date" />
+								<field name="move_id" />
+								<field name="ref" />
+								<field name="name" />
+								<field name="journal_id" groups="base.group_user" />
+								<field name="debit" />
+								<field name="credit" />
+								<field name="amount_currency" groups="base.group_multi_currency" />
+								<field name="currency_id" groups="base.group_multi_currency" />
+							</tree>
+						</field>
+					</group>
+					<group class="oe_subtotal_footer oe_right">
+						<field name="payment_total" groups="account.group_account_user"
+							widget="monetary" options="{'currency_field': 'currency_id'}" />
+						<field name="residual" groups="account.group_account_user"
+							class="oe_subtotal_footer_separator" widget="monetary"
+							options="{'currency_field': 'currency_id'}" />
+					</group>
+				</xpath>
+				<!-- <xpath expr="//notebook/page/field/tree/field[@name='product_id']" 
+					position="before"> <field name="line_no" /> </xpath> -->
+
+				<xpath expr="//div[@class='oe_chatter']" position="replace">
+				</xpath>
+
+				<!-- <xpath expr="//button[@name='invoice_open']" position="replace"> 
+					</xpath> -->
+				<xpath expr="//notebook/page/field[@name='tax_line']"
+					position="replace">
+				</xpath>
+				<xpath expr="//notebook/page/group[1]" position="after">
+					<div style="width: 50%">
+						<field name="tax_line">
+							<tree editable="bottom" string="Taxes">
+								<field name="name" />
+								<field name="account_id" groups="account.group_account_user" />
+								<field name="base"
+									on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)"
+									readonly="1" />
+								<field name="amount" sum="Total"
+									on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)" />
+								<field invisible="True" name="base_amount" />
+								<field invisible="True" name="tax_amount" />
+								<field name="factor_base" invisible="True" />
+								<field name="factor_tax" invisible="True" />
+							</tree>
+						</field>
+					</div>
+				</xpath>
+
+			</field>
+		</record>
+
+		<record id="invoice_supplier_form_hiworth" model="ir.ui.view">
+			<field name="name">account.invoice.supplier.form.hiworth</field>
+			<field name="model">account.invoice</field>
+			<field name="priority">2</field>
+			<field name="inherit_id" ref="account.invoice_supplier_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//notebook/page[@string='Payments']" position="replace">
+				</xpath>
+
+				<xpath expr="//notebook/page/group/field[@name='residual']"
+					position="replace">
+				</xpath>
+
+				<xpath expr="//notebook/page/div[1]" position="after">
+					<group string="Payments">
+						<field name="payment_ids" nolabel="1">
+							<tree string="Payments">
+								<field name="date" string="Date" />
+								<field name="move_id" />
+								<field name="ref" />
+								<field name="name" />
+								<field name="journal_id" groups="base.group_user" />
+								<field name="debit" />
+								<field name="credit" />
+								<field name="amount_currency" groups="base.group_multi_currency" />
+								<field name="currency_id" groups="base.group_multi_currency" />
+							</tree>
+						</field>
+					</group>
+					<group class="oe_subtotal_footer oe_right">
+						<field name="payment_total" groups="account.group_account_user"
+							widget="monetary" options="{'currency_field': 'currency_id'}" />
+						<field name="residual" groups="account.group_account_user"
+							class="oe_subtotal_footer_separator" widget="monetary"
+							options="{'currency_field': 'currency_id'}" />
+					</group>
+				</xpath>
+				<!-- <xpath expr="//notebook/page/field/tree/field[@name='product_id']" 
+					position="before"> <field name="line_no" /> </xpath> -->
+				<xpath expr="//group/group/field[@name='origin']" position="after">
+					<field name="purchase_order_date" attrs="{'invisible':[('origin','=', False)]}" />
+				</xpath>
+
+				<xpath expr="//div[@class='oe_chatter']" position="replace">
+				</xpath>
+
+				<!-- <xpath expr="//button[@name='invoice_open']" position="replace"> 
+					<button name="invoice_open" states="draft,proforma2" string="Validate" class="oe_highlight" 
+					groups="account.group_account_invoice" invisible="True"/> </xpath> -->
+
+			</field>
+		</record>
+
+		<record id="invoice_tree_hiworth" model="ir.ui.view">
+			<field name="name">account.invoice.tree.hiworth</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='origin']" position="replace">
+				</xpath>
+				<xpath expr="//field[@name='date_invoice']" position="after">
+					<field name="origin" />
+					<field name="purchase_order_date" />
+				</xpath>
+			</field>
+		</record>
+
+
+
+		<record id="view_move_form_hiworth" model="ir.ui.view">
+			<field name="name">account.move.form.hiworth</field>
+			<field name="model">account.move</field>
+			<field name="inherit_id" ref="account.view_move_form" />
+			<field name="arch" type="xml">
+				<!-- <xpath expr="//field[@name='line_id']/tree"
+					position="attributes">
+					<field name="editable" >bottom</field>
+				</xpath> -->
+				<xpath expr="//group/group/field[@name='to_check']" position="replace">
+					<field name="review" />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='date_maturity']"
+					position="replace">
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='amount_currency']"
+					position="replace">
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='reconcile_id']"
+					position="replace">
+				</xpath>
+				<xpath
+					expr="//notebook/page/field/tree/field[@name='reconcile_partial_id']"
+					position="replace">
+					<field name="review" invisible="True" />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='account_id']"
+					position="after">
+					<field name="is_posted" invisible="True" />
+					<field name="acc_balance" attrs="{'readonly': [('is_posted', '=', True)]}" />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='partner_id']"
+					position="replace">
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='name']"
+					position="replace">
+					<field name="name" string="Description"
+						attrs="{'readonly': [('is_posted', '=', True)]}" />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='credit']"
+					position="after">
+					<field name="current_balance" string='Balance' />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='tax_amount']"
+					position="replace">
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='invoice']"
+					position="replace">
+				</xpath>
+				<!-- <field name="line_no" /> <field name="invoice_no_id" attrs="{'readonly': 
+					[('is_posted', '=', True)]}" /> <field name="invoice_balance" /> -->
+				<xpath expr="//notebook/page/field/tree/field[@name='account_id']"
+					position="replace">
+					<field name="account_id" attrs="{'readonly': [('is_posted', '=', True)]}"
+						domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]" />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='debit']"
+					position="replace">
+					<field name="debit" sum="Total Debit"
+						attrs="{'readonly': [('is_posted', '=', True)]}" />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='credit']"
+					position="replace">
+					<field name="credit" sum="Total Credit"
+						attrs="{'readonly': [('is_posted', '=', True)]}" />
+				</xpath>
+				<xpath expr="//notebook/page/field/tree/field[@name='state']"
+					position="after">
+					<field name="attachment_ids" widget="one2many" invisible="1">
+						<tree editable="bottom">
+							<!-- <field name="line_no" /> -->
+							<field name="name" />
+							<field name="db_datas" filename="datas_fname" />
+							<field name="datas_fname" string="File Name" />
+							<!-- <field name="parent_id" /> -->
+						</tree>
+					</field>
+				</xpath>
+
+				<!-- <xpath expr="//notebook/page[@string='Journal Items']" position="after"> 
+					<page string="Attachments"> <field name="attachment_ids"> <tree editable="bottom"> 
+					<field name="line_no" /> <field name="name" /> <field name="db_datas" filename="datas_fname" 
+					/> <field name="datas_fname" string="File Name" /> <field name="parent_id" 
+					/> </tree> </field> </page> </xpath> -->
+
+			</field>
+		</record>
+
+		<record id="view_account_move_filter" model="ir.ui.view">
+			<field name="name">account.move.select</field>
+			<field name="model">account.move</field>
+			<field name="inherit_id" ref="account.view_account_move_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='period_id']" position="after">
+					<field name="accounts_names" />
+				</xpath>
+			</field>
+		</record>
+
+
+		<record id="dditem1_action" model="ir.actions.server">
+			<field name="name">Post Selected Items</field>
+			<field name="model_id" ref="model_account_move" />
+			<field name="state">code</field>
+			<field name="condition">True</field>
+			<field name="code">if object:
+				self.browse(cr,uid,context.get('active_ids', [])).post_moves()
+			</field>
+		</record>
+		<record id="dditem1" model="ir.values">
+			<field name="name">Post</field>
+			<field name="model">account.move</field>
+			<field name="key">action</field>
+			<field name="key2">client_action_multi</field>
+			<field name="value" eval="'ir.actions.server,%d'%dditem1_action" />
+		</record>
+		<record id="dditem1_action_cancel" model="ir.actions.server">
+			<field name="name">Cancel Selected Items</field>
+			<field name="model_id" ref="model_account_move" />
+			<field name="state">code</field>
+			<field name="condition">True</field>
+			<field name="code">if object:
+				self.browse(cr,uid,context.get('active_ids', [])).cancel_moves()
+			</field>
+		</record>
+		<record id="dditem1_cancel" model="ir.values">
+			<field name="name">Cancel</field>
+			<field name="model">account.move</field>
+			<field name="key">action</field>
+			<field name="key2">client_action_multi</field>
+			<field name="value" eval="'ir.actions.server,%d'%dditem1_action_cancel" />
+		</record>
+
+
+		<record id="view_move_line_tree_hiworth" model="ir.ui.view">
+			<field name="name">account.move.line.tree.hiworth</field>
+			<field name="model">account.move.line</field>
+			<field name="arch" type="xml">
+				<tree string="Entries">
+					<field name="date" string="Date" />
+					<field name="account_id" />
+					<field name="name" />
+					<!-- <field name="ref" /> -->
+					<button name="open_journal_entries" type="object"
+						string="Goto Journal Entry" icon="gtk-go-forward" class="oe_inline" />
+					<field name="journal_id" />
+					<field name="debit" sum="Total" />
+					<field name="credit" sum="Total" />
+					<!-- <field name="discount" /> <field name="price_subtotal" /> -->
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_account_move_line_filter_hiworth" model="ir.ui.view">
+			<field name="name">view.account.move.line.filter.hiworth</field>
+			<field name="model">account.move.line</field>
+			<field name="inherit_id" ref="account.view_account_move_line_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="//filter[@string='Next Partner to Reconcile']"
+					position="after">
+					<filter string="Day Book" name="day_book"
+						domain="[('date','=',datetime.datetime.now())]" />
+					<!-- <filter string="Cash" name="cash_book" domain="[('account_id.name','like','Cash']" 
+						/> <filter string="Bank" name="bank_book" domain="[('account_id','=',45)]" 
+						/> -->
+				</xpath>
+			</field>
+		</record>
+
+
+
+	</data>
+</openerp>

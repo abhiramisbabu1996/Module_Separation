@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+
+		<record id="purchase_order_form_accounting" model="ir.ui.view">
+			<field name="name">purchase.order.form.accounting</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.purchase_order_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//notebook/page/group[1]" position="after">
+					<div style="width: 50%%">
+                                <field name="voucher_ids" invisible="1" readonly="1" >
+                                    <tree editable="bottom" string="Voucher Payments">
+                                        <field name="date"/>
+                                        <field name="number"/>
+                                        <field  name="narration"/>
+                                        <field  name="receiver_id"/>
+                                        <field  name="cash_amt" sum="Total"/>
+                                        <field name="state" />
+                                    </tree>
+                                </field>
+                            </div>
+				</xpath>
+
+			</field>
+		</record>
+	
+
+
+
+	</data>
+</openerp>
