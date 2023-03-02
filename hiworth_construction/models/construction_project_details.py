@@ -1746,9 +1746,7 @@ class purchase_order(models.Model):
                 # c[2244444444444444]
             line_list = []
             line_values={}
-            print "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",order_line
             for key,item in order_line.items():
-                print "ooooooooooooooooooooooooooooooooo",order_line[key]['product_id']
                 line_values ={'product_id':order_line[key]['product_id'],
                                     'expected_rate':order_line[key]['rate'],
                                     'required_qty':order_line[key]['qty'],
@@ -2208,7 +2206,6 @@ class purchase_order(models.Model):
                    'default_merged_po':merged_po,
                    'default_site_purchase_ids':[(6,0,self.site_purchase_ids.ids)]
                   }
-        print "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",self.company_contractor_id,self.project_id
         # daily_stmt_supervisor = self.env['partner.daily.statement'].search([('project_id','=',self.project_id.id)])
         res = {
             'type': 'ir.actions.act_window',
