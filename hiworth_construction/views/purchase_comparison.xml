@@ -24,7 +24,7 @@
                 <form string="Purchase Comparison" class="my_form_palathra"  delete="false" create="false">
                     <header>
                         <button name="button_request" states="draft"
-                            string="Request" type="object"  class="oe_highlight" groups="hiworth_construction.group_warehouse_user"/>
+                            string="Request" type="object"  class="oe_highlight"/>
 
                         <button name="%(action_view_stock_history)d" states="draft,requested,validated2,button_approve1,po"
                             string="View Stock history" type="action" />
@@ -38,11 +38,11 @@
 
 
                         <button name="button_po_create" states="ceo_approval"
-                            string="Create Purchase" type="object"  groups="hiworth_construction.group_warehouse_user" class="oe_highlight"/>
+                            string="Create Purchase" type="object" class="oe_highlight"/>
                         <button name="button_view_purchase" states="po" groups="hiworth_construction.group_warehouse_user"
                             string="View P.O" type="object" class="oe_highlight"/>
                          <button name="button_cancel"
-                            string="Cancel" type="object" states="draft,requested,first_approve" class="oe_highlight"/>
+                            string="Cancel" type="object" class="oe_highlight"/>
                         <field name="state" widget="statusbar"/>
                     </header>
 
