@@ -43,7 +43,7 @@ class BudgetPlanningChartLine(models.Model):
                 'res_model': 'project.task',
                 'target': 'new',
                 'type': 'ir.actions.act_window',
-                'context': {'default_name': rec.master_plan_line_id.line_id.name,
+                'context': {
                             'default_date_start':rec.date,
                             'default_date_end':rec.date,
                             # 'default_date_deadline':rec.date,
