@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+		<record id="location_hws_location" model="stock.location">
+        <field name="name">HwsLocation</field>
+        <field name="location_id" ref="stock.stock_location_locations_virtual"/>
+        <field name="usage">inventory</field>
+        <field name="company_id"></field>
+</record>
 
 		<record id="form_partner_daily_statement" model="ir.ui.view">
 			<field name="name">form.partner.daily.statement</field>

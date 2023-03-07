@@ -73,6 +73,9 @@ class PartnerDailyStatement(models.Model):
     _name = 'partner.daily.statement'
     _order = 'date desc'
 
+
+
+
     @api.multi
     def load_recieved_items(self):
         list =[]
@@ -207,6 +210,7 @@ class PartnerDailyStatement(models.Model):
     # item_received_lines = fields.One2many('items.received', 'product_id', 'Materials Used')
     # products_received_lines = fields.One2many('partner.received.products', 'partner_id')
     products_used_lines = fields.One2many('partner.used.products', 'partner_id')
+    # products_consumed_id = fields.Many2one('partner.used.products', string='products consumed')
     subcontractor_products_used_lines = fields.One2many('partner.used.products', 'partner_id')
     # project_task_ids = fields.One2many('project.task', 'partner_statement_id')
     project_task_ids = fields.One2many('task.line.custom', 'partner_statement_id')
@@ -285,11 +289,37 @@ class PartnerDailyStatementLine(models.Model):
 class UsedProducts(models.Model):
     _name = 'partner.used.products'
 
+    @api.model
+    def create(self, vals):
+        res = super(UsedProducts, self).create(vals)
+        if res.partner_id.location_ids:
+            destination_loc = self.env['stock.location'].search([('name', '=', 'HwsLocation')])
+            print("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii location", destination_loc)
+
+            move = self.env['stock.move'].create({
+                'name': 'Use on HwsLocation',
+                'location_id': res.partner_id.location_ids.id,
+                'location_dest_id': destination_loc.id,
+                'product_id': res.product_id.id,
+                'product_uom': 1,
+                'product_uom_qty': res.used_qty,
+            })
+            move.action_confirm()
+            move.action_assign()
+            res.write({'move_id': move.id, 'state': 'done'})
+            # move.move_line_ids.write(
+            #     {
+            #       'qty_done': res.used_qty})  # This creates a stock.move.line record. You could also do it manually
+            #
+            move.action_done()
+
+        return res
+
     product_id = fields.Many2one('product.product')
     stock_qty = fields.Float(readonly=True, compute="compute_quantity", store=True)
     used_qty = fields.Float()
     balance_qty = fields.Float(readonly=True, compute="compute_quantity", store=True)
-    unit = fields.Many2one('product.uom', readonly=True)
+    unit = fields.Many2one('product.uom', readonly=True,store=True)
     partner_id = fields.Many2one('partner.daily.statement')
 
     @api.onchange('product_id', 'used_qty')
@@ -322,6 +352,7 @@ class UsedProducts(models.Model):
                         raise osv.except_osv(('Warning!'),
                                              ('%s stock quantity is less than used quantity' % record.product_id.name))
                     record.balance_qty = record.stock_qty - record.used_qty
+
 
     @api.multi
     def unlink(self, cr, uid, ids, context=None):
