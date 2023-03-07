@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
 		<record id="form_partner_daily_statement" model="ir.ui.view">
 			<field name="name">form.partner.daily.statement</field>
 			<field name="model">partner.daily.statement</field>
@@ -119,6 +120,34 @@
 								        </tree>
 							        </field>
 						        </page>
+								<page string="Required Materials">
+							<field name="details_rqrd_item" nolabel="1"  context="{'default_general_purchase':True,'default_date':date}">
+								 <tree>
+									 <field name="name" string="P.R NO"/>
+									 <field name="order_by"/>
+									 <field name="mode_of_order"/>
+									<field name="responsible" invisible="1"/>
+									<field name="order_date"/>
+									<field name="min_expected_date"/>
+									<field name="max_expected_date"/>
+									<field name="state"/>
+								  </tree>
+							</field>
+						</page>
+					    <page string="Details Of Received Items By GRR">
+							<button name="load_recieved_items" string="Load Recieved Items" type="object" class="oe_highlight"/>
+							<field name="recieved_items_line_ids" nolabel="1">
+								<tree editable="bottom">
+									<field name="item_id"/>
+<!--									<field name="brand_name"/>-->
+<!--									<field name="item_id"/>-->
+									<field name="quantity_accept"/>
+									<field name="taxable_amount"/>
+								</tree>
+
+							</field>
+
+						</page>
 							</notebook>
 						</group>
 

@@ -6,7 +6,21 @@ from openerp.tools.translate import _
 from dateutil import relativedelta
 from openerp.exceptions import except_orm, ValidationError
 import math
+# from datetime import date
+# from datetime import datetime
+import dateutil.parser
 
+# class ReceivedItems(models.Model):
+#     _name = 'received.items'
+#
+#     item_id = fields.Many2one('daily.statement.item', 'Item')
+#     brand_name = fields.Many2one('material.brand')
+#     quantity_accept = fields.Float('Quantity Accepted')
+#     taxable_amount = fields.Float("Taxable amount")
+#     sup_daily_statements_id = fields.Many2one('partner.daily.statement',string="Supervisor Daily Statement")
+#     received_items_id = fields.Many2one('goods.recieve.report.line',string="Supervisor Daily Statement")
+#     rate= fields.Float('Rate')
+#     desc = fields.Char('Item Name')
 
 class LabourEmployeeDetails(models.Model):
     _name = 'labour.employee.details.custom'
@@ -58,6 +72,26 @@ class LaboursDetails(models.Model):
 class PartnerDailyStatement(models.Model):
     _name = 'partner.daily.statement'
     _order = 'date desc'
+
+    @api.multi
+    def load_recieved_items(self):
+        list =[]
+        stmt_date = self.date
+        print("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",stmt_date)
+
+        project_id = self.project_id
+        location = self.location_ids
+        grr_ids = self.env['goods.recieve.report'].search([('site','=',location.id),('project_id','=',project_id.id)])
+        print(grr_ids)
+        for item in grr_ids:
+            print("date from grr is",item.Date)
+            t_date = datetime.datetime.strptime(item.Date, "%Y-%m-%d %H:%M:%S").date()
+            print("date extracted is",t_date.strftime("%Y-%m-%d"))
+            date_grr = t_date.strftime("%Y-%m-%d")
+            if date_grr == stmt_date:
+                print("hiyayyayayyaa")
+                self.recieved_items_line_ids = item.goods_recieve_report_line_ids.ids
+
 
     @api.onchange('project_id')
     def onchange_project(self):
@@ -142,8 +176,11 @@ class PartnerDailyStatement(models.Model):
     # item_usage_lines = fields.One2many('item.usage', 'report_id', string='Materials Used')
     # work_details = fields.Text('Details Of Work Done At Site', required=False)
     # tmrw_work_arrangement = fields.Text(required=False)
-    # details_rqrd_item = fields.One2many('site.purchase', 'site_id')
+    details_rqrd_item = fields.One2many('site.purchase', 'site_id')
     # details_received_item_ids = fields.One2many('goods.recieve.report', 'partner_daily_statement_id')
+    details_received_item_ids = fields.Many2many('goods.recieve.report', string='Recieved Items')
+    recieved_items_line_ids = fields.Many2many('goods.recieve.report.line', string='Recieved Items')
+    # recieved_materials_line_ids = fields.Many2many('received.items', string='Recieved Items')
 
     # received_ids = fields.One2many('daily.statement.item.received', 'received_id', 'Receptions')
     # next_approver = fields.Many2one('res.users', 'Next Approver', readonly=True)

@@ -16,7 +16,7 @@ class PurchaseOrder(models.Model):
             name = sequence[0]+"/"+sequence[1]+"/"+project_number[1]+"/"+sequence[2]
         else:
             name = sequence
-        vals['name'] = name 
+        vals['name'] = name
         return super(PurchaseOrder,self).create(vals)
 
 

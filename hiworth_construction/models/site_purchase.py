@@ -701,7 +701,7 @@ class SitePurchase(models.Model):
                 result.name = str('BPR-') + str(result.site.loc_barcode)+"/" + self.env['ir.sequence'].next_by_code(
                     'site.purchase') or '/'
             if result.general_purchase == True:
-                result.name = str('GPR-')+str(result.site.loc_barcode)+"/"+self.env['ir.sequence'].next_by_code('site.purchase') or '/'
+                result.name = str('GPR-')+"/"+self.env['ir.sequence'].next_by_code('site.purchase') or '/'
             if result.vehicle_purchase == True:
                 result.name = str('VPR-')+str(result.site.loc_barcode)+"/"+self.env['ir.sequence'].next_by_code('site.purchase') or '/'
             if result.telecom_purchase == True:
@@ -709,7 +709,7 @@ class SitePurchase(models.Model):
             if result.interlocks_purchase == True:
                 result.name = str('IPR-')+str(result.site.loc_barcode)+"/"+self.env['ir.sequence'].next_by_code('site.purchase') or '/'
             if result.site_request == True:
-                result.name = str('SR-')+str(result.site.loc_barcode)+"/"+self.env['ir.sequence'].next_by_code('site.purchase') or '/'
+                result.name = str('SR-')+"/"+self.env['ir.sequence'].next_by_code('site.purchase') or '/'
 
         if len(result.site_purchase_item_line_ids) ==0:
             raise except_orm(_('Warning'), _('Please Add any Item'))
