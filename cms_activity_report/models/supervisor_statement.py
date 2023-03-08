@@ -304,6 +304,8 @@ class UsedProducts(models.Model):
                 'product_uom': 1,
                 'product_uom_qty': res.used_qty,
                 'date':res.partner_id.date,
+                'date_expected':res.partner_id.date,
+                'date_expected':res.partner_id.date,
             })
             move.action_confirm()
             move.action_assign()
