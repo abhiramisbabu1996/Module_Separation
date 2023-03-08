@@ -303,6 +303,7 @@ class UsedProducts(models.Model):
                 'product_id': res.product_id.id,
                 'product_uom': 1,
                 'product_uom_qty': res.used_qty,
+                'date':res.date,
             })
             move.action_confirm()
             move.action_assign()
