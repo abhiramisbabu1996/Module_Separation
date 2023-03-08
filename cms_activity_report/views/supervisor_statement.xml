@@ -175,17 +175,17 @@
 							    </tree>
 						    </field>
 						</page>
-						<page string="Details Of Used Items">
-							<field name="subcontractor_products_used_lines">
-								<tree editable="bottom">
-									<field name="product_id" string="Product"/>
-									<field name="unit"/>
-									<field name="stock_qty" string="Stock Quantity"/>
-									<field name="used_qty" string="Used Quantity"/>
-									<field name="balance_qty" string="Balance Quantity"/>
-								</tree>
-							</field>
-						</page>
+<!--						<page string="Details Of Used Items">-->
+<!--							<field name="subcontractor_products_used_lines">-->
+<!--								<tree editable="bottom">-->
+<!--									<field name="product_id" string="Product"/>-->
+<!--									<field name="unit"/>-->
+<!--									<field name="stock_qty" string="Stock Quantity"/>-->
+<!--									<field name="used_qty" string="Used Quantity"/>-->
+<!--									<field name="balance_qty" string="Balance Quantity"/>-->
+<!--								</tree>-->
+<!--							</field>-->
+<!--						</page>-->
 
 					</notebook>
 					</group>
