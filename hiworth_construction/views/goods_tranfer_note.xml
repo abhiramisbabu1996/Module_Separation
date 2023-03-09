@@ -130,12 +130,12 @@
 
 
 
-<!--		<menuitem id="menu_goods_transfer_note"-->
-<!--				  parent="material_transfer_menu_id"-->
-<!--				  name="Site to Site"-->
-<!--				  sequence="2"-->
-<!--				  action="action_goods_transfer_note"-->
-<!--				  />-->
+		<menuitem id="menu_goods_transfer_note"
+				  parent="material_transfer_menu_id"
+				  name="Site to Site"
+				  sequence="2"
+				  action="action_goods_transfer_note"
+				  />
 
 
 		<report id="report_goods_transfer_note" string="Goods Transfer Reports"
