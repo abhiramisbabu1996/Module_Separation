@@ -112,10 +112,7 @@
 			<field name="context">{'form_view_ref':'hiworth_construction.view_material_issue_slip_form','readonly_by_pass': True}</field>
 		</record>
 
-		<menuitem id="menu_material_issue_slip" parent="material_transfer_menu_id"
-				  name="Store To Site" sequence="3"
-				  action="action_material_issue_slip"
-				   />
+
 
 
 
@@ -231,6 +228,10 @@
 				  sequence="2"
 				  action="hiworth_construction.action_goods_transfer_note"
 				  />
+		<menuitem id="menu_material_issue_slip" parent="material_transfer_menu_id"
+				  name="Store To Site" sequence="3"
+				  action="action_material_issue_slip"
+				   />
 
 
 		<report id="report_material_request_action" string="MATERIAL REQUISITION NOTE"
