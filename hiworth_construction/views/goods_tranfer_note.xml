@@ -135,7 +135,7 @@
 				  name="Site to Site"
 				  sequence="2"
 				  action="action_goods_transfer_note"
-				  groups="base.group_erp_manager,hiworth_construction.group_warehouse_user"/>
+				  />
 
 
 		<report id="report_goods_transfer_note" string="Goods Transfer Reports"
