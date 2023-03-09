@@ -131,7 +131,7 @@
 
 
 		<menuitem id="menu_goods_transfer_note"
-				  parent="hiworth_construction.material_transfer_menu_id"
+				  parent="material_transfer_menu_id"
 				  name="Site to Site"
 				  sequence="2"
 				  action="action_goods_transfer_note"
