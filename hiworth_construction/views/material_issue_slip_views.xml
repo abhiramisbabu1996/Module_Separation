@@ -225,6 +225,12 @@
 				  name="Site To Store" sequence="3"
 				  action = "hiworth_construction.action_material_issue_slip_receiver"
 				   />
+		<menuitem id="menu_goods_transfer_note"
+				  parent="material_transfer_menu_id"
+				  name="Site to Site"
+				  sequence="2"
+				  action="hiworth_construction.action_goods_transfer_note"
+				  />
 
 
 		<report id="report_material_request_action" string="MATERIAL REQUISITION NOTE"
