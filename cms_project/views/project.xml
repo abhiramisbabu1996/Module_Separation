@@ -89,9 +89,9 @@
 <!--				</xpath>-->
 				<xpath expr="//group[1]" position="after">
 					<group col="6">
-						<field name="contractor_id1" domain="[('is_a_sub_contractor','=',True)]"/>
-						<field name="contractor_id2" domain="[('is_a_sub_contractor','=',True)]"/>
-						<field name="contractor_id3" domain="[('is_a_sub_contractor','=',True)]"/>
+						<field name="contractor_id1" domain="[('is_a_sub_contractor','=',True)]" context="{'default_is_a_sub_contractor': True}" />
+						<field name="contractor_id2" domain="[('is_a_sub_contractor','=',True)]" context="{'default_is_a_sub_contractor': True}"/>
+						<field name="contractor_id3" domain="[('is_a_sub_contractor','=',True)]" context="{'default_is_a_sub_contractor': True}"/>
 					</group>
 					<group col="6">
 <!--						<field name="site_engineer1" options="{'no_create':1}" />-->

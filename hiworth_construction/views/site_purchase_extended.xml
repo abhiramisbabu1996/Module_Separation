@@ -58,7 +58,7 @@
                                   <field name="brand_name" string="Brand"/>
                                     <field name="desc" required="1" />
                                 <field name="unit" required="1" />
-                                <field name="quantity" widget="char" required="1" sum="Total" />
+                                <field name="quantity" required="1" sum="Total" />
                                <field name="project_approved_qty" readonly="1" invisible="1"/>
                                   <field name="processed_qty" readonly="1" invisible="1"/>
                               </tree>

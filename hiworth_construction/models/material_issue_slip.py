@@ -38,13 +38,14 @@ class MaterialIssueSlip(models.Model):
         }
 
     def action_goods_receipts(self):
-        categories = self.env['goods.recieve.report'].search([('site', '=',self.env['stock.location'].search([('is_warehouse','=',True)],limit=1).id)]).ids
+        # categories = self.env['goods.recieve.report'].search([('site', '=',self.env['stock.location'].search([('is_warehouse','=',True)],limit=1).id)]).ids
+        categories = self.env['goods.recieve.report'].search([])
         return {
             'name': 'Goods Receipt & Invoice Entry',
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'domain': [('id', 'in', categories)],
+            # 'domain': [('id', 'in', categories)],
             'res_model': 'goods.recieve.report',
             'target': 'current'
         }
