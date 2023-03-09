@@ -152,8 +152,10 @@
 								</tree>
 
 							</field>
-
 						</page>
+<!--					    <page string="Stock Report(Incoming and Outgoing)">-->
+<!--							-->
+<!--						</page>-->
 							</notebook>
 						</group>
 

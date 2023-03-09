@@ -49,25 +49,25 @@ class MaterialIssueSlip(models.Model):
             'target': 'current'
         }
 
-    @api.model
-    def default_get(self, fields_list):
-        res = super(MaterialIssueSlip, self).default_get(fields_list)
-        if not res.get('is_receive',False):
-            res.update({'source_location_id':self.env['stock.location'].search([('is_warehouse','=',True)],limit=1).id})
-        else:
-            res.update({'location_id':self.env['stock.location'].search([('is_warehouse','=',True)],limit=1).id})
-        return res
+    # @api.model
+    # def default_get(self, fields_list):
+    #     res = super(MaterialIssueSlip, self).default_get(fields_list)
+    #     if not res.get('is_receive',False):
+    #         res.update({'source_location_id':self.env['stock.location'].search([('is_warehouse','=',True)],limit=1).id})
+    #     else:
+    #         res.update({'location_id':self.env['stock.location'].search([('is_warehouse','=',True)],limit=1).id})
+    #     return res
 
-    @api.onchange('project_id')
-    def onchange_project(self):
-        for rec in self:
-
-            if rec.is_receive:
-                if rec.project_id:
-                    return {'domain':{'source_location_id':[('id','in',rec.project_id.project_location_ids.ids)]}}
-            else:
-                if rec.project_id:
-                    return {'domain':{'location_id':[('id','in',rec.project_id.project_location_ids.ids)]}}
+    # @api.onchange('project_id')
+    # def onchange_project(self):
+    #     for rec in self:
+    #
+    #         if rec.is_receive:
+    #             if rec.project_id:
+    #                 return {'domain':{'source_location_id':[('id','in',rec.project_id.project_location_ids.ids)]}}
+    #         else:
+    #             if rec.project_id:
+    #                 return {'domain':{'location_id':[('id','in',rec.project_id.project_location_ids.ids)]}}
 
     @api.depends('material_issue_slip_lines_ids')
     def compute_item_list(self):
@@ -99,8 +99,9 @@ class MaterialIssueSlip(models.Model):
 
                     'site': location.id,
                     'order_date': rec.date,
-                    'account_id': rec.source_location_id.related_account.id,
-                    'supervisor_id': self.env.user.employee_id.id,
+                    # 'account_id': rec.source_location_id.related_account.id,
+                    'account_id': 1,
+                    'supervisor_id': self.env.user.id,
                     'is_purchase': False,
                     'journal_id': journal_id.id,
                     'project_id': rec.project_id.id,
@@ -118,7 +119,8 @@ class MaterialIssueSlip(models.Model):
                         'date': rec.date,
                         'date_expected': rec.date,
                         'price_unit': 1,
-                        'account_id': rec.source_location_id.related_account.id,
+                        # 'account_id': rec.source_location_id.related_account.id,
+                        'account_id': 1,
                         'location_dest_id': self.location_id.id,
                         'picking_id': stock.id
                     })
@@ -132,8 +134,9 @@ class MaterialIssueSlip(models.Model):
 
                     'site': rec.source_location_id.id,
                     'order_date': rec.date,
-                    'account_id': rec.source_location_id.related_account.id,
-                    'supervisor_id': self.env.user.employee_id.id,
+                    # 'account_id': rec.source_location_id.related_account.id,
+                    'account_id': 1,
+                    'supervisor_id': self.env.user.id,
                     'is_purchase': False,
                     'journal_id': journal_id.id,
                     'project_id': rec.project_id.id,
@@ -151,7 +154,8 @@ class MaterialIssueSlip(models.Model):
                         'price_unit': 1,
                         'date': rec.date,
                         'date_expected': rec.date,
-                        'account_id': rec.source_location_id.related_account.id,
+                        # 'account_id': rec.source_location_id.related_account.id,
+                        'account_id': 1,
                         'location_dest_id': rec.source_location_id.id,
                         'picking_id': stock.id
                     })
@@ -193,8 +197,9 @@ class MaterialIssueSlip(models.Model):
 
                 'site': rec.source_location_id.id,
                 'order_date': rec.date,
-                'account_id': rec.source_location_id.related_account.id,
-                'supervisor_id': self.env.user.employee_id.id,
+                # 'account_id': rec.source_location_id.related_account.id,
+                'account_id': 1,
+                'supervisor_id': self.env.user.id,
                 'is_purchase': False,
                 'journal_id': journal_id.id,
                 'project_id': rec.project_id.id,
@@ -215,7 +220,8 @@ class MaterialIssueSlip(models.Model):
                     'product_uom_qty': req.req_qty,
                     'product_uom': req.unit_id.id,
                     'price_unit': (req.rate/req.req_qty),
-                    'account_id': rec.source_location_id.related_account.id,
+                    # 'account_id': rec.source_location_id.related_account.id,
+                    'account_id': 1,
                     'location_dest_id': self.location_id.id,
                     'picking_id':stock.id
                 })
@@ -237,8 +243,9 @@ class MaterialIssueSlip(models.Model):
 
                 'site': self.location_id.id,
                 'order_date': res.date,
-                'account_id': res.source_location_id.related_account.id,
-                'supervisor_id': self.env.user.employee_id.id,
+                # 'account_id': res.source_location_id.related_account.id,
+                'account_id': 1,
+                'supervisor_id': self.env.user.id,
                 'is_purchase': False,
                 'journal_id': journal_id.id,
                 'project_id': res.project_id.id,
@@ -257,7 +264,7 @@ class MaterialIssueSlip(models.Model):
                     'price_unit': (req.rate/req.req_qty),
                     'date': res.date,
                     'date_expected': res.date,
-                    'account_id': res.source_location_id.related_account.id,
+                    'account_id': 1,
                     'location_dest_id': self.location_id.id,
                     'picking_id': stock.id
                 })
@@ -277,6 +284,7 @@ class MaterialIssueSlip(models.Model):
         if res.is_receive == False:
             # vals.update({'name': 'MRN' + str(self.env['ir.sequence'].next_by_code('mrn.code'))})
             res.name = str(self.env['ir.sequence'].next_by_code('min.code'))
+            # res.name = str(self.env['ir.sequence'].next_by_code('mrn.code'))
 
 
         else:
@@ -329,7 +337,7 @@ class MaterialIssuelipLine(models.Model):
             for his in history:
                 product_list.append(his.product_id.id)
 
-            return {'domain':{'item_id':[('id','in',product_list)]}}
+            # return {'domain':{'item_id':[('id','in',product_list)]}}
 
 
     

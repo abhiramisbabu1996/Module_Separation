@@ -45,7 +45,7 @@ class GoodsTransferDummy(models.Model):
                 for his in history:
                     product_list.append(his.product_id.id)
 
-            return {'domain': {'item_id': [('id', 'in', product_list)]}}
+            # return {'domain': {'item_id': [('id', 'in', product_list)]}}
 
 
 
@@ -100,7 +100,7 @@ class GoodsTransferNoteIn(models.Model):
                                                         ('location_id', '=', rec.site_to.id)])
                 quant.with_context({'force_unlink':True}).unlink()
         return super(GoodsTransferNoteIn, self).unlink()
-    
+
 
 
     @api.depends('transfer_list_ids')
@@ -127,13 +127,13 @@ class GoodsTransferNoteIn(models.Model):
     
 
 
-    project_id = fields.Many2one('project.project', 'Project',track_visibility='onchange')
-    to_project_id = fields.Many2one('project.project', 'To Project',track_visibility='onchange')
-    site_from = fields.Many2one('stock.location', 'From',track_visibility='onchange')
-    site_to = fields.Many2one('stock.location', 'To',track_visibility='onchange')
-    gtn_no = fields.Char('GTN NO',track_visibility='onchange')
+    project_id = fields.Many2one('project.project', 'Project')
+    to_project_id = fields.Many2one('project.project', 'To Project')
+    site_from = fields.Many2one('stock.location', 'From',)
+    site_to = fields.Many2one('stock.location', 'To',)
+    gtn_no = fields.Char('GTN NO')
     date = fields.Datetime('Date',default=lambda self: fields.datetime.now())
-    transfer_list_ids = fields.One2many('goods.transfer.dummy','transfer_list_id',track_visibility='onchange')
+    transfer_list_ids = fields.One2many('goods.transfer.dummy','transfer_list_id')
     user_created = fields.Many2one('res.users', 'Prepared by')
     project_manager = fields.Many2one('res.users', 'Project Manager')
     purchase_manager = fields.Many2one('res.users', 'Purchase Manager')
@@ -149,8 +149,10 @@ class GoodsTransferNoteIn(models.Model):
     item_list = fields.Char(string="Items", compute='compute_item_list')
     total_quantity = fields.Char(string="Quantity", compute='compute_item_qty')
     category_ids = fields.Many2many('product.category','goods_transfer_product_category_rel','goods_transfer_id','category_id',"Category")
-    project_location_ids = fields.Many2many('stock.location','stock_location_goods_transfer_note_rel','location_id','transfer_id',"From Location",related='project_id.project_location_ids')
-    to_project_location_ids = fields.Many2many('stock.location','to_project_location_goods_transfer_rel','location_id','project_id',"To Location",related='to_project_id.project_location_ids')
+    # project_location_ids = fields.Many2many('stock.location','stock_location_goods_transfer_note_rel','location_id','transfer_id',"From Location",related='project_id.project_location_ids')
+    project_location_ids = fields.Many2many('stock.location','stock_location_goods_transfer_note_rel','location_id','transfer_id',"From Location")
+    # to_project_location_ids = fields.Many2many('stock.location','to_project_location_goods_transfer_rel','location_id','project_id',"To Location",related='to_project_id.project_location_ids')
+    to_project_location_ids = fields.Many2many('stock.location','to_project_location_goods_transfer_rel','location_id','project_id',"To Location")
     @api.multi
     def set_draft(self):
         self.state = 'draft'
@@ -181,7 +183,8 @@ class GoodsTransferNoteIn(models.Model):
                 'site': rec.site_to.id,
                 'order_date': rec.date,
                 # 'account_id': rec.site_to.related_account.id,
-                'supervisor_id': self.env.user.employee_id.id,
+                # 'supervisor_id': self.env.user.employee_id.id,
+                'supervisor_id': self.env.user.id,
                 'is_purchase': False,
                 'journal_id': journal_id.id,
         
