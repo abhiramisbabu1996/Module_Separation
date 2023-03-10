@@ -58,9 +58,9 @@
                                     <field name="desc" required="1" />
                                 <field name="unit_id" readonly="1" required="1" />
                                    <field name="tax_ids" readonly="1" widget='many2many_tags'/>
-                                <field name="po_quantity" readonly="1" widget="char" required="1" sum="Total" />
+                                <field name="po_quantity" readonly="1"  required="1" sum="Total" />
 
-                                   <field name="quantity_accept"  widget="char" sum="Total"/>
+                                   <field name="quantity_accept"   sum="Total"/>
 
                                      <field name="rate" widget="char" required="1" />
 

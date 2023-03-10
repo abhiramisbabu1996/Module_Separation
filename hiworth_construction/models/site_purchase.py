@@ -431,6 +431,7 @@ class SitePurchase(models.Model):
         value_list = []
         for purchase in self.site_purchase_item_line_ids:
             value_list.append((0, 0, {'product_id': purchase.item_id.id,
+                                      'brand_name': purchase.brand_name.id,
                                   'name': purchase.item_id.name,
                                   'required_qty': purchase.quantity,
                                   'product_uom': purchase.unit.id,

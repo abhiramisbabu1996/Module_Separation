@@ -84,7 +84,7 @@
 				   		<field name="approve_ids">
 				     			<tree editable="bottom" delete="false" create="false">
 					  				<field name="supervisor_id" readonly="1"/>
-								   <field name="requested_amount" readonly="1" widget="char" sum="Total"/>
+								   <field name="requested_amount" sum="Total"/>
 								   <field name="is_approve"/>
 								   <field name="approved_amount" attrs="{'required':[('is_approve','=',True)]}" widget="char" sum="Total"/>
 								   <!-- <field name="payment_mode"/> -->

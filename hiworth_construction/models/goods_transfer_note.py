@@ -684,6 +684,7 @@ class GoodsRecieveReportLine(models.Model):
                         if tax.tax_type == 'igst':
                             igst = ((rec.quantity_accept * (rec.rate / (tax_amt + 1))) * tax_amt)
                     else:
+                        tax_amt = tax.amount
                         if tax.tax_type == 'gst':
                             cgst = (rec.quantity_accept * (rec.rate * tax.amount)) / 2
                             sgst = (rec.quantity_accept * (rec.rate * tax.amount)) / 2
@@ -692,8 +693,13 @@ class GoodsRecieveReportLine(models.Model):
 
             else:
                 non_tax += rec.rate * rec.quantity_accept
-
-            rec.taxable_amount = rec.quantity_accept * (rec.rate / (tax_amt+1))
+            total_amt_subtotal = rec.quantity_accept * rec.rate
+            tax_amount = total_amt_subtotal * tax_amt
+            # tax_amount = tax_amt *100
+            if rec.quantity_accept:
+                rec.taxable_amount = total_amt_subtotal + tax_amount
+            # rec.taxable_amount = rec.quantity_accept * (rec.rate / (tax_amt+1))
+            print("99999999999999999999999999999999",rec.taxable_amount)
             rec.cgst_amount = cgst
             rec.sgst_amount = sgst
             rec.igst_amount = igst
@@ -747,7 +753,9 @@ class GoodsRecieveReportLine(models.Model):
     battery_id = fields.Many2one('vehicle.battery',"Battery")
     retread_tyre_id = fields.Many2one('retreading.tyre.line',"Retread")
     gps_id = fields.Many2one('vehicle.gps',"GPS")
-    brand_name = fields.Many2one('material.brand')
+    brand_name = fields.Many2one('material.brand',store=True)
+    brand_desc = fields.Char('Brand Name')
+    # brand_name1 = fields.Many2one('material.brand',store=True)
 
 
     @api.multi

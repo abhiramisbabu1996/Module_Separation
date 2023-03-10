@@ -2168,10 +2168,14 @@ class purchase_order(models.Model):
         value_list = []
         prev_list = []
         for line in self.order_line:
+            print("inside view invoice")
+            print("brand name is...",line.brand_name.name)
+
 
             value_list.append((0, 0, {'item_id': line.product_id.id,
                                   'desc': line.name,
-                                      'brand_name':line.brand_name.id,
+                                  'brand_name':line.brand_name.id,
+                                  'brand_desc':line.brand_name.name,
                                   'tax_ids': [(6, 0, line.taxes_id.ids)],
                                   'po_quantity': line.required_qty - line.received_qty,
                                   'rate': line.expected_rate,
@@ -2181,6 +2185,7 @@ class purchase_order(models.Model):
             prev_list.append((0, 0, {'item_id': line.product_id.id,
                                      'desc': line.name,
                                      'brand_name': line.brand_name.id,
+                                     'brand_desc': line.brand_name.name,
                                      'tax_ids': [(6, 0, line.taxes_id.ids)],
                                      'po_quantity': line.required_qty,
                                      'quantity_accept': line.received_qty,
