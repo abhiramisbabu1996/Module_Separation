@@ -148,8 +148,7 @@ class MaterialCostTransferLine(models.Model):
                 rec.unit_id = rec.item_id.uom_id.id
 
                 stock_history = self.env['stock.history'].search([('product_id', '=', rec.item_id.id), (
-                'location_id', '=', rec.material_cost_transfer_id.source_location_id.id),
-                                                                  ('date', '<=', rec.material_cost_transfer_id.date)])
+                'location_id', '=', rec.material_cost_transfer_id.source_location_id.id)])
                 qty = 0
                 for stock in stock_history:
                     qty += stock.quantity
@@ -162,7 +161,7 @@ class MaterialCostTransferLine(models.Model):
 
             history = self.env['stock.history'].search(
                 [('location_id', '=', location.id), ('product_categ_id', 'in', category[0][2]),
-                 ('date', '<=', rec.material_cost_transfer_id.date)])
+                 ])
             product_list = []
             for his in history:
                 product_list.append(his.product_id.id)
@@ -226,50 +225,50 @@ class MaterialCostTransferLine(models.Model):
                 raise ValidationError(_('Disposable quantity greater than Select quantity'))
             rec.rate = unit_price
 
-    @api.multi
-    def process_view_price(self):
-        for rec in self:
-            stock_history = self.env['stock.history'].search([('product_id', '=', rec.item_id.id), ('location_id', '=', rec.material_cost_transfer_id.source_location_id.id),
-                                                              ('date', '<=', rec.material_cost_transfer_id.date),('quantity','>',0)],order='date asc')
-            stock_history_zero = self.env['stock.history'].search([('product_id', '=', rec.item_id.id), ('location_id', '=', rec.material_cost_transfer_id.source_location_id.id),
-                                                              ('date', '<=', rec.material_cost_transfer_id.date)],order='date asc')
-
-            stock_moves_from_list = []
-            stock_moves_to_list = []
-            for move_stock in stock_history_zero:
-                stock_moves_to_list.append(move_stock.id)
-
-
-
-            stock_history_zero = list(stock_history_zero)
-            values_list = []
-            index_list = []
-            for stock in stock_history:
-                qty = stock.quantity - stock.move_id.select_qty
-                if qty > 0:
-                    stock_moves_from_list.append({'rem_quantitity': qty, 'move_id': stock.move_id})
-
-            for stock_list in stock_moves_from_list:
-                values_list.append((0, 0, {'item_id': stock_list['move_id'].product_id.id,
-                                           'origin': stock_list['move_id'].origin,
-                                           'quantity': stock_list['rem_quantitity'],
-                                           'unit_price': stock_list['move_id'].price_unit,
-                                           'amount': stock_list['move_id'].inventory_value,
-                                           'material_cost_transfer_line_id': rec.id ,
-                                           'move_id':stock_list['move_id'].id}))
-
-            if not rec.rate_disposable_line_ids:
-                rec.write({'rate_disposable_line_ids': values_list})
-
-            res = {
-                'type': 'ir.actions.act_window',
-                'name': 'Rate Details',
-                'res_model': 'material.cost.transfer.line',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'target': 'new',
-                'res_id': rec.id,
-
-            }
-
-            return res
+    # @api.multi
+    # def process_view_price(self):
+    #     for rec in self:
+    #         stock_history = self.env['stock.history'].search([('product_id', '=', rec.item_id.id), ('location_id', '=', rec.material_cost_transfer_id.source_location_id.id),
+    #                                                           ('date', '<=', rec.material_cost_transfer_id.date),('quantity','>',0)],order='date asc')
+    #         stock_history_zero = self.env['stock.history'].search([('product_id', '=', rec.item_id.id), ('location_id', '=', rec.material_cost_transfer_id.source_location_id.id),
+    #                                                           ('date', '<=', rec.material_cost_transfer_id.date)],order='date asc')
+    #
+    #         stock_moves_from_list = []
+    #         stock_moves_to_list = []
+    #         for move_stock in stock_history_zero:
+    #             stock_moves_to_list.append(move_stock.id)
+    #
+    #
+    #
+    #         stock_history_zero = list(stock_history_zero)
+    #         values_list = []
+    #         index_list = []
+    #         for stock in stock_history:
+    #             qty = stock.quantity - stock.move_id.select_qty
+    #             if qty > 0:
+    #                 stock_moves_from_list.append({'rem_quantitity': qty, 'move_id': stock.move_id})
+    #
+    #         for stock_list in stock_moves_from_list:
+    #             values_list.append((0, 0, {'item_id': stock_list['move_id'].product_id.id,
+    #                                        'origin': stock_list['move_id'].origin,
+    #                                        'quantity': stock_list['rem_quantitity'],
+    #                                        'unit_price': stock_list['move_id'].price_unit,
+    #                                        'amount': stock_list['move_id'].inventory_value,
+    #                                        'material_cost_transfer_line_id': rec.id ,
+    #                                        'move_id':stock_list['move_id'].id}))
+    #
+    #         if not rec.rate_disposable_line_ids:
+    #             rec.write({'rate_disposable_line_ids': values_list})
+    #
+    #         res = {
+    #             'type': 'ir.actions.act_window',
+    #             'name': 'Rate Details',
+    #             'res_model': 'material.cost.transfer.line',
+    #             'view_type': 'form',
+    #             'view_mode': 'form',
+    #             'target': 'new',
+    #             'res_id': rec.id,
+    #
+    #         }
+    #
+    #         return res

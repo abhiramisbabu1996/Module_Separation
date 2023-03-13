@@ -318,11 +318,11 @@ class SitePurchase(models.Model):
         for rec in self:
             if rec.max_expected_date < rec.min_expected_date:
                 raise ValidationError(_("Maximum Expected Date must be equal or greater than Order Date and Minimum Expected Date"))
-    # 
-    # @api.onchange('project_id')
-    # def onchange_project_id(self):
-    #     for rec in self:
-    #         return {'domain':{'site':[('id','in',rec.project_id.project_location_ids.ids)]}}
+
+    @api.onchange('project_id')
+    def onchange_project_id(self):
+        for rec in self:
+            return {'domain':{'site':[('id','in',rec.project_id.project_location.ids)]}}
 
 
     name = fields.Char('Name', readonly=True)
@@ -612,7 +612,6 @@ class SitePurchase(models.Model):
         # print 'record=============', order.order_id,asd
         if order:
             record = order[0].order_id
-            print 'record=============', record.id
             res = {
                 'name': 'Purchase Order',
                 'view_type': 'form',
@@ -631,7 +630,6 @@ class SitePurchase(models.Model):
     def view_invoices(self):
         order = self.env['purchase.order.line'].search([('site_purchase_id', '=', self.id)],limit=1)
         invoice = self.env['account.invoice'].search([('purchase_id', '=', order.order_id.id)])
-        print "wwwwwwwwwwwwwwwwwwwwwwwwwwwwww",order.order_id.invoice_ids.ids
         invoice_list = []
         # for pick in  picking:
         #     print "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",pick

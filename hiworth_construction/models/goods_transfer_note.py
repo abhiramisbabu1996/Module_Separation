@@ -44,7 +44,7 @@ class GoodsTransferDummy(models.Model):
 
                 for his in history:
                     product_list.append(his.product_id.id)
-
+            print("Product list as",product_list)
             # return {'domain': {'item_id': [('id', 'in', product_list)]}}
 
 
@@ -153,6 +153,17 @@ class GoodsTransferNoteIn(models.Model):
     project_location_ids = fields.Many2many('stock.location','stock_location_goods_transfer_note_rel','location_id','transfer_id',"From Location")
     # to_project_location_ids = fields.Many2many('stock.location','to_project_location_goods_transfer_rel','location_id','project_id',"To Location",related='to_project_id.project_location_ids')
     to_project_location_ids = fields.Many2many('stock.location','to_project_location_goods_transfer_rel','location_id','project_id',"To Location")
+
+    @api.onchange('project_id')
+    def onchange_project_id_1(self):
+        for rec in self:
+            return {'domain': {'site_from': [('id', 'in', rec.project_id.project_location.ids)]}}
+
+    @api.onchange('to_project_id')
+    def onchange_project_id_2(self):
+        for rec in self:
+            return {'domain': {'site_to': [('id', 'in', rec.to_project_id.project_location.ids)]}}
+
     @api.multi
     def set_draft(self):
         self.state = 'draft'
@@ -307,7 +318,7 @@ class GoodsRecieveReport(models.Model):
             })
             for line in rec.goods_recieve_report_line_ids:
                 unit_price = (line.amount / line.quantity_accept) + (total_other_charge/total_qty)
-                line.item_id.sudo().standard_price = unit_price
+                # line.item_id.sudo().standard_price = unit_price
                 stock_move = self.env['stock.move'].create({
                     'location_id': rec.supplier_location_id.id,
                     'category_id':line.item_id.categ_id.id,

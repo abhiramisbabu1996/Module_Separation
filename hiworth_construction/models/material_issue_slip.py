@@ -59,16 +59,16 @@ class MaterialIssueSlip(models.Model):
     #         res.update({'location_id':self.env['stock.location'].search([('is_warehouse','=',True)],limit=1).id})
     #     return res
 
-    # @api.onchange('project_id')
-    # def onchange_project(self):
-    #     for rec in self:
-    #
-    #         if rec.is_receive:
-    #             if rec.project_id:
-    #                 return {'domain':{'source_location_id':[('id','in',rec.project_id.project_location_ids.ids)]}}
-    #         else:
-    #             if rec.project_id:
-    #                 return {'domain':{'location_id':[('id','in',rec.project_id.project_location_ids.ids)]}}
+    @api.onchange('project_id')
+    def onchange_project(self):
+        for rec in self:
+
+            if rec.is_receive:
+                if rec.project_id:
+                    return {'domain':{'source_location_id':[('id','in',rec.project_id.project_location.ids)]}}
+            else:
+                if rec.project_id:
+                    return {'domain':{'location_id':[('id','in',rec.project_id.project_location.ids)]}}
 
     @api.depends('material_issue_slip_lines_ids')
     def compute_item_list(self):
@@ -322,7 +322,7 @@ class MaterialIssuelipLine(models.Model):
                 rec.desc = rec.item_id.name
                 rec.unit_id = rec.item_id.uom_id.id
 
-                stock_history = self.env['stock.history'].search([('product_id','=',rec.item_id.id),('location_id','=',rec.material_issue_slip_id.source_location_id.id),('date','<=',rec.material_issue_slip_id.date)])
+                stock_history = self.env['stock.history'].search([('product_id','=',rec.item_id.id),('location_id','=',rec.material_issue_slip_id.source_location_id.id)])
                 qty = 0
                 for stock in stock_history:
                     qty += stock.quantity
@@ -332,13 +332,12 @@ class MaterialIssuelipLine(models.Model):
           
             location = self.env['stock.location'].browse(self._context.get('source_location',False))
             category = self._context.get('category_id',False)
-      
-            history = self.env['stock.history'].search([('location_id','=',location.id),('product_categ_id','in',category[0][2]) ,('date','<=',rec.material_issue_slip_id.date)])
+            # history = self.env['stock.history'].search([('location_id','=',location.id),('product_categ_id','in',category[0][2]) ,('date','<=',rec.material_issue_slip_id.date)])
+            history = self.env['stock.history'].search([('location_id','=',location.id),('product_categ_id','in',category[0][2])])
             product_list = []
             for his in history:
                 product_list.append(his.product_id.id)
-
-            # return {'domain':{'item_id':[('id','in',product_list)]}}
+            return {'domain':{'item_id':[('id','in',product_list)]}}
 
 
     
@@ -413,50 +412,50 @@ class MaterialIssuelipLine(models.Model):
     rate_disposable_line_ids = fields.One2many('rate.disposable.line', 'material_issue_slip_line_id',
                                                "Item Rate details")
 
-    @api.multi
-    def process_view_price(self):
-        for rec in self:
-            stock_history = self.env['stock.history'].search([('product_id', '=', rec.item_id.id), (
-                'location_id', '=', rec.material_issue_slip_id.source_location_id.id),
-                                                              ('date', '<=', rec.material_issue_slip_id.date),
-                                                              ('quantity', '>', 0)], order='date asc')
-
-
-            stock_moves_from_list = []
-            stock_moves_to_list = []
-
-            values_list = []
-            index_list = []
-
-            for stock in stock_history:
-                qty = stock.quantity - stock.move_id.select_qty
-                if qty>0:
-
-                    stock_moves_from_list.append({'rem_quantitity': qty, 'move_id': stock.move_id})
-
-            for stock_list in stock_moves_from_list:
-                values_list.append((0, 0, {'item_id': stock_list['move_id'].product_id.id,
-                                           'origin': stock_list['move_id'].origin,
-                                           'quantity': stock_list['rem_quantitity'],
-                                           'unit_price': stock_list['move_id'].price_unit,
-                                           'amount': stock_list['move_id'].inventory_value,
-                                           'material_issue_slip_line_id': rec.id,
-                                           'move_id': stock_list['move_id'].id}))
-            if not rec.rate_disposable_line_ids:
-                rec.write({'rate_disposable_line_ids': values_list})
-
-            res = {
-                'type': 'ir.actions.act_window',
-                'name': 'Rate Details',
-                'res_model': 'material.issue.slip.line',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'target': 'new',
-                'res_id': rec.id,
-
-            }
-
-            return res
+    # @api.multi
+    # def process_view_price(self):
+    #     for rec in self:
+    #         stock_history = self.env['stock.history'].search([('product_id', '=', rec.item_id.id), (
+    #             'location_id', '=', rec.material_issue_slip_id.source_location_id.id),
+    #                                                           ('date', '<=', rec.material_issue_slip_id.date),
+    #                                                           ('quantity', '>', 0)], order='date asc')
+    #
+    #
+    #         stock_moves_from_list = []
+    #         stock_moves_to_list = []
+    #
+    #         values_list = []
+    #         index_list = []
+    #
+    #         for stock in stock_history:
+    #             qty = stock.quantity - stock.move_id.select_qty
+    #             if qty>0:
+    #
+    #                 stock_moves_from_list.append({'rem_quantitity': qty, 'move_id': stock.move_id})
+    #
+    #         for stock_list in stock_moves_from_list:
+    #             values_list.append((0, 0, {'item_id': stock_list['move_id'].product_id.id,
+    #                                        'origin': stock_list['move_id'].origin,
+    #                                        'quantity': stock_list['rem_quantitity'],
+    #                                        'unit_price': stock_list['move_id'].price_unit,
+    #                                        'amount': stock_list['move_id'].inventory_value,
+    #                                        'material_issue_slip_line_id': rec.id,
+    #                                        'move_id': stock_list['move_id'].id}))
+    #         if not rec.rate_disposable_line_ids:
+    #             rec.write({'rate_disposable_line_ids': values_list})
+    #
+    #         res = {
+    #             'type': 'ir.actions.act_window',
+    #             'name': 'Rate Details',
+    #             'res_model': 'material.issue.slip.line',
+    #             'view_type': 'form',
+    #             'view_mode': 'form',
+    #             'target': 'new',
+    #             'res_id': rec.id,
+    #
+    #         }
+    #
+    #         return res
 
     @api.multi
     def action_submit(self):

@@ -127,65 +127,65 @@ class DisposableProductsLine(models.Model):
     _name='disposable.products.line'
 
 
-    @api.multi
-    def process_view_price(self):
-        for rec in self:
-            stock_history = self.env['stock.history'].search([('product_id', '=', rec.item_id.id), (
-            'location_id', '=', rec.disposable_product_id.source_location_id.id),
-                                                              ('date', '<=', rec.disposable_product_id.date),
-                                                              ('quantity', '>', 0)], order='date asc')
-            stock_history_zero = self.env['stock.history'].search([('product_id', '=', rec.item_id.id), (
-            'location_id', '=', rec.disposable_product_id.source_location_id.id),
-                                                                   ('date', '<=', rec.disposable_product_id.date)],
-                                                                  order='date asc')
-
-            stock_moves_from_list = []
-            stock_moves_to_list = []
-            for move_stock in stock_history_zero:
-                stock_moves_to_list.append(move_stock.id)
-
-
-            stock_history_zero = list(stock_history_zero)
-            values_list = []
-            index_list = []
-
-
-            for stock in stock_history:
-                qty = stock.quantity - stock.move_id.select_qty
-                if qty>0:
-                    stock_moves_from_list.append({'rem_quantitity': qty, 'move_id': stock.move_id})
-
-
-
-
-            for stock_list in stock_moves_from_list:
-                values_list.append((0,0,{'item_id':stock_list['move_id'].product_id.id,
-                                         'origin':stock_list['move_id'].origin,
-                                         'quantity':stock_list['rem_quantitity'] ,
-                                         'unit_price':stock_list['move_id'].price_unit,
-                                         'amount':stock_list['move_id'].inventory_value,
-                                         'disposable_products_line_id':rec.id,
-                                         'move_id':stock_list['move_id'].id}))
-
-
-            if not rec.rate_disposable_line_ids:
-                rec.write({'rate_disposable_line_ids':values_list})
-
-
-
-            res = {
-                'type': 'ir.actions.act_window',
-                'name': 'Rate Details',
-                'res_model': 'disposable.products.line',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'target': 'new',
-                'res_id':rec.id,
-
-
-            }
-
-            return res
+    # @api.multi
+    # def process_view_price(self):
+    #     for rec in self:
+    #         stock_history = self.env['stock.history'].search([('product_id', '=', rec.item_id.id), (
+    #         'location_id', '=', rec.disposable_product_id.source_location_id.id),
+    #                                                           ('date', '<=', rec.disposable_product_id.date),
+    #                                                           ('quantity', '>', 0)], order='date asc')
+    #         stock_history_zero = self.env['stock.history'].search([('product_id', '=', rec.item_id.id), (
+    #         'location_id', '=', rec.disposable_product_id.source_location_id.id),
+    #                                                                ('date', '<=', rec.disposable_product_id.date)],
+    #                                                               order='date asc')
+    #
+    #         stock_moves_from_list = []
+    #         stock_moves_to_list = []
+    #         for move_stock in stock_history_zero:
+    #             stock_moves_to_list.append(move_stock.id)
+    #
+    #
+    #         stock_history_zero = list(stock_history_zero)
+    #         values_list = []
+    #         index_list = []
+    #
+    #
+    #         for stock in stock_history:
+    #             qty = stock.quantity - stock.move_id.select_qty
+    #             if qty>0:
+    #                 stock_moves_from_list.append({'rem_quantitity': qty, 'move_id': stock.move_id})
+    #
+    #
+    #
+    #
+    #         for stock_list in stock_moves_from_list:
+    #             values_list.append((0,0,{'item_id':stock_list['move_id'].product_id.id,
+    #                                      'origin':stock_list['move_id'].origin,
+    #                                      'quantity':stock_list['rem_quantitity'] ,
+    #                                      'unit_price':stock_list['move_id'].price_unit,
+    #                                      'amount':stock_list['move_id'].inventory_value,
+    #                                      'disposable_products_line_id':rec.id,
+    #                                      'move_id':stock_list['move_id'].id}))
+    #
+    #
+    #         if not rec.rate_disposable_line_ids:
+    #             rec.write({'rate_disposable_line_ids':values_list})
+    #
+    #
+    #
+    #         res = {
+    #             'type': 'ir.actions.act_window',
+    #             'name': 'Rate Details',
+    #             'res_model': 'disposable.products.line',
+    #             'view_type': 'form',
+    #             'view_mode': 'form',
+    #             'target': 'new',
+    #             'res_id':rec.id,
+    #
+    #
+    #         }
+    #
+    #         return res
 
 
     @api.onchange('item_id')

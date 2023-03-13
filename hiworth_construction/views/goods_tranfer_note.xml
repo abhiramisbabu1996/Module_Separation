@@ -56,7 +56,7 @@
 									<field name='item_id'/>
 									<field name='desc'/>
 									<!--<field name='specs'/>-->
-									<field name='stock_balance'/>
+									<field name='stock_balance' readonly="1"/>
 									<field name='qty'/>
 									<field name='rate'/>
 									<field name='value'/>

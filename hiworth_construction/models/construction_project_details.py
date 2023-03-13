@@ -72,7 +72,7 @@ class mrp_bom(models.Model):
 
 
 
-            product_obj.write({'standard_price':bom_cost,'list_price':bom_cost})
+            # product_obj.write({'standard_price':bom_cost,'list_price':bom_cost})
 
 
 
@@ -2168,9 +2168,6 @@ class purchase_order(models.Model):
         value_list = []
         prev_list = []
         for line in self.order_line:
-            print("inside view invoice")
-            print("brand name is...",line.brand_name.name)
-
 
             value_list.append((0, 0, {'item_id': line.product_id.id,
                                   'desc': line.name,

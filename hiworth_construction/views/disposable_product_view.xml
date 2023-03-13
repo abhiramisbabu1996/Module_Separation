@@ -44,7 +44,7 @@
 					    <field name ="rate"/>
 
 						<field name="remarks"/>
-						<button name="process_view_price" string="View Rate" type="object"/>
+<!--						<button name="process_view_price" string="View Rate" type="object"/>-->
 
 
 					</tree>

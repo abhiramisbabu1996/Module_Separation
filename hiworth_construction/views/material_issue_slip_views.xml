@@ -45,7 +45,7 @@
 
 						<field name="remarks"/>
 						<field name="project_id" invisible='1'/>
-						<button name="process_view_price" string="View Rate" type="object"/>
+<!--						<button name="process_view_price" string="View Rate" type="object"/>-->
 
 					</tree>
 					</field>
@@ -156,7 +156,7 @@
 
 						<field name="remarks"/>
 						<field name="project_id" invisible='1'/>
-							<button name="process_view_price" string="View Rate" type="object"/>
+<!--							<button name="process_view_price" string="View Rate" type="object"/>-->
 
 					</tree>
 					</field>
